@@ -1,1 +1,177 @@
-400: Invalid request
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Locale Partner AI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<style>
+.markdown-body{font-size:.95rem;line-height:1.7}
+.markdown-body h1,.markdown-body h2{font-weight:700;margin:1em 0 .4em}
+.markdown-body h1{font-size:1.35rem}
+.markdown-body h2{font-size:1.15rem;border-bottom:1px solid #e2e8f0;padding-bottom:.35rem}
+.markdown-body p{margin:.6em 0}
+.markdown-body ul,.markdown-body ol{margin:.6em 0 .6em 1.2em}
+.markdown-body code{background:#f1f5f9;padding:.1em .3em;border-radius:.3rem;font-size:.9em}
+.markdown-body pre{background:#0f172a;color:#e2e8f0;padding:.9rem;border-radius:.75rem;overflow:auto}
+.markdown-body pre code{background:transparent;padding:0}
+.btn-hover{transition:transform .2s}
+.btn-hover:hover:not(:disabled){transform:scale(1.03)}
+.card-panel{box-shadow:0 1px 3px rgb(0 0 0/.06)}
+.loading-spinner{width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:#64748b;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.preview-container{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border:1px solid #e2e8f0;border-radius:.75rem;overflow:hidden}
+.preview-header{background:#fff;border-bottom:1px solid #e2e8f0;padding:.75rem 1rem;display:flex;align-items:center;gap:.5rem}
+.preview-dot{width:12px;height:12px;border-radius:50%}
+.preview-image{max-width:100%;max-height:400px;border-radius:.5rem;box-shadow:0 4px 6px rgb(0 0 0/.1)}
+</style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+<div class="flex min-h-screen">
+<aside class="w-56 border-r border-slate-200 bg-white">
+<div class="border-b border-slate-200 px-5 py-5">
+<h1 class="text-lg font-semibold">Locale Partner AI</h1>
+<p class="mt-1 text-xs text-slate-500">AI localization for Japan</p>
+</div>
+<nav class="p-3 space-y-1">
+<a href="#" class="block rounded-lg bg-slate-100 px-3 py-2 text-sm font-medium">LP</a>
+<div class="flex justify-between rounded-lg px-3 py-2 text-sm text-slate-400"><span>Creative</span><span class="text-[10px] bg-slate-200 px-1.5 py-0.5 rounded">Soon</span></div>
+<div class="flex justify-between rounded-lg px-3 py-2 text-sm text-slate-400"><span>Product</span><span class="text-[10px] bg-slate-200 px-1.5 py-0.5 rounded">Soon</span></div>
+</nav>
+</aside>
+<div class="flex-1 flex flex-col">
+<header class="border-b border-slate-200 bg-white px-8 py-5">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-sm font-semibold">LP Localization</h2>
+<p class="text-xs text-slate-500">Convert Western LP for Japan (Claude Vision API)</p>
+</div>
+<div class="flex gap-4 items-end">
+<label class="block">
+<span class="text-xs text-slate-600">API Key</span>
+<div class="mt-1 flex gap-2">
+<input id="apiKey" type="password" placeholder="sk-ant-..." class="w-80 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+<button id="toggleKey" class="btn-hover rounded-lg border border-slate-200 px-3 py-2 text-sm">Show</button>
+</div>
+</label>
+<div class="flex gap-2">
+<button id="convertBtn" class="btn-hover rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white">Convert</button>
+<button id="clearBtn" class="btn-hover rounded-lg border border-slate-200 px-4 py-2 text-sm">Clear</button>
+</div>
+</div>
+</div>
+<div class="mt-3 flex gap-2 text-xs">
+<span class="rounded-full bg-slate-100 px-2 py-1">claude-sonnet-4-20250514</span>
+<span class="rounded-full bg-blue-100 text-blue-700 px-2 py-1">Vision API</span>
+<span class="rounded-full bg-green-100 text-green-700 px-2 py-1">Auto Screenshot</span>
+</div>
+</header>
+<main class="flex-1 p-8">
+<div class="max-w-[1600px] mx-auto grid gap-6 lg:grid-cols-2">
+<section class="card-panel rounded-xl border border-slate-200 bg-white p-6">
+<label class="block mb-4">
+<span class="text-sm font-medium text-slate-700">LP URL</span>
+<div class="mt-2 flex gap-4">
+<input id="fetchUrlInput" type="url" placeholder="https://example.com" class="flex-1 rounded-lg border border-slate-200 px-4 py-3">
+<button id="fetchUrlBtn" class="btn-hover rounded-lg bg-slate-900 px-6 py-3 text-sm font-medium text-white">Get from URL</button>
+</div>
+</label>
+<div class="mb-4">
+<div class="flex items-center gap-2 mb-3">
+<span class="text-sm font-medium text-slate-700">Original LP Preview</span>
+<span class="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded">AUTO</span>
+</div>
+<div class="preview-container">
+<div class="preview-header">
+<div class="preview-dot bg-red-400"></div>
+<div class="preview-dot bg-yellow-400"></div>
+<div class="preview-dot bg-green-400"></div>
+<span id="previewUrlDisplay" class="ml-2 text-xs text-slate-500">-</span>
+</div>
+<div id="previewImageContainer" class="min-h-[200px] flex items-center justify-center p-4">
+<div id="previewPlaceholder" class="text-center text-slate-400 p-8">
+<svg class="w-16 h-16 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+<p class="text-sm">Enter URL to capture screenshot</p>
+</div>
+<div id="previewLoading" class="hidden text-center p-8">
+<div class="loading-spinner mx-auto mb-3"></div>
+<p class="text-sm text-slate-600">Capturing...</p>
+</div>
+<img id="previewImage" class="preview-image hidden" alt="Screenshot">
+</div>
+</div>
+</div>
+<details class="text-xs text-slate-500">
+<summary class="cursor-pointer">Manual input</summary>
+<div class="mt-3 p-4 border border-slate-200 rounded-lg bg-slate-50 space-y-3">
+<textarea id="inputText" class="w-full min-h-[100px] rounded-lg border border-slate-200 p-3 text-sm" placeholder="Paste text..."></textarea>
+<div class="flex justify-between items-center">
+<span><span id="charCount">0</span> chars</span>
+<label class="flex items-center gap-2"><input id="includeRaw" type="checkbox" checked><span>Include in prompt</span></label>
+</div>
+</div>
+</details>
+</section>
+<section class="card-panel rounded-xl border border-slate-200 bg-white">
+<div class="flex justify-between items-center border-b border-slate-200 px-5 py-4">
+<div>
+<h2 class="text-sm font-semibold">Output (Japan LP)</h2>
+<p class="text-xs text-slate-600">Markdown</p>
+</div>
+<div class="flex gap-2">
+<button id="copyMdBtn" class="btn-hover rounded-lg border border-slate-200 px-3 py-1.5 text-xs" disabled>Copy</button>
+<button id="downloadBtn" class="btn-hover rounded-lg border border-slate-200 px-3 py-1.5 text-xs" disabled>Save</button>
+<div class="flex border border-slate-200 rounded-lg p-1">
+<button id="tabPreview" class="rounded px-2 py-1 text-xs bg-slate-900 text-white">Preview</button>
+<button id="tabMarkdown" class="rounded px-2 py-1 text-xs">Markdown</button>
+</div>
+</div>
+</div>
+<div class="p-5 relative min-h-[320px]">
+<div id="outputLoading" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-slate-50/95 rounded-lg">
+<div class="loading-spinner mb-3"></div>
+<p class="text-sm text-slate-600">Converting...</p>
+</div>
+<div id="statusBox" class="hidden mb-4 rounded-lg border px-3 py-2 text-xs"></div>
+<div id="previewPane" class="markdown-body">
+<div class="border border-dashed border-slate-200 rounded-lg bg-slate-50 p-6 text-sm text-slate-500">Result here</div>
+</div>
+<div id="markdownPane" class="hidden">
+<textarea id="outputMd" class="w-full h-[60vh] rounded-lg border border-slate-200 bg-slate-50 p-3 font-mono text-xs" readonly></textarea>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</div>
+<script>
+const PROMPT="You are a Japan localization expert. Convert Western LP to Japan version. Output: 1.ファーストビュー 2.課題 3.選ばれる理由 4.機能 5.事例 6.FAQ 7.会社概要 8.CTA 9.English Summary";
+const API="https://api.anthropic.com/v1/messages",MODEL="claude-sonnet-4-20250514";
+const $=id=>document.getElementById(id);
+let busy=false,fetching=false,files=[],screenshot=null,md="";
+async function getScreenshot(url){try{const r=await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url&waitForTimeout=3000&viewport.width=1280&viewport.height=800`);const d=await r.json();return d.status==="success"&&d.data?.screenshot?.url||null}catch{return null}}
+async function toBase64(url){try{const r=await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);const b=await r.blob();return new Promise(res=>{const reader=new FileReader();reader.onload=()=>res({base64:reader.result.split(",")[1],type:b.type||"image/png"});reader.readAsDataURL(b)})}catch{return null}}
+function showLoading(){$("previewPlaceholder").classList.add("hidden");$("previewImage").classList.add("hidden");$("previewLoading").classList.remove("hidden")}
+function showImage(url){$("previewPlaceholder").classList.add("hidden");$("previewLoading").classList.add("hidden");$("previewImage").src=url;$("previewImage").classList.remove("hidden")}
+function showPlaceholder(){$("previewLoading").classList.add("hidden");$("previewImage").classList.add("hidden");$("previewPlaceholder").classList.remove("hidden")}
+function status(type,msg){const b=$("statusBox");b.className="mb-4 rounded-lg border px-3 py-2 text-xs "+(type==="success"?"border-green-200 bg-green-50 text-green-900":type==="error"?"border-red-200 bg-red-50 text-red-900":"border-slate-200 bg-slate-50 text-slate-700");b.textContent=msg;b.classList.remove("hidden")}
+function setBusy(b){busy=b;$("convertBtn").disabled=b;$("convertBtn").textContent=b?"Converting...":"Convert";$("outputLoading").classList.toggle("hidden",!b)}
+function tabs(t){$("previewPane").classList.toggle("hidden",t!=="preview");$("markdownPane").classList.toggle("hidden",t==="preview");$("tabPreview").className="rounded px-2 py-1 text-xs "+(t==="preview"?"bg-slate-900 text-white":"");$("tabMarkdown").className="rounded px-2 py-1 text-xs "+(t!=="preview"?"bg-slate-900 text-white":"")}
+function render(m){marked.setOptions({gfm:true,breaks:true});$("previewPane").innerHTML=DOMPurify.sanitize(marked.parse(m||""))||"<p>Empty</p>"}
+$("inputText").oninput=()=>$("charCount").textContent=$("inputText").value.length;
+$("toggleKey").onclick=()=>{$("apiKey").type=$("apiKey").type==="password"?"text":"password"};
+$("tabPreview").onclick=()=>tabs("preview");
+$("tabMarkdown").onclick=()=>tabs("markdown");
+$("copyMdBtn").onclick=()=>{navigator.clipboard.writeText(md);status("success","Copied!")};
+$("downloadBtn").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([md]));a.download="jp-lp.md";a.click()};
+$("clearBtn").onclick=()=>{$("fetchUrlInput").value="";$("inputText").value="";$("charCount").textContent="0";$("previewUrlDisplay").textContent="-";md="";$("outputMd").value="";$("copyMdBtn").disabled=true;$("downloadBtn").disabled=true;$("previewPane").innerHTML='<div class="border border-dashed border-slate-200 rounded-lg bg-slate-50 p-6 text-sm text-slate-500">Result here</div>';$("statusBox").classList.add("hidden");files=[];screenshot=null;showPlaceholder()};
+async function convert(){if(busy)return;const key=$("apiKey").value.trim();if(!key){status("error","Enter API key");return}const content=[];if(screenshot)content.push({type:"image",source:{type:"base64",media_type:screenshot.type,data:screenshot.base64}});let text=content.length?"Analyze this LP and create Japan version.\n\n":"";const raw=$("inputText").value.trim();if(raw&&$("includeRaw").checked)text+="[Text]\n"+raw;if(text)content.push({type:"text",text});if(!content.length){status("error","No content");return}setBusy(true);tabs("preview");status("info","Sending...");try{const r=await fetch(API,{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:MODEL,max_tokens:8192,temperature:0.2,system:PROMPT,messages:[{role:"user",content}]})});const d=await r.json();if(!r.ok)throw new Error(d?.error?.message||r.status);md=d.content?.filter(c=>c.type==="text").map(c=>c.text).join("\n").trim();$("outputMd").value=md;render(md);$("copyMdBtn").disabled=false;$("downloadBtn").disabled=false;status("success","Done!")}catch(e){status("error","Failed: "+e.message)}finally{setBusy(false)}}
+$("convertBtn").onclick=convert;
+$("fetchUrlBtn").onclick=async()=>{if(busy||fetching)return;let url=$("fetchUrlInput").value.trim();if(!url){alert("Enter URL");return}if(!/^https?:\/\//i.test(url))url="https://"+url;fetching=true;$("fetchUrlBtn").disabled=true;$("fetchUrlBtn").textContent="Fetching...";$("previewUrlDisplay").textContent=url;showLoading();screenshot=null;try{const[text,ssUrl]=await Promise.all([fetch("https://r.jina.ai/"+encodeURIComponent(url)).then(r=>r.ok?r.text():"").catch(()=>""),getScreenshot(url)]);$("inputText").value=text;$("charCount").textContent=text.length;if(ssUrl){showImage(ssUrl);const img=await toBase64(ssUrl);if(img){screenshot=img;status("success","Got text + screenshot!")}else status("info","Preview only")}else{showPlaceholder();status(text?"info":"error",text?"Text only":"Failed")}}catch{showPlaceholder();status("error","Fetch failed")}finally{fetching=false;$("fetchUrlBtn").disabled=false;$("fetchUrlBtn").textContent="Get from URL"}if($("inputText").value||screenshot)await convert()};
+tabs("preview");
+</script>
+</body>
+</html>
