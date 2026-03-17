@@ -300,14 +300,9 @@
                   <div class="p-6">
                     <label class="block">
                       <span class="mb-2 block text-sm font-medium text-slate-700">URL (optional)</span>
-                      <div class="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-4">
-                        <input id="smUrlInput" type="url" placeholder="https://example.com"
-                          class="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
-                        <button id="smFetchBtn" type="button"
-                          class="btn-hover flex-shrink-0 rounded-lg bg-slate-900 px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60">
-                          Get from URL
-                        </button>
-                      </div>
+                      <input id="smUrlInput" type="url" placeholder="https://example.com"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                      <p class="mt-1 text-xs text-slate-400">Enter URL to auto-fetch content, or paste text below</p>
                     </label>
                     <div class="mt-4">
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Or paste text / topic</span>
@@ -344,6 +339,10 @@
                   <div class="border-b border-slate-200 px-5 py-4">
                     <h2 class="text-sm font-semibold">Output (Japan Social Posts)</h2>
                     <p class="text-xs text-slate-500 mt-0.5">Professional tone · Japanese</p>
+                  </div>
+                  <div id="smSummaryWrap" class="hidden border-b border-slate-200 px-5 py-3 bg-slate-50">
+                    <p class="text-xs font-medium text-slate-600 mb-1">Localization Summary</p>
+                    <p id="smSummaryText" class="text-xs text-slate-700 leading-relaxed"></p>
                   </div>
                   <div class="p-5 relative min-h-[320px]">
                     <div id="smLoadingOverlay" class="output-loading-overlay hidden">
@@ -970,11 +969,12 @@ Convert the provided Western LP content into a Japan-optimized version. If image
       // ===================
       // Social Media
       // ===================
-      const SM_SYSTEM = `You are a professional Japan social media copywriter. 
-Given content (article, product info, or topic), generate 3 separate posts optimized for the Japanese market.
+      const SM_SYSTEM = `You are a professional Japan social media copywriter and localization strategist.
+Given content (article, product info, or topic), generate Japan-optimized social posts AND a brief localization summary.
 Tone: Professional, trustworthy, engaging.
 Return ONLY valid JSON in this exact format, no markdown, no extra text:
 {
+  "summary": "2-3 sentence English summary of key localization decisions made (e.g. tone adjustments, cultural adaptations, hashtag strategy for Japanese audience)",
   "x": "X/Twitter post (max 140 chars in Japanese, include 2-3 relevant hashtags)",
   "linkedin": "LinkedIn post (3-5 paragraphs in Japanese, professional tone, include line breaks, end with a question or CTA)",
   "instagram": "Instagram caption (Japanese, engaging, storytelling style, include 5-8 hashtags at the end separated by spaces)"
@@ -995,13 +995,33 @@ Return ONLY valid JSON in this exact format, no markdown, no extra text:
         if (smInFlight) return;
         const apiKey = $('apiKey').value.trim();
         if (!apiKey) { setSmStatus('error', 'API Key required'); return; }
-        const text = $('smInputText').value.trim();
-        if (!text) { setSmStatus('error', 'Please enter text or fetch from URL'); return; }
 
         const doX = $('chkX').checked;
         const doLI = $('chkLI').checked;
         const doIG = $('chkIG').checked;
         if (!doX && !doLI && !doIG) { setSmStatus('error', 'Select at least one platform'); return; }
+
+        smInFlight = true;
+        $('smLoadingOverlay').classList.remove('hidden');
+
+        // Auto-fetch URL if provided
+        let text = $('smInputText').value.trim();
+        const url = $('smUrlInput').value.trim();
+        if (url) {
+          setSmStatus('info', 'Fetching content from URL...');
+          try {
+            const fetched = await fetch('https://r.jina.ai/' + encodeURIComponent(url.startsWith('http') ? url : 'https://' + url)).then(r => r.ok ? r.text() : '').catch(() => '');
+            if (fetched) {
+              text = fetched.slice(0, 3000);
+              $('smInputText').value = text;
+              $('smCharCount').textContent = text.length;
+            }
+          } catch {}
+        }
+
+        if (!text) { setSmStatus('error', 'Please enter text or a valid URL'); smInFlight = false; $('smLoadingOverlay').classList.add('hidden'); return; }
+
+        setSmStatus('info', 'Generating posts...');
 
         // Show/hide output sections
         $('outXWrap').classList.toggle('hidden', !doX);
@@ -1009,18 +1029,14 @@ Return ONLY valid JSON in this exact format, no markdown, no extra text:
         $('outIGWrap').classList.toggle('hidden', !doIG);
 
         const platformList = [doX && 'x', doLI && 'linkedin', doIG && 'instagram'].filter(Boolean);
-        const platformDesc = [doX && 'X/Twitter post (max 140 chars in Japanese, include 2-3 relevant hashtags)', doLI && 'LinkedIn post (3-5 paragraphs in Japanese, professional tone, include line breaks, end with a question or CTA)', doIG && 'Instagram caption (Japanese, engaging, storytelling style, include 5-8 hashtags at the end separated by spaces)'].filter(Boolean).join('\n');
+        const platformDesc = [doX && 'x: X/Twitter post (max 140 chars in Japanese, 2-3 hashtags)', doLI && 'linkedin: LinkedIn post (3-5 paragraphs Japanese, professional, end with question or CTA)', doIG && 'instagram: Instagram caption (Japanese, storytelling, 5-8 hashtags at end)'].filter(Boolean).join('\n');
 
-        const dynamicSystem = `You are a professional Japan social media copywriter. 
-Given content (article, product info, or topic), generate posts optimized for the Japanese market.
+        const dynamicSystem = `You are a professional Japan social media copywriter and localization strategist.
 Tone: Professional, trustworthy, engaging.
-Return ONLY valid JSON with these keys: ${platformList.join(', ')}
+Return ONLY valid JSON with keys: summary, ${platformList.join(', ')}
+- summary: 2-3 sentence English explanation of key localization decisions (tone, cultural adaptations, hashtag strategy)
 ${platformDesc}
 No markdown, no extra text outside the JSON.`;
-
-        smInFlight = true;
-        $('smLoadingOverlay').classList.remove('hidden');
-        setSmStatus('info', 'Generating posts...');
 
         try {
           const res = await fetch(ENDPOINT, {
@@ -1039,6 +1055,10 @@ No markdown, no extra text outside the JSON.`;
           const clean = raw.replace(/```json|```/g, '').trim();
           const parsed = JSON.parse(clean);
 
+          if (parsed.summary) {
+            $('smSummaryText').textContent = parsed.summary;
+            $('smSummaryWrap').classList.remove('hidden');
+          }
           if (doX) { $('outX').textContent = parsed.x || '—'; $('copyX').disabled = false; }
           if (doLI) { $('outLI').textContent = parsed.linkedin || '—'; $('copyLI').disabled = false; }
           if (doIG) { $('outIG').textContent = parsed.instagram || '—'; $('copyIG').disabled = false; }
@@ -1052,37 +1072,6 @@ No markdown, no extra text outside the JSON.`;
       }
 
       $('smGenerateBtn').onclick = runSocialGenerate;
-      ['chkX', 'chkLI', 'chkIG'].forEach(id => $(`${id}`).onchange = updateSmBadge);
-
-      $('copyX').onclick = () => { navigator.clipboard.writeText($('outX').textContent); setSmStatus('success', 'Copied X post!'); };
-      $('copyLI').onclick = () => { navigator.clipboard.writeText($('outLI').textContent); setSmStatus('success', 'Copied LinkedIn post!'); };
-      $('copyIG').onclick = () => { navigator.clipboard.writeText($('outIG').textContent); setSmStatus('success', 'Copied Instagram post!'); };
-      $('smInputText').oninput = () => $('smCharCount').textContent = $('smInputText').value.length;
-
-      $('smFetchBtn').onclick = async () => {
-        let url = $('smUrlInput').value.trim();
-        if (!url) { alert('Please enter a URL'); return; }
-        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-        $('smFetchBtn').disabled = true;
-        $('smFetchBtn').textContent = 'Fetching...';
-        setSmStatus('info', 'Fetching content...');
-        try {
-          const text = await fetch('https://r.jina.ai/' + encodeURIComponent(url)).then(r => r.ok ? r.text() : '').catch(() => '');
-          if (text) {
-            $('smInputText').value = text.slice(0, 3000);
-            $('smCharCount').textContent = $('smInputText').value.length;
-            setSmStatus('success', 'Content fetched!');
-            await runSocialGenerate();
-          } else {
-            setSmStatus('error', 'Could not fetch content');
-          }
-        } catch {
-          setSmStatus('error', 'Fetch failed');
-        } finally {
-          $('smFetchBtn').disabled = false;
-          $('smFetchBtn').textContent = 'Get from URL';
-        }
-      };
 
       // Generate button - trigger on Convert button when in social tab
       const origConvertClick = $('convertBtn').onclick;
