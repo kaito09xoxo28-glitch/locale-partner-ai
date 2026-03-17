@@ -113,7 +113,7 @@
           <p class="mt-1 text-xs text-slate-500" data-i18n="sidebar_desc">AI localization for Japan</p>
         </div>
         <nav class="flex-1 space-y-0.5 px-3 py-4">
-          <a href="#" class="flex items-center justify-between rounded-lg bg-slate-100 px-3 py-2.5 text-sm font-medium text-slate-900">LP</a>
+          <a href="#" id="navLP" class="flex items-center justify-between rounded-lg bg-slate-100 px-3 py-2.5 text-sm font-medium text-slate-900">LP</a>
           <div class="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-400">
             <span>Creative</span>
             <span class="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-500">Soon</span>
@@ -122,10 +122,7 @@
             <span>Product</span>
             <span class="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-500">Soon</span>
           </div>
-          <div class="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-400">
-            <span>Social Media</span>
-            <span class="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-500">Soon</span>
-          </div>
+          <a href="#" id="navSocial" class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">Social Media</a>
         </nav>
       </aside>
 
@@ -168,8 +165,10 @@
 
         <main class="flex-1 p-6 lg:p-8">
           <div class="mx-auto max-w-[1600px]">
-            <div class="grid gap-6 lg:grid-cols-2">
-              
+
+            <!-- LP Tab -->
+            <div id="tabLP">
+              <div class="grid gap-6 lg:grid-cols-2">
               <!-- Input Section -->
               <section class="card-panel rounded-xl border border-slate-200 bg-white">
                 <div class="p-6">
@@ -289,7 +288,87 @@
                   </div>
                 </div>
               </section>
-            </div>
+              </div><!-- end LP grid -->
+            </div><!-- end tabLP -->
+
+            <!-- Social Media Tab -->
+            <div id="tabSocial" class="hidden">
+              <div class="grid gap-6 lg:grid-cols-2">
+                <!-- Input -->
+                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                  <div class="p-6">
+                    <label class="block">
+                      <span class="mb-2 block text-sm font-medium text-slate-700">URL (optional)</span>
+                      <div class="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-4">
+                        <input id="smUrlInput" type="url" placeholder="https://example.com"
+                          class="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                        <button id="smFetchBtn" type="button"
+                          class="btn-hover flex-shrink-0 rounded-lg bg-slate-900 px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60">
+                          Get from URL
+                        </button>
+                      </div>
+                    </label>
+                    <div class="mt-4">
+                      <span class="text-xs font-medium text-slate-600 mb-2 block">Or paste text / topic</span>
+                      <textarea id="smInputText" class="min-h-[140px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-200" placeholder="Paste article, product info, or describe the topic..."></textarea>
+                      <span class="text-xs text-slate-400 mt-1 block"><span id="smCharCount">0</span> chars</span>
+                    </div>
+                    <div id="smStatusBox" class="mt-3 hidden rounded-lg border px-3 py-2 text-xs"></div>
+                  </div>
+                </section>
+
+                <!-- Output -->
+                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                  <div class="border-b border-slate-200 px-5 py-4">
+                    <h2 class="text-sm font-semibold">Output (Japan Social Posts)</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Professional tone · Japanese</p>
+                  </div>
+                  <div class="p-5 relative min-h-[320px]">
+                    <div id="smLoadingOverlay" class="output-loading-overlay hidden">
+                      <div class="loading-spinner"></div>
+                      <p class="text-sm font-medium text-slate-600">Generating...</p>
+                    </div>
+
+                    <!-- X -->
+                    <div class="mb-4">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                          X (Twitter)
+                        </span>
+                        <button id="copyX" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy</button>
+                      </div>
+                      <div id="outX" class="min-h-[80px] rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-500 whitespace-pre-wrap">—</div>
+                    </div>
+
+                    <!-- LinkedIn -->
+                    <div class="mb-4">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                          LinkedIn
+                        </span>
+                        <button id="copyLI" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy</button>
+                      </div>
+                      <div id="outLI" class="min-h-[120px] rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-500 whitespace-pre-wrap">—</div>
+                    </div>
+
+                    <!-- Instagram -->
+                    <div>
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                          Instagram
+                        </span>
+                        <button id="copyIG" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy</button>
+                      </div>
+                      <div id="outIG" class="min-h-[120px] rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-500 whitespace-pre-wrap">—</div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div><!-- end tabSocial -->
+
           </div>
         </main>
 
@@ -822,6 +901,125 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         }
 
         if ($('inputText').value || screenshotData) await runConvert();
+      };
+
+      // ===================
+      // Tab Navigation
+      // ===================
+      function switchTab(tab) {
+        $('tabLP').classList.toggle('hidden', tab !== 'lp');
+        $('tabSocial').classList.toggle('hidden', tab !== 'social');
+        $('navLP').className = `flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium ${tab === 'lp' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-50'}`;
+        $('navSocial').className = `flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium ${tab === 'social' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-50'}`;
+      }
+      $('navLP').onclick = (e) => { e.preventDefault(); switchTab('lp'); };
+      $('navSocial').onclick = (e) => { e.preventDefault(); switchTab('social'); };
+
+      // ===================
+      // Social Media
+      // ===================
+      const SM_SYSTEM = `You are a professional Japan social media copywriter. 
+Given content (article, product info, or topic), generate 3 separate posts optimized for the Japanese market.
+Tone: Professional, trustworthy, engaging.
+Return ONLY valid JSON in this exact format, no markdown, no extra text:
+{
+  "x": "X/Twitter post (max 140 chars in Japanese, include 2-3 relevant hashtags)",
+  "linkedin": "LinkedIn post (3-5 paragraphs in Japanese, professional tone, include line breaks, end with a question or CTA)",
+  "instagram": "Instagram caption (Japanese, engaging, storytelling style, include 5-8 hashtags at the end separated by spaces)"
+}`;
+
+      let smInFlight = false;
+
+      function setSmStatus(kind, msg) {
+        const box = $('smStatusBox');
+        box.classList.remove('hidden', 'border-emerald-200', 'bg-emerald-50', 'text-emerald-900', 'border-rose-200', 'bg-rose-50', 'text-rose-900', 'border-slate-200', 'bg-slate-50', 'text-slate-700');
+        if (kind === 'success') box.classList.add('border-emerald-200', 'bg-emerald-50', 'text-emerald-900');
+        else if (kind === 'error') box.classList.add('border-rose-200', 'bg-rose-50', 'text-rose-900');
+        else box.classList.add('border-slate-200', 'bg-slate-50', 'text-slate-700');
+        box.textContent = msg;
+      }
+
+      async function runSocialGenerate() {
+        if (smInFlight) return;
+        const apiKey = $('apiKey').value.trim();
+        if (!apiKey) { setSmStatus('error', 'API Key required'); return; }
+        const text = $('smInputText').value.trim();
+        if (!text) { setSmStatus('error', 'Please enter text or fetch from URL'); return; }
+
+        smInFlight = true;
+        $('smLoadingOverlay').classList.remove('hidden');
+        setSmStatus('info', 'Generating posts...');
+
+        try {
+          const res = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+            body: JSON.stringify({
+              model: MODEL, max_tokens: 2000, temperature: 0.3,
+              system: SM_SYSTEM,
+              messages: [{ role: 'user', content: `Create Japanese social media posts for:\n\n${text}` }]
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error?.message || res.status);
+
+          const raw = data.content?.filter(c => c.type === 'text').map(c => c.text).join('').trim();
+          const clean = raw.replace(/```json|```/g, '').trim();
+          const parsed = JSON.parse(clean);
+
+          $('outX').textContent = parsed.x || '—';
+          $('outLI').textContent = parsed.linkedin || '—';
+          $('outIG').textContent = parsed.instagram || '—';
+          $('copyX').disabled = false;
+          $('copyLI').disabled = false;
+          $('copyIG').disabled = false;
+          setSmStatus('success', 'Done!');
+        } catch (e) {
+          setSmStatus('error', `Failed: ${e.message}`);
+        } finally {
+          smInFlight = false;
+          $('smLoadingOverlay').classList.add('hidden');
+        }
+      }
+
+      $('copyX').onclick = () => { navigator.clipboard.writeText($('outX').textContent); setSmStatus('success', 'Copied X post!'); };
+      $('copyLI').onclick = () => { navigator.clipboard.writeText($('outLI').textContent); setSmStatus('success', 'Copied LinkedIn post!'); };
+      $('copyIG').onclick = () => { navigator.clipboard.writeText($('outIG').textContent); setSmStatus('success', 'Copied Instagram post!'); };
+      $('smInputText').oninput = () => $('smCharCount').textContent = $('smInputText').value.length;
+
+      $('smFetchBtn').onclick = async () => {
+        let url = $('smUrlInput').value.trim();
+        if (!url) { alert('Please enter a URL'); return; }
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+        $('smFetchBtn').disabled = true;
+        $('smFetchBtn').textContent = 'Fetching...';
+        setSmStatus('info', 'Fetching content...');
+        try {
+          const text = await fetch('https://r.jina.ai/' + encodeURIComponent(url)).then(r => r.ok ? r.text() : '').catch(() => '');
+          if (text) {
+            $('smInputText').value = text.slice(0, 3000);
+            $('smCharCount').textContent = $('smInputText').value.length;
+            setSmStatus('success', 'Content fetched!');
+            await runSocialGenerate();
+          } else {
+            setSmStatus('error', 'Could not fetch content');
+          }
+        } catch {
+          setSmStatus('error', 'Fetch failed');
+        } finally {
+          $('smFetchBtn').disabled = false;
+          $('smFetchBtn').textContent = 'Get from URL';
+        }
+      };
+
+      // Generate button - trigger on Convert button when in social tab
+      const origConvertClick = $('convertBtn').onclick;
+      $('convertBtn').onclick = () => {
+        if (!$('tabSocial').classList.contains('hidden')) {
+          runSocialGenerate();
+        } else {
+          runConvert();
+        }
       };
 
       // Init
