@@ -115,6 +115,7 @@
         <nav class="flex-1 space-y-0.5 px-3 py-4">
           <a href="#" id="navLP" class="flex items-center justify-between rounded-lg bg-slate-100 px-3 py-2.5 text-sm font-medium text-slate-900">LP</a>
           <a href="#" id="navCreative" class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">Creative</a>
+          <a href="#" id="navSEO" class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">SEO</a>
           <div class="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-400">
             <span>Product</span>
             <span class="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-500">Soon</span>
@@ -159,6 +160,7 @@
             <span class="rounded-full bg-green-100 text-green-700 px-2 py-1" data-i18n="auto_screenshot_badge" id="badgeScreenshot">Auto Screenshot</span>
             <span class="rounded-full bg-purple-100 text-purple-700 px-2 py-1 hidden" id="badgeSocial">X · LinkedIn · Instagram</span>
             <span class="rounded-full bg-orange-100 text-orange-700 px-2 py-1 hidden" id="badgeCreative">Meta · Google · LINE</span>
+            <span class="rounded-full bg-teal-100 text-teal-700 px-2 py-1 hidden" id="badgeSEO">Meta · H1/H2 · Body</span>
           </div>
         </header>
 
@@ -523,6 +525,107 @@
               </div>
             </div><!-- end tabCreative -->
 
+            <!-- SEO Tab -->
+            <div id="tabSEO" class="hidden">
+              <div class="grid gap-6 lg:grid-cols-2">
+                <!-- Input -->
+                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                  <div class="p-6 space-y-5">
+                    <div>
+                      <span class="mb-2 block text-sm font-medium text-slate-700">URL (optional)</span>
+                      <input id="seoUrlInput" type="url" placeholder="https://example.com/page"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                      <p class="mt-1 text-xs text-slate-400">Enter URL to auto-fetch, or paste content below</p>
+                    </div>
+                    <div>
+                      <span class="text-xs font-medium text-slate-600 mb-2 block">Or paste content / topic</span>
+                      <textarea id="seoInputText" class="min-h-[160px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-200" placeholder="Paste page content, existing SEO copy, or describe the page topic..."></textarea>
+                      <span class="text-xs text-slate-400 mt-1 block"><span id="seoCharCount">0</span> chars</span>
+                    </div>
+                    <div>
+                      <span class="text-xs font-medium text-slate-600 mb-2 block">Target keyword (optional)</span>
+                      <input id="seoKeyword" type="text" placeholder="e.g. PIM ツール 日本, AI画像生成"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                    </div>
+                    <button id="seoGenerateBtn" type="button"
+                      class="btn-hover rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60">
+                      Generate
+                    </button>
+                    <div id="seoStatusBox" class="hidden rounded-lg border px-3 py-2 text-xs"></div>
+                  </div>
+                </section>
+
+                <!-- Output -->
+                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                  <div class="border-b border-slate-200 px-5 py-4">
+                    <h2 class="text-sm font-semibold">Output (Japan SEO)</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Optimized for Japanese search</p>
+                  </div>
+                  <div id="seoSummaryWrap" class="hidden border-b border-slate-200 px-5 py-3 bg-slate-50">
+                    <p class="text-xs font-medium text-slate-600 mb-1">Localization Summary</p>
+                    <p id="seoSummaryText" class="text-xs text-slate-700 leading-relaxed"></p>
+                  </div>
+                  <div class="p-5 relative min-h-[320px]">
+                    <div id="seoLoadingOverlay" class="output-loading-overlay hidden">
+                      <div class="loading-spinner"></div>
+                      <p class="text-sm font-medium text-slate-600">Generating...</p>
+                    </div>
+
+                    <!-- Meta -->
+                    <div class="mb-5">
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-semibold text-slate-700">🏷️ Meta Tags</span>
+                        <button id="copySeeMeta" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy</button>
+                      </div>
+                      <div class="space-y-2">
+                        <div>
+                          <div class="flex justify-between">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wide">Title Tag <span class="text-slate-300">(30–60 chars)</span></span>
+                            <span class="text-[10px] text-slate-400" id="lenSeoTitle"></span>
+                          </div>
+                          <div id="outSeoTitle" class="mt-0.5 rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-sm text-slate-500">—</div>
+                        </div>
+                        <div>
+                          <div class="flex justify-between">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wide">Meta Description <span class="text-slate-300">(70–120 chars)</span></span>
+                            <span class="text-[10px] text-slate-400" id="lenSeoDesc"></span>
+                          </div>
+                          <div id="outSeoDesc" class="mt-0.5 rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-sm text-slate-500">—</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- H1/H2 -->
+                    <div class="mb-5">
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-semibold text-slate-700">📐 Page Structure</span>
+                        <button id="copySeoStructure" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy</button>
+                      </div>
+                      <div class="space-y-2">
+                        <div>
+                          <span class="text-[10px] text-slate-400 uppercase tracking-wide">H1</span>
+                          <div id="outSeoH1" class="mt-0.5 rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-sm text-slate-500">—</div>
+                        </div>
+                        <div>
+                          <span class="text-[10px] text-slate-400 uppercase tracking-wide">H2 suggestions</span>
+                          <div id="outSeoH2" class="mt-0.5 rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-sm text-slate-500 whitespace-pre-wrap">—</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Body rewrite -->
+                    <div>
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-semibold text-slate-700">✍️ Body Copy Rewrite</span>
+                        <button id="copySeoBody" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy</button>
+                      </div>
+                      <div id="outSeoBody" class="rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-sm text-slate-500 whitespace-pre-wrap min-h-[100px]">—</div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div><!-- end tabSEO -->
+
           </div>
         </main>
 
@@ -654,7 +757,7 @@
         localStorage.setItem('locale-partner-lang', lang);
 
         // Re-render header for current tab
-        const activeTab = !$('tabLP').classList.contains('hidden') ? 'lp' : !$('tabCreative').classList.contains('hidden') ? 'creative' : 'social';
+        const activeTab = !$('tabLP').classList.contains('hidden') ? 'lp' : !$('tabCreative').classList.contains('hidden') ? 'creative' : !$('tabSEO').classList.contains('hidden') ? 'seo' : 'social';
         switchTab(activeTab);
       }
 
@@ -1068,14 +1171,15 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         $('tabLP').classList.toggle('hidden', tab !== 'lp');
         $('tabSocial').classList.toggle('hidden', tab !== 'social');
         $('tabCreative').classList.toggle('hidden', tab !== 'creative');
-        const tabs = { lp: 'navLP', social: 'navSocial', creative: 'navCreative' };
+        $('tabSEO').classList.toggle('hidden', tab !== 'seo');
+        const tabs = { lp: 'navLP', social: 'navSocial', creative: 'navCreative', seo: 'navSEO' };
         Object.entries(tabs).forEach(([t, id]) => {
           $(id).className = `flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium ${tab === t ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-50'}`;
         });
         const isLP = tab === 'lp';
         const isSocial = tab === 'social';
         const isCreative = tab === 'creative';
-        // Header
+        const isSEO = tab === 'seo';
         if (isLP) {
           $('headerTitle').textContent = currentLang === 'jp' ? 'LPローカライズ' : 'LP Localization';
           $('headerDesc').textContent = currentLang === 'jp' ? '海外LPを日本向けに変換（Claude Vision API）' : 'Convert Western LP for Japan (Claude Vision API)';
@@ -1085,11 +1189,15 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         } else if (isCreative) {
           $('headerTitle').textContent = currentLang === 'jp' ? '広告クリエイティブローカライズ' : 'Ad Creative Localization';
           $('headerDesc').textContent = currentLang === 'jp' ? 'Meta・Google・LINE向け日本語広告コピーを生成' : 'Generate Japan-optimized ad copy for Meta, Google & LINE (Claude API)';
+        } else if (isSEO) {
+          $('headerTitle').textContent = currentLang === 'jp' ? 'SEOコンテンツローカライズ' : 'SEO Content Localization';
+          $('headerDesc').textContent = currentLang === 'jp' ? '日本検索向けメタタグ・構成・本文を生成' : 'Generate Japan-optimized meta tags, page structure & body copy (Claude API)';
         }
         $('badgeVision').classList.toggle('hidden', !isLP);
         $('badgeScreenshot').classList.toggle('hidden', !isLP);
         $('badgeSocial').classList.toggle('hidden', !isSocial);
         $('badgeCreative').classList.toggle('hidden', !isCreative);
+        $('badgeSEO').classList.toggle('hidden', !isSEO);
         $('langToggleWrap').classList.toggle('hidden', !isLP);
         $('convertBtn').classList.toggle('hidden', !isLP);
         $('clearBtn').classList.toggle('hidden', !isLP);
@@ -1107,6 +1215,94 @@ Convert the provided Western LP content into a Japan-optimized version. If image
       $('navLP').onclick = (e) => { e.preventDefault(); switchTab('lp'); };
       $('navSocial').onclick = (e) => { e.preventDefault(); switchTab('social'); };
       $('navCreative').onclick = (e) => { e.preventDefault(); switchTab('creative'); };
+      $('navSEO').onclick = (e) => { e.preventDefault(); switchTab('seo'); };
+
+      // ===================
+      // SEO
+      // ===================
+      function setSeoStatus(kind, msg) {
+        const box = $('seoStatusBox');
+        box.classList.remove('hidden', 'border-emerald-200', 'bg-emerald-50', 'text-emerald-900', 'border-rose-200', 'bg-rose-50', 'text-rose-900', 'border-slate-200', 'bg-slate-50', 'text-slate-700');
+        if (kind === 'success') box.classList.add('border-emerald-200', 'bg-emerald-50', 'text-emerald-900');
+        else if (kind === 'error') box.classList.add('border-rose-200', 'bg-rose-50', 'text-rose-900');
+        else box.classList.add('border-slate-200', 'bg-slate-50', 'text-slate-700');
+        box.textContent = msg;
+      }
+
+      let seoInFlight = false;
+
+      async function runSEOGenerate() {
+        if (seoInFlight) return;
+        const apiKey = $('apiKey').value.trim();
+        if (!apiKey) { setSeoStatus('error', 'API Key required'); return; }
+
+        seoInFlight = true;
+        $('seoLoadingOverlay').classList.remove('hidden');
+
+        let text = $('seoInputText').value.trim();
+        const url = $('seoUrlInput').value.trim();
+        if (url) {
+          setSeoStatus('info', 'Fetching content from URL...');
+          try {
+            const fetched = await fetch('https://r.jina.ai/' + encodeURIComponent(url.startsWith('http') ? url : 'https://' + url)).then(r => r.ok ? r.text() : '').catch(() => '');
+            if (fetched) { text = fetched.slice(0, 4000); $('seoInputText').value = text; $('seoCharCount').textContent = text.length; }
+          } catch {}
+        }
+
+        if (!text) { setSeoStatus('error', 'Please enter content or a valid URL'); seoInFlight = false; $('seoLoadingOverlay').classList.add('hidden'); return; }
+
+        const keyword = $('seoKeyword').value.trim();
+        setSeoStatus('info', 'Generating SEO content...');
+
+        const seoSystem = `You are a Japan SEO specialist. Localize and optimize the given content for Japanese search.
+${keyword ? `Target keyword: ${keyword}` : ''}
+Japanese SEO guidelines: use natural Japanese, incorporate target keyword in title/H1/early body, write for Japanese search intent, use です/ます調, include trust signals.
+Return ONLY valid JSON, no markdown:
+{
+  "summary": "2-3 sentence English explanation of key localization and SEO decisions made",
+  "title_tag": "SEO title in Japanese (30-60 chars)",
+  "meta_description": "Meta description in Japanese (70-120 chars)",
+  "h1": "H1 heading in Japanese",
+  "h2_suggestions": "3-5 H2 suggestions, one per line",
+  "body_rewrite": "Rewritten intro paragraph + key sections in Japanese (300-500 chars), optimized for the target keyword"
+}`;
+
+        try {
+          const res = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+            body: JSON.stringify({ model: MODEL, max_tokens: 3000, temperature: 0.3, system: seoSystem, messages: [{ role: 'user', content: `Localize for Japan SEO:\n\n${text}` }] })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error?.message || res.status);
+          const raw = data.content?.filter(c => c.type === 'text').map(c => c.text).join('').trim();
+          const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+
+          if (parsed.summary) { $('seoSummaryText').textContent = parsed.summary; $('seoSummaryWrap').classList.remove('hidden'); }
+          $('outSeoTitle').textContent = parsed.title_tag || '—';
+          $('outSeoDesc').textContent = parsed.meta_description || '—';
+          $('outSeoH1').textContent = parsed.h1 || '—';
+          $('outSeoH2').textContent = parsed.h2_suggestions || '—';
+          $('outSeoBody').textContent = parsed.body_rewrite || '—';
+          setLen('lenSeoTitle', parsed.title_tag, 60);
+          setLen('lenSeoDesc', parsed.meta_description, 120);
+          $('copySeeMeta').disabled = false;
+          $('copySeoStructure').disabled = false;
+          $('copySeoBody').disabled = false;
+          setSeoStatus('success', 'Done!');
+        } catch (e) {
+          setSeoStatus('error', `Failed: ${e.message}`);
+        } finally {
+          seoInFlight = false;
+          $('seoLoadingOverlay').classList.add('hidden');
+        }
+      }
+
+      $('seoGenerateBtn').onclick = runSEOGenerate;
+      $('seoInputText').oninput = () => $('seoCharCount').textContent = $('seoInputText').value.length;
+      $('copySeeMeta').onclick = () => { navigator.clipboard.writeText([$('outSeoTitle').textContent, $('outSeoDesc').textContent].join('\n')); setSeoStatus('success', 'Copied meta tags!'); };
+      $('copySeoStructure').onclick = () => { navigator.clipboard.writeText([$('outSeoH1').textContent, $('outSeoH2').textContent].join('\n')); setSeoStatus('success', 'Copied structure!'); };
+      $('copySeoBody').onclick = () => { navigator.clipboard.writeText($('outSeoBody').textContent); setSeoStatus('success', 'Copied body copy!'); };
 
       // ===================
       // Creative
