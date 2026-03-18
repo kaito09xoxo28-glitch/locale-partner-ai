@@ -83,7 +83,7 @@
         display: flex;
         border-radius: 0.5rem;
         overflow: hidden;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255,255,255,0.15);
       }
       .lang-toggle button {
         padding: 0.25rem 0.75rem;
@@ -92,121 +92,182 @@
         transition: all 0.2s;
       }
       .lang-toggle button.active {
-        background: #1e293b;
-        color: white;
+        background: rgba(255,255,255,0.9);
+        color: #0f172a;
       }
       .lang-toggle button:not(.active) {
-        background: white;
-        color: #64748b;
+        background: rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.7);
       }
       .lang-toggle button:not(.active):hover {
-        background: #f1f5f9;
+        background: rgba(255,255,255,0.2);
+      }
+
+      /* ── Video Background ── */
+      #videoBg {
+        position: fixed; inset: 0; z-index: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+      }
+      #videoBgOverlay {
+        position: fixed; inset: 0; z-index: 1;
+        background: linear-gradient(135deg, rgba(2,8,23,0.72) 0%, rgba(7,15,36,0.65) 100%);
+        pointer-events: none;
+      }
+      .app-shell {
+        position: relative; z-index: 2;
+      }
+
+      /* ── Glassmorphism ── */
+      .glass-sidebar {
+        background: rgba(8,15,35,0.7) !important;
+        border-right: 1px solid rgba(255,255,255,0.08) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .glass-sidebar h1 { color: rgba(255,255,255,0.92) !important; }
+      .glass-sidebar p  { color: rgba(255,255,255,0.45) !important; }
+      .glass-sidebar a  { color: rgba(255,255,255,0.6) !important; }
+      .glass-sidebar a:hover { background: rgba(255,255,255,0.08) !important; color: rgba(255,255,255,0.9) !important; }
+      .glass-sidebar .nav-active { background: rgba(255,255,255,0.12) !important; color: rgba(255,255,255,0.95) !important; font-weight: 600; }
+      .glass-sidebar .border-t { border-color: rgba(255,255,255,0.08) !important; }
+      .glass-sidebar span#settingsSummary { color: rgba(255,255,255,0.4) !important; }
+
+      .glass-header {
+        background: rgba(8,15,35,0.6) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .glass-header h2, .glass-header label span, .glass-header span { color: rgba(255,255,255,0.85) !important; }
+      .glass-header p, .glass-header .text-slate-500 { color: rgba(255,255,255,0.45) !important; }
+      .glass-header input {
+        background: rgba(255,255,255,0.08) !important;
+        border-color: rgba(255,255,255,0.15) !important;
+        color: rgba(255,255,255,0.9) !important;
+      }
+      .glass-header input::placeholder { color: rgba(255,255,255,0.35) !important; }
+      .glass-header button.btn-hover:not(:disabled) { background: rgba(255,255,255,0.9) !important; color: #0f172a !important; }
+      .glass-header .rounded-full { background: rgba(255,255,255,0.1) !important; color: rgba(255,255,255,0.6) !important; }
+      .glass-header .bg-blue-100 { background: rgba(59,130,246,0.25) !important; color: rgba(147,197,253,1) !important; }
+      .glass-header .bg-green-100 { background: rgba(34,197,94,0.2) !important; color: rgba(134,239,172,1) !important; }
+      .glass-header .bg-purple-100 { background: rgba(168,85,247,0.2) !important; color: rgba(216,180,254,1) !important; }
+      .glass-header .bg-orange-100 { background: rgba(249,115,22,0.2) !important; color: rgba(253,186,116,1) !important; }
+      .glass-header .bg-teal-100 { background: rgba(20,184,166,0.2) !important; color: rgba(94,234,212,1) !important; }
+
+      .glass-card {
+        background: rgba(255,255,255,0.06) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        color: rgba(255,255,255,0.85) !important;
+      }
+      .glass-card:hover { background: rgba(255,255,255,0.09) !important; border-color: rgba(255,255,255,0.16) !important; }
+      .glass-card h2, .glass-card h3, .glass-card .font-semibold, .glass-card .font-medium { color: rgba(255,255,255,0.92) !important; }
+      .glass-card p, .glass-card .text-slate-500, .glass-card .text-slate-600, .glass-card .text-xs { color: rgba(255,255,255,0.5) !important; }
+      .glass-card label span, .glass-card .block { color: rgba(255,255,255,0.7) !important; }
+      .glass-card input, .glass-card textarea, .glass-card select {
+        background: rgba(255,255,255,0.08) !important;
+        border-color: rgba(255,255,255,0.12) !important;
+        color: rgba(255,255,255,0.9) !important;
+      }
+      .glass-card input::placeholder, .glass-card textarea::placeholder { color: rgba(255,255,255,0.3) !important; }
+      .glass-card select option { background: #0f172a; color: white; }
+      .glass-card .border-slate-200 { border-color: rgba(255,255,255,0.1) !important; }
+      .glass-card .bg-slate-50 { background: rgba(255,255,255,0.05) !important; }
+      .glass-card .bg-slate-900 { background: rgba(255,255,255,0.85) !important; color: #0f172a !important; }
+      .glass-card .text-slate-900 { color: rgba(255,255,255,0.92) !important; }
+      .glass-card .border-dashed { border-color: rgba(255,255,255,0.15) !important; }
+
+      .glass-main {
+        background: transparent !important;
+      }
+      .glass-footer {
+        background: rgba(8,15,35,0.5) !important;
+        border-top: 1px solid rgba(255,255,255,0.06) !important;
+        backdrop-filter: blur(16px);
+        color: rgba(255,255,255,0.3) !important;
+      }
+
+      /* Home tab tool buttons */
+      #tabHome .card-panel {
+        background: rgba(255,255,255,0.06) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        backdrop-filter: blur(16px);
+      }
+      #tabHome .card-panel:hover { background: rgba(255,255,255,0.1) !important; }
+      #tabHome .card-panel span.text-sm { color: rgba(255,255,255,0.9) !important; }
+      #tabHome .card-panel p { color: rgba(255,255,255,0.45) !important; }
+      #tabHome .card-panel .rounded-lg { background: rgba(255,255,255,0.1) !important; }
+      #tabHome h2 { color: rgba(255,255,255,0.92) !important; }
+      #tabHome p.text-xs { color: rgba(255,255,255,0.45) !important; }
+
+      /* Override loading overlay for dark mode */
+      .output-loading-overlay {
+        background: rgba(8,15,35,0.85) !important;
+        backdrop-filter: blur(8px);
+      }
+      .output-loading-overlay p { color: rgba(255,255,255,0.7) !important; }
+      .loading-spinner {
+        border-color: rgba(255,255,255,0.15) !important;
+        border-top-color: rgba(255,255,255,0.7) !important;
       }
     </style>
   </head>
-  <body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
-    <div class="flex min-h-screen">
+  <body class="min-h-screen text-slate-900 antialiased" style="background:#060d1f">
+    <!-- Video background -->
+    <video id="videoBg" autoplay loop muted playsinline>
+      <source src="bg.mp4" type="video/mp4">
+    </video>
+    <div id="videoBgOverlay"></div>
+
+    <div class="flex min-h-screen app-shell">
       <!-- Sidebar -->
-      <aside class="flex w-56 flex-shrink-0 flex-col border-r border-slate-200 bg-white">
+      <aside class="glass-sidebar flex w-60 flex-shrink-0 flex-col">
         <div class="border-b border-slate-200 px-5 py-5">
-          <h1 class="text-lg font-semibold tracking-tight text-slate-900">Locale Partner AI</h1>
-          <p class="mt-1 text-xs text-slate-500" data-i18n="sidebar_desc">AI localization for Japan</p>
+          <h1 class="text-base font-semibold tracking-tight text-slate-900">Locale Partner AI</h1>
+          <p class="mt-0.5 text-xs text-slate-500">AI localization for Japan</p>
         </div>
         <nav class="flex-1 space-y-0.5 px-3 py-4">
-          <a href="#" id="navLP" class="flex items-center justify-between rounded-lg bg-slate-100 px-3 py-2.5 text-sm font-medium text-slate-900">LP</a>
-          <a href="#" id="navCreative" class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">Creative</a>
-          <a href="#" id="navSEO" class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">SEO</a>
-          <div class="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-400">
-            <span>Product</span>
-            <span class="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-500">Soon</span>
+          <a href="#" id="navHome" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Home
+          </a>
+          <a href="#" id="navLP" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            LP Localization
+          </a>
+          <a href="#" id="navCreative" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Ad Creative
+          </a>
+          <a href="#" id="navSEO" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            SEO Content
+          </a>
+          <a href="#" id="navSocial" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+            Social Media
+          </a>
+          <div class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-slate-400 cursor-not-allowed">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            Product
+            <span class="ml-auto rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase">Soon</span>
           </div>
-          <a href="#" id="navSocial" class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">Social Media</a>
         </nav>
-
-        <!-- Settings Panel -->
-        <div class="border-t border-slate-200 px-3 py-4">
-          <button id="settingsToggle" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-slate-500 hover:bg-slate-50">
-            <span class="flex items-center gap-1.5">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
-              Settings
-            </span>
-            <span id="settingsChevron">▼</span>
+        <!-- Settings summary -->
+        <div class="border-t border-slate-200 px-4 py-3">
+          <button id="navSettingsShortcut" class="flex w-full items-center gap-2 text-xs text-slate-400 hover:text-slate-600">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span id="settingsSummary" class="truncate">Settings</span>
           </button>
-          <div id="settingsPanel" class="hidden mt-2 space-y-3">
-            <!-- Industry -->
-            <div>
-              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Industry</label>
-              <select id="settingIndustry" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
-                <option value="">Not set</option>
-                <option value="Horizontal SaaS (CRM, HR, Legal, Marketing etc.)">Horizontal SaaS</option>
-                <option value="EC & Retail">EC・小売</option>
-                <option value="Consumer Goods (FMCG)">消費財（FMCG）</option>
-                <option value="Healthcare & Medical">ヘルスケア・医療</option>
-                <option value="Finance & FinTech">金融・FinTech</option>
-                <option value="HR & Recruitment">人材・HR</option>
-                <option value="Education & EdTech">教育・EdTech</option>
-                <option value="Real Estate">不動産</option>
-                <option value="Manufacturing & Hardware">製造・ハードウェア</option>
-                <option value="Media & Entertainment">メディア・エンタメ</option>
-              </select>
-            </div>
-            <!-- Target Gender -->
-            <div>
-              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Target Gender</label>
-              <select id="settingGender" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
-                <option value="">Not set</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="All genders">All</option>
-              </select>
-            </div>
-            <!-- Target Age -->
-            <div>
-              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Target Age</label>
-              <select id="settingAge" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
-                <option value="">Not set</option>
-                <option value="Teens (13-19)">10代</option>
-                <option value="Young adults (20-30s)">20〜30代</option>
-                <option value="Middle-aged (40-50s)">40〜50代</option>
-                <option value="Seniors (60+)">60代以上</option>
-                <option value="All ages">All</option>
-              </select>
-            </div>
-            <!-- Tone -->
-            <div>
-              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Tone</label>
-              <select id="settingTone" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
-                <option value="">Not set</option>
-                <option value="Professional and trustworthy">Professional</option>
-                <option value="Casual and friendly">Casual</option>
-                <option value="Warm and approachable">Warm</option>
-                <option value="Authoritative and expert">Authoritative</option>
-                <option value="Energetic and bold">Energetic</option>
-              </select>
-            </div>
-            <!-- Goal -->
-            <div>
-              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Goal</label>
-              <select id="settingGoal" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
-                <option value="">Not set</option>
-                <option value="Brand awareness">Brand awareness</option>
-                <option value="Lead generation">Lead generation</option>
-                <option value="Conversion / Purchase">Conversion</option>
-                <option value="Retention / Re-engagement">Retention</option>
-              </select>
-            </div>
-            <!-- Notes -->
-            <div>
-              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Notes</label>
-              <textarea id="settingNotes" rows="2" placeholder="e.g. Competitor: X, USP: Y..." class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300 resize-none"></textarea>
-            </div>
-            <div id="settingsSaved" class="hidden text-[10px] text-emerald-600 text-center">✓ Saved</div>
-          </div>
         </div>
+      </aside>
 
       <!-- Main content -->
       <div class="flex flex-1 flex-col overflow-auto">
-        <header class="flex-shrink-0 border-b border-slate-200 bg-white px-8 py-5">
+        <header class="glass-header flex-shrink-0 px-8 py-5">
           <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <div class="flex items-center gap-3">
@@ -244,14 +305,150 @@
           </div>
         </header>
 
-        <main class="flex-1 p-6 lg:p-8">
+        <main class="glass-main flex-1 p-6 lg:p-8">
           <div class="mx-auto max-w-[1600px]">
+
+            <!-- Home Tab -->
+            <div id="tabHome" class="hidden">
+              <div class="max-w-3xl mx-auto">
+                <!-- Video placeholder -->
+                <div class="relative w-full rounded-2xl overflow-hidden bg-slate-900 mb-8" style="aspect-ratio:16/9">
+                  <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white">
+                    <div class="w-16 h-16 rounded-full border-2 border-white/30 flex items-center justify-center">
+                      <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <p class="text-sm text-white/60">Video placeholder — swap with your Nano Banana video</p>
+                  </div>
+                  <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 opacity-80"></div>
+                </div>
+
+                <!-- Settings card -->
+                <div class="card-panel glass-card rounded-xl p-6 mb-6">
+                  <h2 class="text-base font-semibold text-slate-900 mb-1">Personalization Settings</h2>
+                  <p class="text-xs text-slate-500 mb-5">Configure once — applied to all localization tools</p>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="text-xs font-medium text-slate-600 block mb-1">Industry</label>
+                      <select id="settingIndustry" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-200">
+                        <option value="">Not set</option>
+                        <option value="Horizontal SaaS (CRM, HR, Legal, Marketing etc.)">Horizontal SaaS</option>
+                        <option value="EC & Retail">EC・小売</option>
+                        <option value="Consumer Goods (FMCG)">消費財（FMCG）</option>
+                        <option value="Healthcare & Medical">ヘルスケア・医療</option>
+                        <option value="Finance & FinTech">金融・FinTech</option>
+                        <option value="HR & Recruitment">人材・HR</option>
+                        <option value="Education & EdTech">教育・EdTech</option>
+                        <option value="Real Estate">不動産</option>
+                        <option value="Manufacturing & Hardware">製造・ハードウェア</option>
+                        <option value="Media & Entertainment">メディア・エンタメ</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="text-xs font-medium text-slate-600 block mb-1">Target Gender</label>
+                      <select id="settingGender" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-200">
+                        <option value="">Not set</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="All genders">All</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="text-xs font-medium text-slate-600 block mb-1">Target Age</label>
+                      <select id="settingAge" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-200">
+                        <option value="">Not set</option>
+                        <option value="Teens (13-19)">10代</option>
+                        <option value="Young adults (20-30s)">20〜30代</option>
+                        <option value="Middle-aged (40-50s)">40〜50代</option>
+                        <option value="Seniors (60+)">60代以上</option>
+                        <option value="All ages">All</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="text-xs font-medium text-slate-600 block mb-1">Tone</label>
+                      <select id="settingTone" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-200">
+                        <option value="">Not set</option>
+                        <option value="Professional and trustworthy">Professional</option>
+                        <option value="Casual and friendly">Casual</option>
+                        <option value="Warm and approachable">Warm</option>
+                        <option value="Authoritative and expert">Authoritative</option>
+                        <option value="Energetic and bold">Energetic</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="text-xs font-medium text-slate-600 block mb-1">Goal</label>
+                      <select id="settingGoal" class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-200">
+                        <option value="">Not set</option>
+                        <option value="Brand awareness">Brand awareness</option>
+                        <option value="Lead generation">Lead generation</option>
+                        <option value="Conversion / Purchase">Conversion</option>
+                        <option value="Retention / Re-engagement">Retention</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="text-xs font-medium text-slate-600 block mb-1">API Key</label>
+                      <div class="flex gap-2">
+                        <input id="apiKeyHome" type="password" autocomplete="off" placeholder="sk-ant-..."
+                          class="flex-1 min-w-0 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                        <button id="toggleKeyHome" type="button" class="btn-hover rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm hover:bg-slate-100">Show</button>
+                      </div>
+                    </div>
+                    <div class="col-span-2">
+                      <label class="text-xs font-medium text-slate-600 block mb-1">Notes <span class="text-slate-400 font-normal">(optional)</span></label>
+                      <textarea id="settingNotes" rows="2" placeholder="e.g. Competitor: X, USP: Y, Brand voice: Z..." class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-200 resize-none"></textarea>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex items-center gap-3">
+                    <span id="settingsSaved" class="hidden text-xs text-emerald-600">✓ Saved</span>
+                  </div>
+                </div>
+
+                <!-- Tool shortcuts -->
+                <div class="grid grid-cols-2 gap-3">
+                  <button onclick="switchTab('lp')" class="card-panel glass-card rounded-xl p-4 text-left hover:border-slate-300 transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                      </div>
+                      <span class="text-sm font-medium text-slate-900">LP Localization</span>
+                    </div>
+                    <p class="text-xs text-slate-500">Convert Western LPs for Japan with screenshot analysis</p>
+                  </button>
+                  <button onclick="switchTab('creative')" class="card-panel glass-card rounded-xl p-4 text-left hover:border-slate-300 transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                      </div>
+                      <span class="text-sm font-medium text-slate-900">Ad Creative</span>
+                    </div>
+                    <p class="text-xs text-slate-500">Meta, Google & LINE ad copy for Japan</p>
+                  </button>
+                  <button onclick="switchTab('seo')" class="card-panel glass-card rounded-xl p-4 text-left hover:border-slate-300 transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                      </div>
+                      <span class="text-sm font-medium text-slate-900">SEO Content</span>
+                    </div>
+                    <p class="text-xs text-slate-500">Meta tags, H1/H2 structure & body copy</p>
+                  </button>
+                  <button onclick="switchTab('social')" class="card-panel glass-card rounded-xl p-4 text-left hover:border-slate-300 transition-colors">
+                    <div class="flex items-center gap-3 mb-2">
+                      <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                      </div>
+                      <span class="text-sm font-medium text-slate-900">Social Media</span>
+                    </div>
+                    <p class="text-xs text-slate-500">X, LinkedIn & Instagram posts in Japanese</p>
+                  </button>
+                </div>
+              </div>
+            </div><!-- end tabHome -->
 
             <!-- LP Tab -->
             <div id="tabLP">
               <div class="grid gap-6 lg:grid-cols-2">
               <!-- Input Section -->
-              <section class="card-panel rounded-xl border border-slate-200 bg-white">
+              <section class="card-panel glass-card rounded-xl">
                 <div class="p-6">
                   <!-- URL Input -->
                   <label class="block">
@@ -337,7 +534,7 @@
               </section>
 
               <!-- Output Section -->
-              <section class="card-panel rounded-xl border border-slate-200 bg-white">
+              <section class="card-panel glass-card rounded-xl">
                 <div class="flex flex-col gap-2 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <h2 class="text-sm font-semibold" data-i18n="output_title">Output (Japan LP)</h2>
@@ -376,7 +573,7 @@
             <div id="tabSocial" class="hidden">
               <div class="grid gap-6 lg:grid-cols-2">
                 <!-- Input -->
-                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                <section class="card-panel glass-card rounded-xl">
                   <div class="p-6">
                     <label class="block">
                       <span class="mb-2 block text-sm font-medium text-slate-700">URL (optional)</span>
@@ -415,7 +612,7 @@
                 </section>
 
                 <!-- Output -->
-                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                <section class="card-panel glass-card rounded-xl">
                   <div class="border-b border-slate-200 px-5 py-4">
                     <h2 class="text-sm font-semibold">Output (Japan Social Posts)</h2>
                     <p class="text-xs text-slate-500 mt-0.5">Professional tone · Japanese</p>
@@ -474,7 +671,7 @@
             <div id="tabCreative" class="hidden">
               <div class="grid gap-6 lg:grid-cols-2">
                 <!-- Input -->
-                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                <section class="card-panel glass-card rounded-xl">
                   <div class="p-6 space-y-5">
                     <!-- Ad copy input -->
                     <div>
@@ -515,7 +712,7 @@
                 </section>
 
                 <!-- Output -->
-                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                <section class="card-panel glass-card rounded-xl">
                   <div class="border-b border-slate-200 px-5 py-4">
                     <h2 class="text-sm font-semibold">Output (Japan Ad Copy)</h2>
                     <p class="text-xs text-slate-500 mt-0.5">Localized for Japanese market</p>
@@ -609,7 +806,7 @@
             <div id="tabSEO" class="hidden">
               <div class="grid gap-6 lg:grid-cols-2">
                 <!-- Input -->
-                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                <section class="card-panel glass-card rounded-xl">
                   <div class="p-6 space-y-5">
                     <div>
                       <span class="mb-2 block text-sm font-medium text-slate-700">URL (optional)</span>
@@ -636,7 +833,7 @@
                 </section>
 
                 <!-- Output -->
-                <section class="card-panel rounded-xl border border-slate-200 bg-white">
+                <section class="card-panel glass-card rounded-xl">
                   <div class="border-b border-slate-200 px-5 py-4">
                     <h2 class="text-sm font-semibold">Output (Japan SEO)</h2>
                     <p class="text-xs text-slate-500 mt-0.5">Optimized for Japanese search</p>
@@ -709,7 +906,7 @@
           </div>
         </main>
 
-        <footer class="border-t border-slate-200 bg-white px-8 py-4 text-xs text-slate-500">
+        <footer class="glass-footer px-8 py-4 text-xs">
           Locale Partner AI - Claude Vision API - Auto Screenshot via Microlink
         </footer>
       </div>
@@ -1248,30 +1445,40 @@ Convert the provided Western LP content into a Japan-optimized version. If image
       // Tab Navigation
       // ===================
       function switchTab(tab) {
+        $('tabHome').classList.toggle('hidden', tab !== 'home');
         $('tabLP').classList.toggle('hidden', tab !== 'lp');
         $('tabSocial').classList.toggle('hidden', tab !== 'social');
         $('tabCreative').classList.toggle('hidden', tab !== 'creative');
         $('tabSEO').classList.toggle('hidden', tab !== 'seo');
-        const tabs = { lp: 'navLP', social: 'navSocial', creative: 'navCreative', seo: 'navSEO' };
+        const tabs = { home: 'navHome', lp: 'navLP', social: 'navSocial', creative: 'navCreative', seo: 'navSEO' };
         Object.entries(tabs).forEach(([t, id]) => {
-          $(id).className = `flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium ${tab === t ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-50'}`;
+          const el = $(id);
+          if (!el) return;
+          el.className = el.className.replace('nav-active font-medium', '').replace('nav-active', '').trim();
+          if (tab === t) {
+            el.className += ' nav-active font-medium';
+          }
         });
+        const isHome = tab === 'home';
         const isLP = tab === 'lp';
         const isSocial = tab === 'social';
         const isCreative = tab === 'creative';
         const isSEO = tab === 'seo';
-        if (isLP) {
+        if (isHome) {
+          $('headerTitle').textContent = 'Locale Partner AI';
+          $('headerDesc').textContent = 'AI-powered Japan localization platform';
+        } else if (isLP) {
           $('headerTitle').textContent = currentLang === 'jp' ? 'LPローカライズ' : 'LP Localization';
           $('headerDesc').textContent = currentLang === 'jp' ? '海外LPを日本向けに変換（Claude Vision API）' : 'Convert Western LP for Japan (Claude Vision API)';
         } else if (isSocial) {
           $('headerTitle').textContent = currentLang === 'jp' ? 'SNS投稿ローカライズ' : 'Social Media Localization';
-          $('headerDesc').textContent = currentLang === 'jp' ? 'X・LinkedIn・Instagram向け日本語投稿を生成' : 'Generate Japan-optimized posts for X, LinkedIn & Instagram (Claude API)';
+          $('headerDesc').textContent = currentLang === 'jp' ? 'X・LinkedIn・Instagram向け日本語投稿を生成' : 'Generate Japan-optimized posts for X, LinkedIn & Instagram';
         } else if (isCreative) {
           $('headerTitle').textContent = currentLang === 'jp' ? '広告クリエイティブローカライズ' : 'Ad Creative Localization';
-          $('headerDesc').textContent = currentLang === 'jp' ? 'Meta・Google・LINE向け日本語広告コピーを生成' : 'Generate Japan-optimized ad copy for Meta, Google & LINE (Claude API)';
+          $('headerDesc').textContent = currentLang === 'jp' ? 'Meta・Google・LINE向け日本語広告コピーを生成' : 'Generate Japan-optimized ad copy for Meta, Google & LINE';
         } else if (isSEO) {
           $('headerTitle').textContent = currentLang === 'jp' ? 'SEOコンテンツローカライズ' : 'SEO Content Localization';
-          $('headerDesc').textContent = currentLang === 'jp' ? '日本検索向けメタタグ・構成・本文を生成' : 'Generate Japan-optimized meta tags, page structure & body copy (Claude API)';
+          $('headerDesc').textContent = currentLang === 'jp' ? '日本検索向けメタタグ・構成・本文を生成' : 'Generate Japan-optimized meta tags, page structure & body copy';
         }
         $('badgeVision').classList.toggle('hidden', !isLP);
         $('badgeScreenshot').classList.toggle('hidden', !isLP);
@@ -1279,8 +1486,8 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         $('badgeCreative').classList.toggle('hidden', !isCreative);
         $('badgeSEO').classList.toggle('hidden', !isSEO);
         $('langToggleWrap').classList.toggle('hidden', !isLP);
-        $('convertBtn').classList.toggle('hidden', !isLP);
-        $('clearBtn').classList.toggle('hidden', !isLP);
+        $('convertBtn').classList.toggle('hidden', isHome || !isLP);
+        $('clearBtn').classList.toggle('hidden', isHome || !isLP);
         updateSmBadge();
         updateCrBadge();
       }
@@ -1292,10 +1499,24 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if ($('chkIG').checked) platforms.push('Instagram');
         $('badgeSocial').textContent = platforms.join(' · ') || 'No platform selected';
       }
+      $('navHome').onclick = (e) => { e.preventDefault(); switchTab('home'); };
       $('navLP').onclick = (e) => { e.preventDefault(); switchTab('lp'); };
       $('navSocial').onclick = (e) => { e.preventDefault(); switchTab('social'); };
       $('navCreative').onclick = (e) => { e.preventDefault(); switchTab('creative'); };
       $('navSEO').onclick = (e) => { e.preventDefault(); switchTab('seo'); };
+      if ($('navSettingsShortcut')) $('navSettingsShortcut').onclick = (e) => { e.preventDefault(); switchTab('home'); };
+
+      // Sync API key between home input and header input
+      if ($('apiKeyHome')) {
+        $('apiKeyHome').oninput = () => { $('apiKey').value = $('apiKeyHome').value; };
+        $('toggleKeyHome').onclick = () => {
+          $('apiKeyHome').type = $('apiKeyHome').type === 'password' ? 'text' : 'password';
+          $('toggleKeyHome').textContent = $('apiKeyHome').type === 'password' ? 'Show' : 'Hide';
+        };
+        // Load saved API key into home input
+        const savedKey = $('apiKey').value;
+        if (savedKey) $('apiKeyHome').value = savedKey;
+      }
 
       // ===================
       // SEO
@@ -1670,7 +1891,26 @@ No markdown, no extra text outside the JSON.`;
       });
 
       loadSettings();
-      
+
+      function updateSettingsSummary() {
+        const industry = $('settingIndustry')?.options[$('settingIndustry')?.selectedIndex]?.text;
+        const tone = $('settingTone')?.options[$('settingTone')?.selectedIndex]?.text;
+        const hasSettings = ($('settingIndustry')?.value || $('settingTone')?.value);
+        $('settingsSummary').textContent = hasSettings ? [industry !== 'Not set' ? industry : '', tone !== 'Not set' ? tone : ''].filter(Boolean).join(' · ') || 'Settings' : 'Settings — not configured';
+      }
+
+      // Re-save triggers summary update
+      const origSave = saveSettings;
+      saveSettings = function() { origSave(); updateSettingsSummary(); };
+      SETTING_KEYS.forEach(key => {
+        const el = $(key);
+        if (el) el.addEventListener('change', updateSettingsSummary);
+      });
+
+      // Start on home
+      switchTab('home');
+      updateSettingsSummary();
+
       // Load saved language preference
       const savedLang = localStorage.getItem('locale-partner-lang');
       if (savedLang && (savedLang === 'en' || savedLang === 'jp')) {
