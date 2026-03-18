@@ -122,7 +122,87 @@
           </div>
           <a href="#" id="navSocial" class="flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">Social Media</a>
         </nav>
-      </aside>
+
+        <!-- Settings Panel -->
+        <div class="border-t border-slate-200 px-3 py-4">
+          <button id="settingsToggle" class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-slate-500 hover:bg-slate-50">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+              Settings
+            </span>
+            <span id="settingsChevron">▼</span>
+          </button>
+          <div id="settingsPanel" class="hidden mt-2 space-y-3">
+            <!-- Industry -->
+            <div>
+              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Industry</label>
+              <select id="settingIndustry" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
+                <option value="">Not set</option>
+                <option value="Horizontal SaaS (CRM, HR, Legal, Marketing etc.)">Horizontal SaaS</option>
+                <option value="EC & Retail">EC・小売</option>
+                <option value="Consumer Goods (FMCG)">消費財（FMCG）</option>
+                <option value="Healthcare & Medical">ヘルスケア・医療</option>
+                <option value="Finance & FinTech">金融・FinTech</option>
+                <option value="HR & Recruitment">人材・HR</option>
+                <option value="Education & EdTech">教育・EdTech</option>
+                <option value="Real Estate">不動産</option>
+                <option value="Manufacturing & Hardware">製造・ハードウェア</option>
+                <option value="Media & Entertainment">メディア・エンタメ</option>
+              </select>
+            </div>
+            <!-- Target Gender -->
+            <div>
+              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Target Gender</label>
+              <select id="settingGender" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
+                <option value="">Not set</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="All genders">All</option>
+              </select>
+            </div>
+            <!-- Target Age -->
+            <div>
+              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Target Age</label>
+              <select id="settingAge" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
+                <option value="">Not set</option>
+                <option value="Teens (13-19)">10代</option>
+                <option value="Young adults (20-30s)">20〜30代</option>
+                <option value="Middle-aged (40-50s)">40〜50代</option>
+                <option value="Seniors (60+)">60代以上</option>
+                <option value="All ages">All</option>
+              </select>
+            </div>
+            <!-- Tone -->
+            <div>
+              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Tone</label>
+              <select id="settingTone" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
+                <option value="">Not set</option>
+                <option value="Professional and trustworthy">Professional</option>
+                <option value="Casual and friendly">Casual</option>
+                <option value="Warm and approachable">Warm</option>
+                <option value="Authoritative and expert">Authoritative</option>
+                <option value="Energetic and bold">Energetic</option>
+              </select>
+            </div>
+            <!-- Goal -->
+            <div>
+              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Goal</label>
+              <select id="settingGoal" class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300">
+                <option value="">Not set</option>
+                <option value="Brand awareness">Brand awareness</option>
+                <option value="Lead generation">Lead generation</option>
+                <option value="Conversion / Purchase">Conversion</option>
+                <option value="Retention / Re-engagement">Retention</option>
+              </select>
+            </div>
+            <!-- Notes -->
+            <div>
+              <label class="text-[10px] font-medium text-slate-500 uppercase tracking-wide block mb-1">Notes</label>
+              <textarea id="settingNotes" rows="2" placeholder="e.g. Competitor: X, USP: Y..." class="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-slate-300 resize-none"></textarea>
+            </div>
+            <div id="settingsSaved" class="hidden text-[10px] text-emerald-600 text-center">✓ Saved</div>
+          </div>
+        </div>
 
       <!-- Main content -->
       <div class="flex flex-1 flex-col overflow-auto">
@@ -1100,7 +1180,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
           const res = await fetch(ENDPOINT, {
             method: 'POST',
             headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-            body: JSON.stringify({ model: MODEL, max_tokens: 8192, temperature: 0.2, system: SYSTEM_PROMPT, messages: [{ role: 'user', content }] })
+            body: JSON.stringify({ model: MODEL, max_tokens: 8192, temperature: 0.2, system: SYSTEM_PROMPT + getPersonalizationContext(), messages: [{ role: 'user', content }] })
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error?.message || res.status);
@@ -1271,7 +1351,7 @@ Return ONLY valid JSON, no markdown:
           const res = await fetch(ENDPOINT, {
             method: 'POST',
             headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-            body: JSON.stringify({ model: MODEL, max_tokens: 3000, temperature: 0.3, system: seoSystem, messages: [{ role: 'user', content: `Localize for Japan SEO:\n\n${text}` }] })
+            body: JSON.stringify({ model: MODEL, max_tokens: 3000, temperature: 0.3, system: seoSystem + getPersonalizationContext(), messages: [{ role: 'user', content: `Localize for Japan SEO:\n\n${text}` }] })
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error?.message || res.status);
@@ -1368,7 +1448,7 @@ No markdown, no extra text.`;
           const res = await fetch(ENDPOINT, {
             method: 'POST',
             headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-            body: JSON.stringify({ model: MODEL, max_tokens: 2000, temperature: 0.3, system: crSystem, messages: [{ role: 'user', content: `Localize this ad copy for Japan:\n\n${text}` }] })
+            body: JSON.stringify({ model: MODEL, max_tokens: 2000, temperature: 0.3, system: crSystem + getPersonalizationContext(), messages: [{ role: 'user', content: `Localize this ad copy for Japan:\n\n${text}` }] })
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error?.message || res.status);
@@ -1499,7 +1579,7 @@ No markdown, no extra text outside the JSON.`;
             headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
             body: JSON.stringify({
               model: MODEL, max_tokens: 2000, temperature: 0.3,
-              system: dynamicSystem,
+              system: dynamicSystem + getPersonalizationContext(),
               messages: [{ role: 'user', content: `Create Japanese social media posts for:\n\n${text}` }]
             })
           });
@@ -1538,8 +1618,58 @@ No markdown, no extra text outside the JSON.`;
         }
       };
 
-      // Init
-      setTabs('preview');
+      // ===================
+      // Personalization Settings
+      // ===================
+      const SETTING_KEYS = ['settingIndustry','settingGender','settingAge','settingTone','settingGoal','settingNotes'];
+
+      function loadSettings() {
+        SETTING_KEYS.forEach(key => {
+          const val = localStorage.getItem('lp-' + key);
+          if (val && $(key)) $(key).value = val;
+        });
+      }
+
+      function saveSettings() {
+        SETTING_KEYS.forEach(key => {
+          if ($(key)) localStorage.setItem('lp-' + key, $(key).value);
+        });
+        $('settingsSaved').classList.remove('hidden');
+        setTimeout(() => $('settingsSaved').classList.add('hidden'), 1500);
+      }
+
+      function getPersonalizationContext() {
+        const industry = $('settingIndustry')?.value;
+        const gender = $('settingGender')?.value;
+        const age = $('settingAge')?.value;
+        const tone = $('settingTone')?.value;
+        const goal = $('settingGoal')?.value;
+        const notes = $('settingNotes')?.value?.trim();
+        const parts = [];
+        if (industry) parts.push(`Industry: ${industry}`);
+        if (gender) parts.push(`Target gender: ${gender}`);
+        if (age) parts.push(`Target age: ${age}`);
+        if (tone) parts.push(`Tone: ${tone}`);
+        if (goal) parts.push(`Goal: ${goal}`);
+        if (notes) parts.push(`Additional context: ${notes}`);
+        if (!parts.length) return '';
+        return `\n\n[Personalization Context]\n${parts.join('\n')}`;
+      }
+
+      $('settingsToggle').onclick = () => {
+        const panel = $('settingsPanel');
+        const chevron = $('settingsChevron');
+        const open = panel.classList.toggle('hidden');
+        chevron.textContent = open ? '▼' : '▲';
+      };
+
+      SETTING_KEYS.forEach(key => {
+        const el = $(key);
+        if (el) el.addEventListener('change', saveSettings);
+        if (el && el.tagName === 'TEXTAREA') el.addEventListener('input', saveSettings);
+      });
+
+      loadSettings();
       
       // Load saved language preference
       const savedLang = localStorage.getItem('locale-partner-lang');
