@@ -83,7 +83,7 @@
         display: flex;
         border-radius: 0.5rem;
         overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.15);
+        border: 1px solid rgba(180,160,200,0.35);
       }
       .lang-toggle button {
         padding: 0.25rem 0.75rem;
@@ -92,15 +92,15 @@
         transition: all 0.2s;
       }
       .lang-toggle button.active {
-        background: rgba(255,255,255,0.9);
-        color: #0f172a;
+        background: rgba(30,15,40,0.82);
+        color: white;
       }
       .lang-toggle button:not(.active) {
-        background: rgba(255,255,255,0.1);
-        color: rgba(255,255,255,0.7);
+        background: rgba(255,255,255,0.35);
+        color: rgba(20,10,25,0.6);
       }
       .lang-toggle button:not(.active):hover {
-        background: rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.55);
       }
 
       /* ── Video Background ── */
@@ -112,7 +112,7 @@
       }
       #videoBgOverlay {
         position: fixed; inset: 0; z-index: 1;
-        background: linear-gradient(135deg, rgba(2,8,23,0.72) 0%, rgba(7,15,36,0.65) 100%);
+        background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(240,235,245,0.12) 100%);
         pointer-events: none;
       }
       .app-shell {
@@ -121,101 +121,97 @@
 
       /* ── Glassmorphism ── */
       .glass-sidebar {
-        background: rgba(8,15,35,0.7) !important;
-        border-right: 1px solid rgba(255,255,255,0.08) !important;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        background: rgba(255,252,255,0.22) !important;
+        border-right: 1px solid rgba(255,255,255,0.35) !important;
+        backdrop-filter: blur(28px) saturate(1.4);
+        -webkit-backdrop-filter: blur(28px) saturate(1.4);
       }
-      .glass-sidebar h1 { color: rgba(255,255,255,0.92) !important; }
-      .glass-sidebar p  { color: rgba(255,255,255,0.45) !important; }
-      .glass-sidebar a  { color: rgba(255,255,255,0.6) !important; }
-      .glass-sidebar a:hover { background: rgba(255,255,255,0.08) !important; color: rgba(255,255,255,0.9) !important; }
-      .glass-sidebar .nav-active { background: rgba(255,255,255,0.12) !important; color: rgba(255,255,255,0.95) !important; font-weight: 600; }
-      .glass-sidebar .border-t { border-color: rgba(255,255,255,0.08) !important; }
-      .glass-sidebar span#settingsSummary { color: rgba(255,255,255,0.4) !important; }
+      .glass-sidebar h1 { color: rgba(30,20,35,0.92) !important; }
+      .glass-sidebar p  { color: rgba(30,20,35,0.45) !important; }
+      .glass-sidebar a  { color: rgba(30,20,35,0.65) !important; }
+      .glass-sidebar a:hover { background: rgba(255,255,255,0.28) !important; color: rgba(20,10,25,0.9) !important; }
+      .glass-sidebar .nav-active { background: rgba(255,255,255,0.45) !important; color: rgba(20,10,25,0.95) !important; font-weight: 600; }
+      .glass-sidebar .border-t { border-color: rgba(180,160,190,0.2) !important; }
+      .glass-sidebar span#settingsSummary { color: rgba(30,20,35,0.4) !important; }
 
       .glass-header {
-        background: rgba(8,15,35,0.6) !important;
-        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        background: rgba(255,252,255,0.2) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.3) !important;
+        backdrop-filter: blur(24px) saturate(1.3);
+        -webkit-backdrop-filter: blur(24px) saturate(1.3);
       }
-      .glass-header h2, .glass-header label span, .glass-header span { color: rgba(255,255,255,0.85) !important; }
-      .glass-header p, .glass-header .text-slate-500 { color: rgba(255,255,255,0.45) !important; }
+      .glass-header h2, .glass-header label span, .glass-header span { color: rgba(25,15,30,0.88) !important; }
+      .glass-header p, .glass-header .text-slate-500 { color: rgba(25,15,30,0.45) !important; }
       .glass-header input {
-        background: rgba(255,255,255,0.08) !important;
-        border-color: rgba(255,255,255,0.15) !important;
-        color: rgba(255,255,255,0.9) !important;
+        background: rgba(255,255,255,0.35) !important;
+        border-color: rgba(200,180,210,0.4) !important;
+        color: rgba(20,10,25,0.9) !important;
       }
-      .glass-header input::placeholder { color: rgba(255,255,255,0.35) !important; }
-      .glass-header button.btn-hover:not(:disabled) { background: rgba(255,255,255,0.9) !important; color: #0f172a !important; }
-      .glass-header .rounded-full { background: rgba(255,255,255,0.1) !important; color: rgba(255,255,255,0.6) !important; }
-      .glass-header .bg-blue-100 { background: rgba(59,130,246,0.25) !important; color: rgba(147,197,253,1) !important; }
-      .glass-header .bg-green-100 { background: rgba(34,197,94,0.2) !important; color: rgba(134,239,172,1) !important; }
-      .glass-header .bg-purple-100 { background: rgba(168,85,247,0.2) !important; color: rgba(216,180,254,1) !important; }
-      .glass-header .bg-orange-100 { background: rgba(249,115,22,0.2) !important; color: rgba(253,186,116,1) !important; }
-      .glass-header .bg-teal-100 { background: rgba(20,184,166,0.2) !important; color: rgba(94,234,212,1) !important; }
+      .glass-header input::placeholder { color: rgba(20,10,25,0.3) !important; }
+      .glass-header button.btn-hover:not(:disabled) { background: rgba(30,15,40,0.85) !important; color: #fff !important; }
+      .glass-header .rounded-full { background: rgba(255,255,255,0.3) !important; color: rgba(20,10,25,0.6) !important; }
 
       .glass-card {
-        background: rgba(255,255,255,0.06) !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        color: rgba(255,255,255,0.85) !important;
+        background: rgba(255,252,255,0.28) !important;
+        border: 1px solid rgba(255,255,255,0.5) !important;
+        backdrop-filter: blur(20px) saturate(1.3);
+        -webkit-backdrop-filter: blur(20px) saturate(1.3);
+        color: rgba(20,10,25,0.85) !important;
+        box-shadow: 0 4px 24px rgba(180,160,200,0.12) !important;
       }
-      .glass-card:hover { background: rgba(255,255,255,0.09) !important; border-color: rgba(255,255,255,0.16) !important; }
-      .glass-card h2, .glass-card h3, .glass-card .font-semibold, .glass-card .font-medium { color: rgba(255,255,255,0.92) !important; }
-      .glass-card p, .glass-card .text-slate-500, .glass-card .text-slate-600, .glass-card .text-xs { color: rgba(255,255,255,0.5) !important; }
-      .glass-card label span, .glass-card .block { color: rgba(255,255,255,0.7) !important; }
+      .glass-card:hover { background: rgba(255,252,255,0.38) !important; border-color: rgba(255,255,255,0.65) !important; }
+      .glass-card h2, .glass-card h3, .glass-card .font-semibold, .glass-card .font-medium { color: rgba(20,10,25,0.9) !important; }
+      .glass-card p, .glass-card .text-slate-500, .glass-card .text-slate-600, .glass-card .text-xs { color: rgba(20,10,25,0.5) !important; }
+      .glass-card label span, .glass-card .block { color: rgba(20,10,25,0.7) !important; }
       .glass-card input, .glass-card textarea, .glass-card select {
-        background: rgba(255,255,255,0.08) !important;
-        border-color: rgba(255,255,255,0.12) !important;
-        color: rgba(255,255,255,0.9) !important;
+        background: rgba(255,255,255,0.5) !important;
+        border-color: rgba(200,185,215,0.5) !important;
+        color: rgba(20,10,25,0.9) !important;
       }
-      .glass-card input::placeholder, .glass-card textarea::placeholder { color: rgba(255,255,255,0.3) !important; }
-      .glass-card select option { background: #0f172a; color: white; }
-      .glass-card .border-slate-200 { border-color: rgba(255,255,255,0.1) !important; }
-      .glass-card .bg-slate-50 { background: rgba(255,255,255,0.05) !important; }
-      .glass-card .bg-slate-900 { background: rgba(255,255,255,0.85) !important; color: #0f172a !important; }
-      .glass-card .text-slate-900 { color: rgba(255,255,255,0.92) !important; }
-      .glass-card .border-dashed { border-color: rgba(255,255,255,0.15) !important; }
+      .glass-card input::placeholder, .glass-card textarea::placeholder { color: rgba(20,10,25,0.3) !important; }
+      .glass-card select option { background: #f8f4ff; color: #1a0a25; }
+      .glass-card .border-slate-200 { border-color: rgba(200,185,215,0.35) !important; }
+      .glass-card .bg-slate-50 { background: rgba(255,255,255,0.3) !important; }
+      .glass-card .bg-slate-900 { background: rgba(25,10,35,0.85) !important; color: #fff !important; }
+      .glass-card .text-slate-900 { color: rgba(20,10,25,0.9) !important; }
+      .glass-card .border-dashed { border-color: rgba(200,185,215,0.4) !important; }
 
       .glass-main {
         background: transparent !important;
       }
       .glass-footer {
-        background: rgba(8,15,35,0.5) !important;
-        border-top: 1px solid rgba(255,255,255,0.06) !important;
+        background: rgba(255,252,255,0.18) !important;
+        border-top: 1px solid rgba(255,255,255,0.3) !important;
         backdrop-filter: blur(16px);
-        color: rgba(255,255,255,0.3) !important;
+        color: rgba(20,10,25,0.3) !important;
       }
 
       /* Home tab tool buttons */
       #tabHome .card-panel {
-        background: rgba(255,255,255,0.06) !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        backdrop-filter: blur(16px);
+        background: rgba(255,252,255,0.28) !important;
+        border: 1px solid rgba(255,255,255,0.5) !important;
+        backdrop-filter: blur(20px);
       }
-      #tabHome .card-panel:hover { background: rgba(255,255,255,0.1) !important; }
-      #tabHome .card-panel span.text-sm { color: rgba(255,255,255,0.9) !important; }
-      #tabHome .card-panel p { color: rgba(255,255,255,0.45) !important; }
-      #tabHome .card-panel .rounded-lg { background: rgba(255,255,255,0.1) !important; }
-      #tabHome h2 { color: rgba(255,255,255,0.92) !important; }
-      #tabHome p.text-xs { color: rgba(255,255,255,0.45) !important; }
+      #tabHome .card-panel:hover { background: rgba(255,252,255,0.4) !important; }
+      #tabHome .card-panel span.text-sm { color: rgba(20,10,25,0.9) !important; }
+      #tabHome .card-panel p { color: rgba(20,10,25,0.5) !important; }
+      #tabHome .card-panel .rounded-lg { background: rgba(255,255,255,0.35) !important; }
+      #tabHome h2 { color: rgba(20,10,25,0.92) !important; }
+      #tabHome p.text-xs { color: rgba(20,10,25,0.5) !important; }
 
       /* Override loading overlay for dark mode */
       .output-loading-overlay {
-        background: rgba(8,15,35,0.85) !important;
+        background: rgba(255,252,255,0.75) !important;
         backdrop-filter: blur(8px);
       }
-      .output-loading-overlay p { color: rgba(255,255,255,0.7) !important; }
+      .output-loading-overlay p { color: rgba(20,10,25,0.7) !important; }
       .loading-spinner {
-        border-color: rgba(255,255,255,0.15) !important;
-        border-top-color: rgba(255,255,255,0.7) !important;
+        border-color: rgba(180,160,200,0.25) !important;
+        border-top-color: rgba(160,100,180,0.8) !important;
       }
     </style>
   </head>
-  <body class="min-h-screen text-slate-900 antialiased" style="background:#060d1f">
+  <body class="min-h-screen text-slate-900 antialiased" style="background:#f0ecf5">
     <!-- Video background -->
     <video id="videoBg" autoplay loop muted playsinline>
       <source src="bg.mp4" type="video/mp4">
@@ -259,19 +255,19 @@
         <div class="border-t border-white/10 px-4 py-4 space-y-3">
           <!-- API Key -->
           <div>
-            <label class="text-[10px] font-medium uppercase tracking-wide block mb-1.5" style="color:rgba(255,255,255,0.4)">API Key</label>
+            <label class="text-[10px] font-medium uppercase tracking-wide block mb-1.5" style="color:rgba(20,10,25,0.4)">API Key</label>
             <div class="flex gap-1.5">
               <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-..."
                 class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
-                style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.85);" />
+                style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
               <button id="toggleKey" type="button"
                 class="rounded-lg px-2 py-1.5 text-xs transition-colors"
-                style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.1);">Show</button>
+                style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
             </div>
           </div>
           <!-- Language toggle -->
           <div class="flex items-center justify-between">
-            <span class="text-[10px] font-medium uppercase tracking-wide" style="color:rgba(255,255,255,0.4)">Language</span>
+            <span class="text-[10px] font-medium uppercase tracking-wide" style="color:rgba(20,10,25,0.4)">Language</span>
             <div class="lang-toggle" id="langToggleWrap">
               <button id="langEN" class="active">EN</button>
               <button id="langJP">JP</button>
@@ -286,12 +282,12 @@
         <header class="glass-header flex-shrink-0 px-8 py-5">
           <div class="flex items-center justify-between">
             <div>
-              <h2 id="headerTitle" class="text-xl font-semibold tracking-tight" style="color:rgba(255,255,255,0.95)" data-i18n="header_title">LP Localization</h2>
-              <p id="headerDesc" class="mt-1 text-sm" style="color:rgba(255,255,255,0.5)" data-i18n="header_desc">Generate Japan-optimized landing page copy</p>
+              <h2 id="headerTitle" class="text-xl font-semibold tracking-tight" style="color:rgba(20,10,25,0.92)" data-i18n="header_title">LP Localization</h2>
+              <p id="headerDesc" class="mt-1 text-sm" style="color:rgba(20,10,25,0.5)" data-i18n="header_desc">Generate Japan-optimized landing page copy</p>
             </div>
             <div class="flex items-center gap-2">
-              <button id="convertBtn" class="hidden btn-hover rounded-lg px-4 py-2 text-sm font-medium shadow-sm disabled:opacity-60" style="background:rgba(255,255,255,0.9);color:#0f172a;" type="button" data-i18n="convert_btn">Convert</button>
-              <button id="clearBtn" class="hidden btn-hover rounded-lg px-4 py-2 text-sm shadow-sm" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.12);" type="button" data-i18n="clear_btn">Clear</button>
+              <button id="convertBtn" class="hidden btn-hover rounded-lg px-4 py-2 text-sm font-medium shadow-sm disabled:opacity-60" style="background:rgba(25,10,35,0.82);color:#fff;" type="button" data-i18n="convert_btn">Convert</button>
+              <button id="clearBtn" class="hidden btn-hover rounded-lg px-4 py-2 text-sm shadow-sm" style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.65);border:1px solid rgba(200,185,215,0.4);" type="button" data-i18n="clear_btn">Clear</button>
             </div>
           </div>
         </header>
@@ -309,10 +305,10 @@
                   <div class="flex gap-3">
                     <input id="homeUrlInput" type="url" placeholder="https://your-product.com"
                       class="flex-1 rounded-xl px-4 py-3 text-sm outline-none"
-                      style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.9);" />
+                      style="background:rgba(255,255,255,0.5);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.9);" />
                     <button id="homeAnalyzeBtn" type="button"
                       class="btn-hover rounded-xl px-6 py-3 text-sm font-semibold flex items-center gap-2 disabled:opacity-50"
-                      style="background:rgba(255,255,255,0.92);color:#0f172a;">
+                      style="background:rgba(25,10,35,0.82);color:#fff;">
                       <span id="homeAnalyzeBtnText">Analyze</span>
                       <svg id="homeAnalyzeSpinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -320,7 +316,7 @@
                       </svg>
                     </button>
                   </div>
-                  <p id="homeAnalyzeStatus" class="hidden mt-2 text-xs" style="color:rgba(255,255,255,0.45)"></p>
+                  <p id="homeAnalyzeStatus" class="hidden mt-2 text-xs" style="color:rgba(20,10,25,0.5)"></p>
                 </div>
 
                 <!-- Analysis result + Personalization (hidden until analyzed) -->
@@ -333,17 +329,17 @@
                         <svg class="w-3.5 h-3.5" style="color:#63b3ed" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                       </div>
                       <span class="text-sm font-semibold" style="color:rgba(255,255,255,0.9)">Product Analysis</span>
-                      <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full" style="background:rgba(99,179,237,0.15);color:#63b3ed">Auto-detected</span>
+                      <span class="ml-auto text-[10px] px-2 py-0.5 rounded-full" style="background:rgba(180,210,240,0.3);color:#1a6fa8">Auto-detected</span>
                     </div>
                     <div class="space-y-3">
                       <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-1" style="color:rgba(255,255,255,0.35)">Summary</p>
-                        <p id="homeSummary" class="text-sm leading-relaxed" style="color:rgba(255,255,255,0.75)">—</p>
+                        <p class="text-[10px] uppercase tracking-wider mb-1" style="color:rgba(20,10,25,0.4)">Summary</p>
+                        <p id="homeSummary" class="text-sm leading-relaxed" style="color:rgba(20,10,25,0.75)">—</p>
                       </div>
                       <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(255,255,255,0.35)">Industry</p>
+                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)">Industry</p>
                         <select id="settingIndustry" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                          style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);">
+                          style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
                           <option value="">Not set</option>
                           <option value="Horizontal SaaS (CRM, HR, Legal, Marketing etc.)">Horizontal SaaS</option>
                           <option value="EC & Retail">EC・小売</option>
@@ -371,9 +367,9 @@
                     <div class="space-y-3">
                       <div class="grid grid-cols-2 gap-3">
                         <div>
-                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(255,255,255,0.35)" data-i18n="set_gender">Target Gender</p>
+                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_gender">Target Gender</p>
                           <select id="settingGender" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                            style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);">
+                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
                             <option value="">Not set</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -381,9 +377,9 @@
                           </select>
                         </div>
                         <div>
-                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(255,255,255,0.35)" data-i18n="set_age">Target Age</p>
+                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_age">Target Age</p>
                           <select id="settingAge" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                            style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);">
+                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
                             <option value="">Not set</option>
                             <option value="Teens (13-19)">10代</option>
                             <option value="Young adults (20-30s)">20〜30代</option>
@@ -395,9 +391,9 @@
                       </div>
                       <div class="grid grid-cols-2 gap-3">
                         <div>
-                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(255,255,255,0.35)" data-i18n="set_tone">Tone</p>
+                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_tone">Tone</p>
                           <select id="settingTone" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                            style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);">
+                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
                             <option value="">Not set</option>
                             <option value="Professional and trustworthy">Professional</option>
                             <option value="Casual and friendly">Casual</option>
@@ -407,9 +403,9 @@
                           </select>
                         </div>
                         <div>
-                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(255,255,255,0.35)" data-i18n="set_goal">Goal</p>
+                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_goal">Goal</p>
                           <select id="settingGoal" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                            style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);">
+                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
                             <option value="">Not set</option>
                             <option value="Brand awareness">Brand awareness</option>
                             <option value="Lead generation">Lead generation</option>
@@ -419,13 +415,13 @@
                         </div>
                       </div>
                       <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(255,255,255,0.35)" data-i18n="set_notes">Notes</p>
+                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_notes">Notes</p>
                         <textarea id="settingNotes" rows="2" placeholder="e.g. Competitor: X, USP: Y, Brand voice: Z..."
                           class="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none"
-                          style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);"></textarea>
+                          style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);"></textarea>
                       </div>
                     </div>
-                    <span id="settingsSaved" class="hidden mt-3 block text-xs" style="color:#68d391">✓ Saved</span>
+                    <span id="settingsSaved" class="hidden mt-3 block text-xs" style="color:#2d9e6b">✓ Saved</span>
                   </div>
                 </div>
 
@@ -438,7 +434,7 @@
                       </div>
                       <span class="text-sm font-medium" style="color:rgba(255,255,255,0.9)">LP</span>
                     </div>
-                    <p class="text-xs" style="color:rgba(255,255,255,0.4)">Landing page localization</p>
+                    <p class="text-xs" style="color:rgba(20,10,25,0.4)">Landing page localization</p>
                   </button>
                   <button onclick="switchTab('creative')" class="card-panel glass-card rounded-xl p-4 text-left transition-colors">
                     <div class="flex items-center gap-3 mb-2">
@@ -447,7 +443,7 @@
                       </div>
                       <span class="text-sm font-medium" style="color:rgba(255,255,255,0.9)">Ad Creative</span>
                     </div>
-                    <p class="text-xs" style="color:rgba(255,255,255,0.4)">Meta, Google &amp; LINE</p>
+                    <p class="text-xs" style="color:rgba(20,10,25,0.4)">Meta, Google &amp; LINE</p>
                   </button>
                   <button onclick="switchTab('seo')" class="card-panel glass-card rounded-xl p-4 text-left transition-colors">
                     <div class="flex items-center gap-3 mb-2">
@@ -456,7 +452,7 @@
                       </div>
                       <span class="text-sm font-medium" style="color:rgba(255,255,255,0.9)">SEO</span>
                     </div>
-                    <p class="text-xs" style="color:rgba(255,255,255,0.4)">Meta tags &amp; body copy</p>
+                    <p class="text-xs" style="color:rgba(20,10,25,0.4)">Meta tags &amp; body copy</p>
                   </button>
                   <button onclick="switchTab('social')" class="card-panel glass-card rounded-xl p-4 text-left transition-colors">
                     <div class="flex items-center gap-3 mb-2">
@@ -465,7 +461,7 @@
                       </div>
                       <span class="text-sm font-medium" style="color:rgba(255,255,255,0.9)">Social</span>
                     </div>
-                    <p class="text-xs" style="color:rgba(255,255,255,0.4)">X, LinkedIn &amp; Instagram</p>
+                    <p class="text-xs" style="color:rgba(20,10,25,0.4)">X, LinkedIn &amp; Instagram</p>
                   </button>
                 </div>
 
@@ -484,7 +480,7 @@
                     <div class="flex gap-2">
                       <input id="fetchUrlInput" type="url" placeholder="https://example.com/landing-page"
                         class="min-w-0 flex-1 rounded-xl px-4 py-3 text-sm outline-none"
-                        style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.9);" />
+                        style="background:rgba(255,255,255,0.5);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.9);" />
                       <button id="lpGenerateBtn" type="button"
                         class="btn-hover flex-shrink-0 rounded-xl px-6 py-3 text-sm font-semibold disabled:opacity-50"
                         style="background:rgba(255,255,255,0.92);color:#0f172a;">
