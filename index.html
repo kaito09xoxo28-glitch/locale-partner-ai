@@ -286,12 +286,12 @@
         <header class="glass-header flex-shrink-0 px-8 py-5">
           <div class="flex items-center justify-between">
             <div>
-              <h2 id="headerTitle" class="text-sm font-semibold" style="color:rgba(255,255,255,0.9)" data-i18n="header_title">LP Localization</h2>
-              <p id="headerDesc" class="mt-0.5 text-xs" style="color:rgba(255,255,255,0.4)" data-i18n="header_desc">Convert Western LP for Japan</p>
+              <h2 id="headerTitle" class="text-xl font-semibold tracking-tight" style="color:rgba(255,255,255,0.95)" data-i18n="header_title">LP Localization</h2>
+              <p id="headerDesc" class="mt-1 text-sm" style="color:rgba(255,255,255,0.5)" data-i18n="header_desc">Generate Japan-optimized landing page copy</p>
             </div>
             <div class="flex items-center gap-2">
-              <button id="convertBtn" class="btn-hover rounded-lg px-4 py-2 text-sm font-medium shadow-sm disabled:opacity-60" style="background:rgba(255,255,255,0.9);color:#0f172a;" type="button" data-i18n="convert_btn">Convert</button>
-              <button id="clearBtn" class="btn-hover rounded-lg px-4 py-2 text-sm shadow-sm" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.12);" type="button" data-i18n="clear_btn">Clear</button>
+              <button id="convertBtn" class="hidden btn-hover rounded-lg px-4 py-2 text-sm font-medium shadow-sm disabled:opacity-60" style="background:rgba(255,255,255,0.9);color:#0f172a;" type="button" data-i18n="convert_btn">Convert</button>
+              <button id="clearBtn" class="hidden btn-hover rounded-lg px-4 py-2 text-sm shadow-sm" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.12);" type="button" data-i18n="clear_btn">Clear</button>
             </div>
           </div>
         </header>
@@ -384,7 +384,7 @@
                       </div>
                       <span class="text-sm font-medium text-slate-900">LP Localization</span>
                     </div>
-                    <p class="text-xs text-slate-500">Convert Western LPs for Japan with screenshot analysis</p>
+                    <p class="text-xs text-slate-500" data-i18n="home_lp_desc">Convert Western LPs for Japan with screenshot analysis</p>
                   </button>
                   <button onclick="switchTab('creative')" class="card-panel glass-card rounded-xl p-4 text-left hover:border-slate-300 transition-colors">
                     <div class="flex items-center gap-3 mb-2">
@@ -393,7 +393,7 @@
                       </div>
                       <span class="text-sm font-medium text-slate-900">Ad Creative</span>
                     </div>
-                    <p class="text-xs text-slate-500">Meta, Google & LINE ad copy for Japan</p>
+                    <p class="text-xs text-slate-500" data-i18n="home_cr_desc">Meta, Google &amp; LINE ad copy for Japan</p>
                   </button>
                   <button onclick="switchTab('seo')" class="card-panel glass-card rounded-xl p-4 text-left hover:border-slate-300 transition-colors">
                     <div class="flex items-center gap-3 mb-2">
@@ -430,11 +430,23 @@
                       <input id="fetchUrlInput" type="url" placeholder="https://example.com/landing-page"
                         class="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
                       <button id="fetchUrlBtn" type="button"
-                        class="btn-hover flex-shrink-0 rounded-lg bg-slate-900 px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60" data-i18n="fetch_btn">
+                        class="btn-hover flex-shrink-0 rounded-lg px-5 py-3 text-sm font-medium shadow-sm disabled:opacity-60" style="background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2);" data-i18n="fetch_btn">
                         Get from URL
                       </button>
                     </div>
                   </label>
+                  <div class="flex items-center gap-2 mt-2">
+                    <button id="lpGenerateBtn" type="button"
+                      class="btn-hover rounded-lg px-6 py-3 text-sm font-semibold shadow-sm disabled:opacity-60"
+                      style="background:rgba(255,255,255,0.92);color:#0f172a;">
+                      Generate
+                    </button>
+                    <button id="lpClearBtn" type="button"
+                      class="btn-hover rounded-lg px-5 py-3 text-sm"
+                      style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.12);">
+                      Clear
+                    </button>
+                  </div>
 
                   <!-- Original LP Preview -->
                   <div class="mt-5">
@@ -893,7 +905,7 @@
         en: {
           sidebar_desc: "AI localization for Japan",
           header_title: "LP Localization",
-          header_desc: "Convert Western LP for Japan (Claude Vision API)",
+          header_desc: "Generate Japan-optimized landing page copy",
           api_key_label: "API Key",
           show_btn: "Show",
           hide_btn: "Hide",
@@ -941,7 +953,7 @@
         jp: {
           sidebar_desc: "日本市場向けAIローカライズ",
           header_title: "LPローカライズ",
-          header_desc: "欧米LPを日本市場向けに変換（Claude Vision API）",
+          header_desc: "日本市場向けランディングページを生成",
           api_key_label: "APIキー",
           show_btn: "表示",
           hide_btn: "非表示",
@@ -976,7 +988,15 @@
           status_text_only: "テキストのみ",
           status_failed: "失敗",
           status_fetch_failed: "取得失敗",
-          alert_enter_url: "URLを入力してください"
+          alert_enter_url: "URLを入力してください",
+          set_title: "パーソナライズ設定",
+          set_subtitle: "一度設定すれば全ツールに反映されます",
+          set_industry: "業種",
+          set_gender: "ターゲット性別",
+          set_age: "ターゲット年齢",
+          set_tone: "トーン",
+          set_goal: "目標",
+          set_notes: "備考"
         }
       };
 
@@ -1280,6 +1300,10 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         inFlight = busy;
         $('convertBtn').disabled = busy;
         $('convertBtn').textContent = busy ? t('converting_text') : t('convert_btn');
+        if ($('lpGenerateBtn')) {
+          $('lpGenerateBtn').disabled = busy;
+          $('lpGenerateBtn').textContent = busy ? 'Generating...' : 'Generate';
+        }
         $('outputLoadingOverlay').classList.toggle('hidden', !busy);
       }
 
@@ -1378,6 +1402,8 @@ Convert the provided Western LP content into a Japan-optimized version. If image
       }
 
       $('convertBtn').onclick = runConvert;
+      if ($('lpGenerateBtn')) $('lpGenerateBtn').onclick = () => { $('convertBtn').click(); };
+      if ($('lpClearBtn')) $('lpClearBtn').onclick = () => { $('clearBtn').click(); };
 
       // Fetch URL
       $('fetchUrlBtn').onclick = async () => {
@@ -1450,7 +1476,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
           $('headerDesc').textContent = 'AI-powered Japan localization platform';
         } else if (isLP) {
           $('headerTitle').textContent = currentLang === 'jp' ? 'LPローカライズ' : 'LP Localization';
-          $('headerDesc').textContent = currentLang === 'jp' ? '海外LPを日本向けに変換（Claude Vision API）' : 'Convert Western LP for Japan (Claude Vision API)';
+          $('headerDesc').textContent = currentLang === 'jp' ? '日本市場向けランディングページを生成' : 'Generate Japan-optimized landing page copy';
         } else if (isSocial) {
           $('headerTitle').textContent = currentLang === 'jp' ? 'SNS投稿ローカライズ' : 'Social Media Localization';
           $('headerDesc').textContent = currentLang === 'jp' ? 'X・LinkedIn・Instagram向け日本語投稿を生成' : 'Generate Japan-optimized posts for X, LinkedIn & Instagram';
@@ -1461,8 +1487,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
           $('headerTitle').textContent = currentLang === 'jp' ? 'SEOコンテンツローカライズ' : 'SEO Content Localization';
           $('headerDesc').textContent = currentLang === 'jp' ? '日本検索向けメタタグ・構成・本文を生成' : 'Generate Japan-optimized meta tags, page structure & body copy';
         }
-        $('convertBtn').classList.toggle('hidden', isHome || !isLP);
-        $('clearBtn').classList.toggle('hidden', isHome || !isLP);
+        // convertBtn/clearBtn are always hidden (replaced by lpGenerateBtn inside LP tab)
         updateSmBadge();
         updateCrBadge();
       }
