@@ -479,28 +479,23 @@
               <section class="card-panel glass-card rounded-xl">
                 <div class="p-6">
                   <!-- URL Input -->
-                  <label class="block">
-                    <span class="mb-2 block text-sm font-medium text-slate-700" data-i18n="url_label">LP URL</span>
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-4">
+                  <div class="mb-4">
+                    <span class="mb-2 block text-sm font-medium" style="color:rgba(255,255,255,0.6)" data-i18n="url_label">LP URL</span>
+                    <div class="flex gap-2">
                       <input id="fetchUrlInput" type="url" placeholder="https://example.com/landing-page"
-                        class="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
-                      <button id="fetchUrlBtn" type="button"
-                        class="btn-hover flex-shrink-0 rounded-lg px-5 py-3 text-sm font-medium shadow-sm disabled:opacity-60" style="background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.2);" data-i18n="fetch_btn">
-                        Get from URL
+                        class="min-w-0 flex-1 rounded-xl px-4 py-3 text-sm outline-none"
+                        style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.9);" />
+                      <button id="lpGenerateBtn" type="button"
+                        class="btn-hover flex-shrink-0 rounded-xl px-6 py-3 text-sm font-semibold disabled:opacity-50"
+                        style="background:rgba(255,255,255,0.92);color:#0f172a;">
+                        Generate
+                      </button>
+                      <button id="lpClearBtn" type="button"
+                        class="btn-hover flex-shrink-0 rounded-xl px-4 py-3 text-sm"
+                        style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.12);">
+                        Clear
                       </button>
                     </div>
-                  </label>
-                  <div class="flex items-center gap-2 mt-2">
-                    <button id="lpGenerateBtn" type="button"
-                      class="btn-hover rounded-lg px-6 py-3 text-sm font-semibold shadow-sm disabled:opacity-60"
-                      style="background:rgba(255,255,255,0.92);color:#0f172a;">
-                      Generate
-                    </button>
-                    <button id="lpClearBtn" type="button"
-                      class="btn-hover rounded-lg px-5 py-3 text-sm"
-                      style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.12);">
-                      Clear
-                    </button>
                   </div>
 
                   <!-- Original LP Preview -->
@@ -1358,6 +1353,8 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if ($('lpGenerateBtn')) {
           $('lpGenerateBtn').disabled = busy;
           $('lpGenerateBtn').textContent = busy ? 'Generating...' : 'Generate';
+          if (busy) $('lpGenerateBtn').style.background = 'rgba(255,255,255,0.5)';
+          else $('lpGenerateBtn').style.background = 'rgba(255,255,255,0.92)';
         }
         $('outputLoadingOverlay').classList.toggle('hidden', !busy);
       }
@@ -1457,8 +1454,19 @@ Convert the provided Western LP content into a Japan-optimized version. If image
       }
 
       $('convertBtn').onclick = runConvert;
-      if ($('lpGenerateBtn')) $('lpGenerateBtn').onclick = () => { $('convertBtn').click(); };
       if ($('lpClearBtn')) $('lpClearBtn').onclick = () => { $('clearBtn').click(); };
+
+      // lpGenerateBtn: fetch URL (if provided) then generate
+      if ($('lpGenerateBtn')) $('lpGenerateBtn').onclick = async () => {
+        const url = $('fetchUrlInput').value.trim();
+        if (url && !$('inputText').value && !screenshotData) {
+          // Trigger fetch first, which auto-calls runConvert at end
+          $('fetchUrlBtn').click();
+        } else {
+          // Already have content or no URL — just generate
+          runConvert();
+        }
+      };
 
       // Fetch URL
       $('fetchUrlBtn').onclick = async () => {
@@ -1470,6 +1478,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         urlFetchInProgress = true;
         $('fetchUrlBtn').disabled = true;
         $('fetchUrlBtn').textContent = t('fetching_btn');
+        if ($('lpGenerateBtn')) { $('lpGenerateBtn').disabled = true; $('lpGenerateBtn').textContent = 'Fetching...'; }
         $('previewUrlDisplay').textContent = url;
         showPreviewLoading();
         screenshotData = null;
@@ -1498,10 +1507,18 @@ Convert the provided Western LP content into a Japan-optimized version. If image
           urlFetchInProgress = false;
           $('fetchUrlBtn').disabled = false;
           $('fetchUrlBtn').textContent = t('fetch_btn');
+          if ($('lpGenerateBtn') && !inFlight) { $('lpGenerateBtn').disabled = false; $('lpGenerateBtn').textContent = 'Generate'; }
         }
 
         if ($('inputText').value || screenshotData) await runConvert();
       };
+
+      // Enter key in LP URL input
+      if ($('fetchUrlInput')) {
+        $('fetchUrlInput').addEventListener('keydown', e => {
+          if (e.key === 'Enter') $('lpGenerateBtn')?.click();
+        });
+      }
 
       // ===================
       // Tab Navigation
