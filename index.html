@@ -103,7 +103,7 @@
         background: rgba(255,255,255,0.55);
       }
 
-      /* ── Image Background ── */
+      /* ── Video Background ── */
       #videoBg {
         position: fixed; inset: 0; z-index: 0;
         width: 100%; height: 100%;
@@ -112,7 +112,7 @@
       }
       #videoBgOverlay {
         position: fixed; inset: 0; z-index: 1;
-        background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(240,235,245,0.12) 100%);
+        background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(240,235,245,0.04) 100%);
         pointer-events: none;
       }
       .app-shell {
@@ -121,8 +121,8 @@
 
       /* ── Glassmorphism ── */
       .glass-sidebar {
-        background: rgba(255,252,255,0.22) !important;
-        border-right: 1px solid rgba(255,255,255,0.35) !important;
+        background: rgba(255,252,255,0.10) !important;
+        border-right: 1px solid rgba(255,255,255,0.25) !important;
         backdrop-filter: blur(28px) saturate(1.4);
         -webkit-backdrop-filter: blur(28px) saturate(1.4);
       }
@@ -135,8 +135,8 @@
       .glass-sidebar span#settingsSummary { color: rgba(30,20,35,0.4) !important; }
 
       .glass-header {
-        background: rgba(255,252,255,0.2) !important;
-        border-bottom: 1px solid rgba(255,255,255,0.3) !important;
+        background: rgba(255,252,255,0.10) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.2) !important;
         backdrop-filter: blur(24px) saturate(1.3);
         -webkit-backdrop-filter: blur(24px) saturate(1.3);
       }
@@ -152,14 +152,14 @@
       .glass-header .rounded-full { background: rgba(255,255,255,0.3) !important; color: rgba(20,10,25,0.6) !important; }
 
       .glass-card {
-        background: rgba(255,252,255,0.28) !important;
-        border: 1px solid rgba(255,255,255,0.5) !important;
+        background: rgba(255,252,255,0.14) !important;
+        border: 1px solid rgba(255,255,255,0.4) !important;
         backdrop-filter: blur(20px) saturate(1.3);
         -webkit-backdrop-filter: blur(20px) saturate(1.3);
         color: rgba(20,10,25,0.85) !important;
-        box-shadow: 0 4px 24px rgba(180,160,200,0.12) !important;
+        box-shadow: 0 4px 24px rgba(180,160,200,0.10) !important;
       }
-      .glass-card:hover { background: rgba(255,252,255,0.38) !important; border-color: rgba(255,255,255,0.65) !important; }
+      .glass-card:hover { background: rgba(255,252,255,0.22) !important; border-color: rgba(255,255,255,0.55) !important; }
       .glass-card h2, .glass-card h3, .glass-card .font-semibold, .glass-card .font-medium { color: rgba(20,10,25,0.9) !important; }
       .glass-card p, .glass-card .text-slate-500, .glass-card .text-slate-600, .glass-card .text-xs { color: rgba(20,10,25,0.5) !important; }
       .glass-card label span, .glass-card .block { color: rgba(20,10,25,0.7) !important; }
@@ -188,11 +188,11 @@
 
       /* Home tab tool buttons */
       #tabHome .card-panel {
-        background: rgba(255,252,255,0.28) !important;
-        border: 1px solid rgba(255,255,255,0.5) !important;
+        background: rgba(255,252,255,0.14) !important;
+        border: 1px solid rgba(255,255,255,0.4) !important;
         backdrop-filter: blur(20px);
       }
-      #tabHome .card-panel:hover { background: rgba(255,252,255,0.4) !important; }
+      #tabHome .card-panel:hover { background: rgba(255,252,255,0.24) !important; }
       #tabHome .card-panel span.text-sm { color: rgba(20,10,25,0.9) !important; }
       #tabHome .card-panel p { color: rgba(20,10,25,0.5) !important; }
       #tabHome .card-panel .rounded-lg { background: rgba(255,255,255,0.35) !important; }
@@ -211,9 +211,11 @@
       }
     </style>
   </head>
-  <body class="min-h-screen text-slate-900 antialiased" style="background:#f0ecf5">
-    <!-- Image background -->
-    <img id="videoBg" src="bg.png" alt="" />
+  <body class="min-h-screen text-slate-900 antialiased" style="background:transparent">
+    <!-- Video background -->
+    <video id="videoBg" autoplay loop muted playsinline>
+      <source src="bg.mp4" type="video/mp4">
+    </video>
     <div id="videoBgOverlay"></div>
 
     <div class="flex min-h-screen app-shell">
