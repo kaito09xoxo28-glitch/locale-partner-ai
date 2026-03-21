@@ -103,7 +103,7 @@
         background: rgba(255,255,255,0.55);
       }
 
-      /* ── Video Background ── */
+      /* ── Image Background ── */
       #videoBg {
         position: fixed; inset: 0; z-index: 0;
         width: 100%; height: 100%;
@@ -212,10 +212,8 @@
     </style>
   </head>
   <body class="min-h-screen text-slate-900 antialiased" style="background:#f0ecf5">
-    <!-- Video background -->
-    <video id="videoBg" autoplay loop muted playsinline>
-      <source src="bg.mp4" type="video/mp4">
-    </video>
+    <!-- Image background -->
+    <img id="videoBg" src="bg.png" alt="" />
     <div id="videoBgOverlay"></div>
 
     <div class="flex min-h-screen app-shell">
