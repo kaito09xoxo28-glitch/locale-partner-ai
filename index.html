@@ -632,6 +632,15 @@
                         </label>
                       </div>
                     </div>
+                    <!-- Image upload -->
+                    <div class="mt-4">
+                      <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
+                      <div id="smDropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
+                        <input type="file" id="smFileInput" accept="image/*" multiple class="hidden" />
+                        <p class="text-xs text-slate-500">Drag & drop or click to upload image</p>
+                      </div>
+                      <div id="smFilePreviewArea" class="hidden mt-2 space-y-1"></div>
+                    </div>
                     <div class="mt-4">
                       <button id="smGenerateBtn" type="button"
                         class="btn-hover rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60">
@@ -734,6 +743,15 @@
                         class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
                     </div>
 
+                    <!-- Image upload -->
+                    <div class="mb-4">
+                      <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
+                      <div id="crDropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
+                        <input type="file" id="crFileInput" accept="image/*" multiple class="hidden" />
+                        <p class="text-xs text-slate-500">Drag & drop or click to upload image</p>
+                      </div>
+                      <div id="crFilePreviewArea" class="hidden mt-2 space-y-1"></div>
+                    </div>
                     <button id="crGenerateBtn" type="button"
                       class="btn-hover rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60">
                       Generate
@@ -841,8 +859,14 @@
                   <div class="p-6 space-y-5">
                     <div>
                       <span class="mb-2 block text-sm font-medium text-slate-700">URL (optional)</span>
-                      <input id="seoUrlInput" type="url" placeholder="https://example.com/page"
-                        class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                      <div class="flex gap-2">
+                        <input id="seoUrlInput" type="url" placeholder="https://example.com/page"
+                          class="flex-1 rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                        <button id="seoFetchBtn" type="button"
+                          class="btn-hover rounded-lg bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60 whitespace-nowrap">
+                          Fetch
+                        </button>
+                      </div>
                       <p class="mt-1 text-xs text-slate-400">Enter URL to auto-fetch, or paste content below</p>
                     </div>
                     <div>
@@ -854,6 +878,15 @@
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Target keyword (optional)</span>
                       <input id="seoKeyword" type="text" placeholder="e.g. PIM ツール 日本, AI画像生成"
                         class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                    </div>
+                    <!-- Image upload -->
+                    <div class="mb-4">
+                      <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
+                      <div id="seoDropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
+                        <input type="file" id="seoFileInput" accept="image/*" multiple class="hidden" />
+                        <p class="text-xs text-slate-500">Drag & drop or click to upload image</p>
+                      </div>
+                      <div id="seoFilePreviewArea" class="hidden mt-2 space-y-1"></div>
                     </div>
                     <button id="seoGenerateBtn" type="button"
                       class="btn-hover rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60">
@@ -1154,6 +1187,9 @@ Convert the provided Western LP content into a Japan-optimized version. If image
 2. [Change 2]
 3. [Change 3]
 **Recommended Next Steps:** [Suggestions for further optimization]
+
+# Important
+Only use information present in the provided content. Do not invent company names, branch offices, statistics, testimonials, pricing, or any details not explicitly stated in the source material.
 `;
 
       // ===================
@@ -1165,6 +1201,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
       const $ = id => document.getElementById(id);
       let inFlight = false, urlFetchInProgress = false;
       let uploadedFiles = [], screenshotData = null, lastMarkdown = "";
+      let smUploadedFiles = [], crUploadedFiles = [], seoUploadedFiles = [];
 
       // Screenshot
       async function fetchScreenshot(url) {
@@ -1688,26 +1725,19 @@ ${text.slice(0, 6000)}`;
         if (!text) { setSeoStatus('error', 'Please enter content or a valid URL'); seoInFlight = false; $('seoLoadingOverlay').classList.add('hidden'); return; }
 
         const keyword = $('seoKeyword').value.trim();
+        // Build content with images
+        const seoContent = [];
+        seoUploadedFiles.forEach(f => seoContent.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType, data: f.base64 } }));
         setSeoStatus('info', 'Generating SEO content...');
 
-        const seoSystem = `You are a Japan SEO specialist. Localize and optimize the given content for Japanese search.
-${keyword ? `Target keyword: ${keyword}` : ''}
-Japanese SEO guidelines: use natural Japanese, incorporate target keyword in title/H1/early body, write for Japanese search intent, use です/ます調, include trust signals.
-Return ONLY valid JSON, no markdown:
-{
-  "summary": "2-3 sentence English explanation of key localization and SEO decisions made",
-  "title_tag": "SEO title in Japanese (30-60 chars)",
-  "meta_description": "Meta description in Japanese (70-120 chars)",
-  "h1": "H1 heading in Japanese",
-  "h2_suggestions": "3-5 H2 suggestions, one per line",
-  "body_rewrite": "Rewritten intro paragraph + key sections in Japanese (300-500 chars), optimized for the target keyword"
-}`;
+        const seoSystem = `あなたは日本SEO専門のローカライザー。英語サイトを日本市場向けに自然で検索に強い日本語へ最適化せよ。日本の検索行動は欧米より比較・検討・安心感・具体性重視。直訳、過度な煽り、英語臭い表現は避け、実際に検索される自然語を使う。主KWはtitle_tag前方、H1、本文冒頭に配置し、不自然な詰め込みは禁止。関連語はH2と本文へ分散。文体は一貫してです/ます調。会社情報、実績、料金/条件、問い合わせ、法令表記等の信頼要素を補強。body_rewriteは300〜500字で、導入段落＋主要セクション構成。提供された情報のみ使用し、実在しない会社情報・日本拠点・統計・価格等を勝手に追加しないこと。${keyword ? `\nTarget keyword: ${keyword}` : ''}
+出力はJSONのみ: {"title_tag":"","meta_description":"","H1":"","H2_suggestions":[],"body_rewrite":""}`;
 
         try {
           const res = await fetch(ENDPOINT, {
             method: 'POST',
             headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-            body: JSON.stringify({ model: MODEL, max_tokens: 3000, temperature: 0.3, system: seoSystem + getPersonalizationContext(), messages: [{ role: 'user', content: `Localize for Japan SEO:\n\n${text}` }] })
+            body: JSON.stringify({ model: MODEL, max_tokens: 3000, temperature: 0.3, system: seoSystem + getPersonalizationContext(), messages: [{ role: 'user', content: [...seoContent, { type: 'text', text: `Localize for Japan SEO:\n\n${text}` }] }] })
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error?.message || res.status);
@@ -1789,12 +1819,12 @@ Return ONLY valid JSON, no markdown:
         if (doLINE) platforms.push(`"line": { "title": "max 40 chars", "text": "max 60 chars" }`);
         if (customFormat) platforms.push(`"custom": "follow this format: ${customFormat}"`);
 
-        const crSystem = `You are a Japan advertising copywriter. Localize the given English ad copy for the Japanese market.
-Tone: Professional, trustworthy, benefit-focused.
-Japanese ad copy guidelines: use です/ます調, focus on concrete benefits, avoid superlatives, use numbers when possible, CTAs should be soft (試してみる, 詳しく見る, 無料で始める).
-Return ONLY valid JSON with key "notes" (2-3 sentences English localization notes) and these platform keys:
-{ "notes": "...", ${platforms.join(', ')} }
-No markdown, no extra text.`;
+        const crSystem = `あなたは日本向け広告コピーライター。英語広告をMeta・Google・LINE向けに、自然で成果重視の日本語へ再構成せよ。日本の広告心理は、強い押し売りより控えめ・共感・便益・安心感重視。誇大表現、断定、煽り、命令調は避ける。Meta主文は簡潔で冒頭訴求、Google見出しは各30字以内、LINEタイトルは40字以内。CTAは「試してみる」「詳しく見る」「まずは確認」など柔らかく。信頼表現は「公式」「導入実績」「サポート充実」「安心」「無料相談」などを優先。媒体特性と審査通過性を意識し、自然で信頼される表現にせよ。提供された情報のみ使用し、実在しない実績・会社情報・日本拠点等を勝手に追加しないこと。
+出力はJSONのみ: {"notes":"ローカライズ方針の説明(英語2-3文)","meta":{"primary_text":"","headline":"","description":""},"google":{"headline_1":"","headline_2":"","description":""},"line":{"title":"","text":""}}`;
+
+        // Build content with images
+        const crContent = [];
+        crUploadedFiles.forEach(f => crContent.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType, data: f.base64 } }));
 
         crInFlight = true;
         $('crLoadingOverlay').classList.remove('hidden');
@@ -1804,7 +1834,7 @@ No markdown, no extra text.`;
           const res = await fetch(ENDPOINT, {
             method: 'POST',
             headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-            body: JSON.stringify({ model: MODEL, max_tokens: 2000, temperature: 0.3, system: crSystem + getPersonalizationContext(), messages: [{ role: 'user', content: `Localize this ad copy for Japan:\n\n${text}` }] })
+            body: JSON.stringify({ model: MODEL, max_tokens: 2000, temperature: 0.3, system: crSystem + getPersonalizationContext(), messages: [{ role: 'user', content: [...crContent, { type: 'text', text: `Localize this ad copy for Japan:\n\n${text}` }] }] })
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error?.message || res.status);
@@ -1919,11 +1949,14 @@ Return ONLY valid JSON in this exact format, no markdown, no extra text:
         $('outLIWrap').classList.toggle('hidden', !doLI);
         $('outIGWrap').classList.toggle('hidden', !doIG);
 
+        // Build content with images
+        const smContent = [];
+        smUploadedFiles.forEach(f => smContent.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType, data: f.base64 } }));
+
         const platformList = [doX && 'x', doLI && 'linkedin', doIG && 'instagram'].filter(Boolean);
         const platformDesc = [doX && 'x: X/Twitter post (max 140 chars in Japanese, 2-3 hashtags)', doLI && 'linkedin: LinkedIn post (3-5 paragraphs Japanese, professional, end with question or CTA)', doIG && 'instagram: Instagram caption (Japanese, storytelling, 5-8 hashtags at end)'].filter(Boolean).join('\n');
 
-        const dynamicSystem = `You are a professional Japan social media copywriter and localization strategist.
-Tone: Professional, trustworthy, engaging.
+        const dynamicSystem = `あなたは日本向けSNSコピーライター。英語コンテンツを各媒体文化に合う自然な日本語投稿へ再構成せよ。Xは短く即読・時流性・話題性重視、ハッシュタグは1〜2個。LinkedInは敬語寄りで端正に、知見・実績・示唆を軸にし、ハッシュタグは0〜3個。Instagramは感情訴求と物語性を重視し、やや柔らかく、ハッシュタグは3〜5個。媒体ごとに敬語/カジュアル度を調整。直訳、過剰な煽り、文化不適合な比喩やユーモアは避け、日本の文脈・共感・安心感・季節感に合わせて最適化せよ。提供された情報のみ使用し、実在しない情報・日本拠点・統計等を勝手に追加しないこと。
 Return ONLY valid JSON with keys: summary, ${platformList.join(', ')}
 - summary: 2-3 sentence English explanation of key localization decisions (tone, cultural adaptations, hashtag strategy)
 ${platformDesc}
@@ -1936,7 +1969,7 @@ No markdown, no extra text outside the JSON.`;
             body: JSON.stringify({
               model: MODEL, max_tokens: 2000, temperature: 0.3,
               system: dynamicSystem + getPersonalizationContext(),
-              messages: [{ role: 'user', content: `Create Japanese social media posts for:\n\n${text}` }]
+              messages: [{ role: 'user', content: [...smContent, { type: 'text', text: `Create Japanese social media posts for:\n\n${text}` }] }]
             })
           });
           const data = await res.json();
@@ -2024,6 +2057,53 @@ No markdown, no extra text outside the JSON.`;
         if (el) el.addEventListener('change', saveSettings);
         if (el && el.tagName === 'TEXTAREA') el.addEventListener('input', saveSettings);
       });
+
+      // ===== Sub-tab dropzone handlers =====
+      function makeDropzone(zoneId, inputId, previewId, filesArr) {
+        const zone = $(zoneId), input = $(inputId), preview = $(previewId);
+        if (!zone) return;
+        zone.onclick = () => input.click();
+        zone.ondragover = e => { e.preventDefault(); zone.classList.add('border-blue-400','bg-blue-50'); };
+        zone.ondragleave = () => zone.classList.remove('border-blue-400','bg-blue-50');
+        zone.ondrop = async e => {
+          e.preventDefault(); zone.classList.remove('border-blue-400','bg-blue-50');
+          for (const file of e.dataTransfer.files) {
+            if (file.type.startsWith('image/')) filesArr.push({ id: Date.now()+Math.random(), name: file.name, base64: await fileToBase64(file), mediaType: file.type });
+          }
+          renderSubPreview(previewId, filesArr);
+        };
+        input.onchange = async e => {
+          for (const file of e.target.files) {
+            if (file.type.startsWith('image/')) filesArr.push({ id: Date.now()+Math.random(), name: file.name, base64: await fileToBase64(file), mediaType: file.type });
+          }
+          renderSubPreview(previewId, filesArr); e.target.value='';
+        };
+      }
+      function renderSubPreview(previewId, filesArr) {
+        const area = $(previewId);
+        if (!filesArr.length) { area.classList.add('hidden'); return; }
+        area.classList.remove('hidden');
+        area.innerHTML = filesArr.map(f => `<div class="flex items-center gap-2 p-2 bg-white rounded border text-xs"><span class="truncate flex-1">${f.name}</span><button class="rm-file text-slate-400 hover:text-red-500" data-id="${f.id}">✕</button></div>`).join('');
+        area.querySelectorAll('.rm-file').forEach(btn => {
+          btn.onclick = () => { const i = filesArr.findIndex(f=>f.id==btn.dataset.id); if(i>-1) filesArr.splice(i,1); renderSubPreview(previewId, filesArr); };
+        });
+      }
+      makeDropzone('smDropzone','smFileInput','smFilePreviewArea', smUploadedFiles);
+      makeDropzone('crDropzone','crFileInput','crFilePreviewArea', crUploadedFiles);
+      makeDropzone('seoDropzone','seoFileInput','seoFilePreviewArea', seoUploadedFiles);
+
+      // SEO URL fetch
+      $('seoFetchBtn').onclick = async () => {
+        const url = $('seoUrlInput').value.trim();
+        if (!url) return;
+        $('seoFetchBtn').disabled = true; $('seoFetchBtn').textContent = 'Fetching...';
+        try {
+          const text = await fetch('https://r.jina.ai/' + encodeURIComponent(url.startsWith('http') ? url : 'https://'+url)).then(r=>r.ok?r.text():'').catch(()=>'');
+          if (text) { $('seoInputText').value = text; $('seoCharCount').textContent = text.length; }
+        } catch {}
+        $('seoFetchBtn').disabled = false; $('seoFetchBtn').textContent = 'Fetch';
+      };
+      $('seoUrlInput').addEventListener('keydown', e => { if(e.key==='Enter') $('seoFetchBtn').click(); });
 
       loadSettings();
 
