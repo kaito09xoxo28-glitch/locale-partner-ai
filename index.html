@@ -638,7 +638,7 @@
                       <div class="flex items-center gap-2">
                         <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
                           📎 Upload image
-                          <input type="file" id="smFileInput" accept="image/*" multiple class="hidden" />
+                          <input type="file" id="smFileInput" accept="image/*" multiple class="hidden" onchange="handleSubFileChange(this, smUploadedFiles, 'smFilePreviewArea')" />
                         </label>
                         <span class="text-xs text-slate-400">PNG, JPG supported</span>
                       </div>
@@ -752,7 +752,7 @@
                       <div class="flex items-center gap-2">
                         <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
                           📎 Upload image
-                          <input type="file" id="crFileInput" accept="image/*" multiple class="hidden" />
+                          <input type="file" id="crFileInput" accept="image/*" multiple class="hidden" onchange="handleSubFileChange(this, crUploadedFiles, 'crFilePreviewArea')" />
                         </label>
                         <span class="text-xs text-slate-400">PNG, JPG supported</span>
                       </div>
@@ -891,7 +891,7 @@
                       <div class="flex items-center gap-2">
                         <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
                           📎 Upload image
-                          <input type="file" id="seoFileInput" accept="image/*" multiple class="hidden" />
+                          <input type="file" id="seoFileInput" accept="image/*" multiple class="hidden" onchange="handleSubFileChange(this, seoUploadedFiles, 'seoFilePreviewArea')" />
                         </label>
                         <span class="text-xs text-slate-400">PNG, JPG supported</span>
                       </div>
@@ -1211,6 +1211,17 @@ Only use information present in the provided content. Do not invent company name
       let inFlight = false, urlFetchInProgress = false;
       let uploadedFiles = [], screenshotData = null, lastMarkdown = "";
       let smUploadedFiles = [], crUploadedFiles = [], seoUploadedFiles = [];
+
+      async function handleSubFileChange(input, filesArr, previewId) {
+        for (const file of Array.from(input.files)) {
+          if (file.type.startsWith('image/')) {
+            const base64 = await fileToBase64(file);
+            filesArr.push({ id: Date.now()+Math.random(), name: file.name, base64, mediaType: file.type });
+          }
+        }
+        renderSubPreview(previewId, filesArr);
+        input.value = '';
+      }
 
       // Screenshot
       async function fetchScreenshot(url) {
