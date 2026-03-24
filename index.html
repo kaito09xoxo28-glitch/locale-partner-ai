@@ -2096,10 +2096,12 @@ No markdown, no extra text outside the JSON.`;
         if (!filesArr.length) { area.classList.add('hidden'); return; }
         area.classList.remove('hidden');
         area.innerHTML = filesArr.map(f => `
-          <div class="flex items-center gap-2 p-2 bg-white rounded border text-xs">
-            <img src="data:${f.mediaType};base64,${f.base64}" class="w-10 h-10 object-cover rounded flex-shrink-0" />
-            <span class="truncate flex-1">${f.name}</span>
-            <button class="rm-file text-slate-400 hover:text-red-500 flex-shrink-0" data-id="${f.id}">✕</button>
+          <div class="p-2 bg-white rounded-lg border text-xs">
+            <img src="data:${f.mediaType};base64,${f.base64}" class="w-full rounded-lg object-cover mb-2" style="max-height:200px" />
+            <div class="flex items-center justify-between">
+              <span class="truncate flex-1 text-slate-600">${f.name}</span>
+              <button class="rm-file ml-2 text-slate-400 hover:text-red-500 flex-shrink-0" data-id="${f.id}">✕</button>
+            </div>
           </div>`).join('');
         area.querySelectorAll('.rm-file').forEach(btn => {
           btn.onclick = () => { const i = filesArr.findIndex(f=>f.id==btn.dataset.id); if(i>-1) filesArr.splice(i,1); renderSubPreview(previewId, filesArr); };
