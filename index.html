@@ -635,8 +635,8 @@
                     <!-- Image upload -->
                     <div class="mt-4">
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
+                      <input type="file" id="smFileInput" accept="image/*" multiple class="hidden" />
                       <div id="smDropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
-                        <input type="file" id="smFileInput" accept="image/*" multiple class="hidden" />
                         <p class="text-xs text-slate-500">Drag & drop or click to upload image</p>
                       </div>
                       <div id="smFilePreviewArea" class="hidden mt-2 space-y-1"></div>
@@ -746,8 +746,8 @@
                     <!-- Image upload -->
                     <div class="mb-4">
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
+                      <input type="file" id="crFileInput" accept="image/*" multiple class="hidden" />
                       <div id="crDropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
-                        <input type="file" id="crFileInput" accept="image/*" multiple class="hidden" />
                         <p class="text-xs text-slate-500">Drag & drop or click to upload image</p>
                       </div>
                       <div id="crFilePreviewArea" class="hidden mt-2 space-y-1"></div>
@@ -882,8 +882,8 @@
                     <!-- Image upload -->
                     <div class="mb-4">
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
+                      <input type="file" id="seoFileInput" accept="image/*" multiple class="hidden" />
                       <div id="seoDropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
-                        <input type="file" id="seoFileInput" accept="image/*" multiple class="hidden" />
                         <p class="text-xs text-slate-500">Drag & drop or click to upload image</p>
                       </div>
                       <div id="seoFilePreviewArea" class="hidden mt-2 space-y-1"></div>
@@ -2063,7 +2063,6 @@ No markdown, no extra text outside the JSON.`;
         const zone = $(zoneId), input = $(inputId), preview = $(previewId);
         if (!zone) return;
         zone.onclick = () => input.click();
-        input.onclick = e => e.stopPropagation();
         zone.ondragover = e => { e.preventDefault(); zone.classList.add('border-blue-400','bg-blue-50'); };
         zone.ondragleave = () => zone.classList.remove('border-blue-400','bg-blue-50');
         zone.ondrop = async e => {
