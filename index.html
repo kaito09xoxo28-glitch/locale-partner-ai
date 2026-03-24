@@ -2060,23 +2060,24 @@ No markdown, no extra text outside the JSON.`;
 
       // ===== Sub-tab dropzone handlers =====
       function makeDropzone(zoneId, inputId, previewId, filesArr) {
-        const zone = $(zoneId), input = $(inputId), preview = $(previewId);
-        if (!zone) return;
-        zone.ondragover = e => { e.preventDefault(); zone.classList.add('border-blue-400','bg-blue-50'); };
-        zone.ondragleave = () => zone.classList.remove('border-blue-400','bg-blue-50');
-        zone.ondrop = async e => {
+        const zone = $(zoneId), input = $(inputId);
+        if (!zone || !input) return;
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('border-blue-400','bg-blue-50'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('border-blue-400','bg-blue-50'));
+        zone.addEventListener('drop', async e => {
           e.preventDefault(); zone.classList.remove('border-blue-400','bg-blue-50');
           for (const file of e.dataTransfer.files) {
             if (file.type.startsWith('image/')) filesArr.push({ id: Date.now()+Math.random(), name: file.name, base64: await fileToBase64(file), mediaType: file.type });
           }
           renderSubPreview(previewId, filesArr);
-        };
-        input.onchange = async e => {
-          for (const file of e.target.files) {
+        });
+        input.addEventListener('change', async e => {
+          for (const file of Array.from(e.target.files)) {
             if (file.type.startsWith('image/')) filesArr.push({ id: Date.now()+Math.random(), name: file.name, base64: await fileToBase64(file), mediaType: file.type });
           }
-          renderSubPreview(previewId, filesArr); e.target.value='';
-        };
+          renderSubPreview(previewId, filesArr);
+          input.value = '';
+        });
       }
       function renderSubPreview(previewId, filesArr) {
         const area = $(previewId);
