@@ -1591,6 +1591,7 @@ Only use information present in the provided content. Do not invent company name
         // convertBtn/clearBtn are always hidden (replaced by lpGenerateBtn inside LP tab)
         updateSmBadge();
         updateCrBadge();
+        initDropzones();
       }
 
       function updateSmBadge() {
@@ -2088,9 +2089,17 @@ No markdown, no extra text outside the JSON.`;
           btn.onclick = () => { const i = filesArr.findIndex(f=>f.id==btn.dataset.id); if(i>-1) filesArr.splice(i,1); renderSubPreview(previewId, filesArr); };
         });
       }
-      makeDropzone('smDropzone','smFileInput','smFilePreviewArea', smUploadedFiles);
-      makeDropzone('crDropzone','crFileInput','crFilePreviewArea', crUploadedFiles);
-      makeDropzone('seoDropzone','seoFileInput','seoFilePreviewArea', seoUploadedFiles);
+      // dropzoneはswitchTab後に初期化（hidden状態だとaddEventListenerが効かないため）
+      let dropzonesInitialized = false;
+      function initDropzones() {
+        if (dropzonesInitialized) return;
+        if (!$('smFileInput') || !$('crFileInput') || !$('seoFileInput')) return;
+        makeDropzone('smDropzone','smFileInput','smFilePreviewArea', smUploadedFiles);
+        makeDropzone('crDropzone','crFileInput','crFilePreviewArea', crUploadedFiles);
+        makeDropzone('seoDropzone','seoFileInput','seoFilePreviewArea', seoUploadedFiles);
+        dropzonesInitialized = true;
+        console.log('Dropzones initialized');
+      }
 
       // SEO URL fetch
       $('seoFetchBtn').onclick = async () => {
