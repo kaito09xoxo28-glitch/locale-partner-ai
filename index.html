@@ -2063,6 +2063,7 @@ No markdown, no extra text outside the JSON.`;
         const zone = $(zoneId), input = $(inputId), preview = $(previewId);
         if (!zone) return;
         zone.onclick = () => input.click();
+        input.onclick = e => e.stopPropagation();
         zone.ondragover = e => { e.preventDefault(); zone.classList.add('border-blue-400','bg-blue-50'); };
         zone.ondragleave = () => zone.classList.remove('border-blue-400','bg-blue-50');
         zone.ondrop = async e => {
