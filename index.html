@@ -1743,7 +1743,7 @@ ${text.slice(0, 6000)}`;
           } catch {}
         }
 
-        if (!text) { setSeoStatus('error', 'Please enter content or a valid URL'); seoInFlight = false; $('seoLoadingOverlay').classList.add('hidden'); return; }
+        if (!text && !seoUploadedFiles.length) { setSeoStatus('error', 'Please enter content, URL, or upload an image'); seoInFlight = false; $('seoLoadingOverlay').classList.add('hidden'); return; }
 
         const keyword = $('seoKeyword').value.trim();
         // Build content with images
@@ -1821,7 +1821,7 @@ ${text.slice(0, 6000)}`;
         const apiKey = $('apiKey').value.trim();
         if (!apiKey) { setCrStatus('error', 'API Key required'); return; }
         const text = $('crInputText').value.trim();
-        if (!text) { setCrStatus('error', 'Please paste your ad copy'); return; }
+        if (!text && !crUploadedFiles.length) { setCrStatus('error', 'Please paste ad copy or upload an image'); return; }
 
         const doMeta = $('chkMeta').checked;
         const doGoogle = $('chkGoogle').checked;
@@ -1961,7 +1961,7 @@ Return ONLY valid JSON in this exact format, no markdown, no extra text:
           } catch {}
         }
 
-        if (!text) { setSmStatus('error', 'Please enter text or a valid URL'); smInFlight = false; $('smLoadingOverlay').classList.add('hidden'); return; }
+        if (!text && !smUploadedFiles.length) { setSmStatus('error', 'Please enter text, URL, or upload an image'); smInFlight = false; $('smLoadingOverlay').classList.add('hidden'); return; }
 
         setSmStatus('info', 'Generating posts...');
 
@@ -2095,7 +2095,12 @@ No markdown, no extra text outside the JSON.`;
         const area = $(previewId);
         if (!filesArr.length) { area.classList.add('hidden'); return; }
         area.classList.remove('hidden');
-        area.innerHTML = filesArr.map(f => `<div class="flex items-center gap-2 p-2 bg-white rounded border text-xs"><span class="truncate flex-1">${f.name}</span><button class="rm-file text-slate-400 hover:text-red-500" data-id="${f.id}">✕</button></div>`).join('');
+        area.innerHTML = filesArr.map(f => `
+          <div class="flex items-center gap-2 p-2 bg-white rounded border text-xs">
+            <img src="data:${f.mediaType};base64,${f.base64}" class="w-10 h-10 object-cover rounded flex-shrink-0" />
+            <span class="truncate flex-1">${f.name}</span>
+            <button class="rm-file text-slate-400 hover:text-red-500 flex-shrink-0" data-id="${f.id}">✕</button>
+          </div>`).join('');
         area.querySelectorAll('.rm-file').forEach(btn => {
           btn.onclick = () => { const i = filesArr.findIndex(f=>f.id==btn.dataset.id); if(i>-1) filesArr.splice(i,1); renderSubPreview(previewId, filesArr); };
         });
