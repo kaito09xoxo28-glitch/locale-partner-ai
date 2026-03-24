@@ -635,10 +635,13 @@
                     <!-- Image upload -->
                     <div class="mt-4">
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
-                      <input type="file" id="smFileInput" accept="image/*" multiple class="hidden" />
-                      <label for="smFileInput" id="smDropzone" class="block border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
-                        <p class="text-xs text-slate-500">Drag & drop or click to upload image</p>
-                      </label>
+                      <div class="flex items-center gap-2">
+                        <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
+                          📎 Upload image
+                          <input type="file" id="smFileInput" accept="image/*" multiple class="hidden" />
+                        </label>
+                        <span class="text-xs text-slate-400">PNG, JPG supported</span>
+                      </div>
                       <div id="smFilePreviewArea" class="hidden mt-2 space-y-1"></div>
                     </div>
                     <div class="mt-4">
@@ -746,10 +749,13 @@
                     <!-- Image upload -->
                     <div class="mb-4">
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
-                      <input type="file" id="crFileInput" accept="image/*" multiple class="hidden" />
-                      <label for="crFileInput" id="crDropzone" class="block border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
-                        <p class="text-xs text-slate-500">Drag & drop or click to upload image</p>
-                      </label>
+                      <div class="flex items-center gap-2">
+                        <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
+                          📎 Upload image
+                          <input type="file" id="crFileInput" accept="image/*" multiple class="hidden" />
+                        </label>
+                        <span class="text-xs text-slate-400">PNG, JPG supported</span>
+                      </div>
                       <div id="crFilePreviewArea" class="hidden mt-2 space-y-1"></div>
                     </div>
                     <button id="crGenerateBtn" type="button"
@@ -882,10 +888,13 @@
                     <!-- Image upload -->
                     <div class="mb-4">
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
-                      <input type="file" id="seoFileInput" accept="image/*" multiple class="hidden" />
-                      <label for="seoFileInput" id="seoDropzone" class="block border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
-                        <p class="text-xs text-slate-500">Drag & drop or click to upload image</p>
-                      </label>
+                      <div class="flex items-center gap-2">
+                        <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
+                          📎 Upload image
+                          <input type="file" id="seoFileInput" accept="image/*" multiple class="hidden" />
+                        </label>
+                        <span class="text-xs text-slate-400">PNG, JPG supported</span>
+                      </div>
                       <div id="seoFilePreviewArea" class="hidden mt-2 space-y-1"></div>
                     </div>
                     <button id="seoGenerateBtn" type="button"
@@ -2061,17 +2070,8 @@ No markdown, no extra text outside the JSON.`;
 
       // ===== Sub-tab dropzone handlers =====
       function makeDropzone(zoneId, inputId, previewId, filesArr) {
-        const zone = $(zoneId), input = $(inputId);
-        if (!zone || !input) return;
-        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('border-blue-400','bg-blue-50'); });
-        zone.addEventListener('dragleave', () => zone.classList.remove('border-blue-400','bg-blue-50'));
-        zone.addEventListener('drop', async e => {
-          e.preventDefault(); zone.classList.remove('border-blue-400','bg-blue-50');
-          for (const file of e.dataTransfer.files) {
-            if (file.type.startsWith('image/')) filesArr.push({ id: Date.now()+Math.random(), name: file.name, base64: await fileToBase64(file), mediaType: file.type });
-          }
-          renderSubPreview(previewId, filesArr);
-        });
+        const input = $(inputId);
+        if (!input) return;
         input.addEventListener('change', async e => {
           for (const file of Array.from(e.target.files)) {
             if (file.type.startsWith('image/')) filesArr.push({ id: Date.now()+Math.random(), name: file.name, base64: await fileToBase64(file), mediaType: file.type });
