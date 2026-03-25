@@ -723,6 +723,13 @@
                       <span class="text-xs text-slate-400 mt-1 block"><span id="crCharCount">0</span> chars</span>
                     </div>
 
+                    <!-- Custom format -->
+                    <div>
+                      <span class="text-xs font-medium text-slate-600 mb-2 block">Custom format (optional)</span>
+                      <input id="crCustomFormat" type="text" placeholder="e.g. 20 chars headline + 40 chars body"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                    </div>
+
                     <!-- Platform checkboxes -->
                     <div>
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Platforms</span>
@@ -739,25 +746,30 @@
                       </div>
                     </div>
 
-                    <!-- Custom format -->
+                    <!-- Output type -->
                     <div>
-                      <span class="text-xs font-medium text-slate-600 mb-2 block">Custom format (optional)</span>
-                      <input id="crCustomFormat" type="text" placeholder="e.g. 20 chars headline + 40 chars body"
-                        class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
+                      <span class="text-xs font-medium text-slate-600 mb-2 block">Output type</span>
+                      <div class="flex gap-3">
+                        <label class="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                          <input type="radio" name="crOutputType" id="crOutputText" value="text" checked class="rounded"> Text only
+                        </label>
+                        <label class="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                          <input type="radio" name="crOutputType" id="crOutputImage" value="image" class="rounded"> Image banner
+                        </label>
+                      </div>
+                      <!-- Image upload (imageモード時のみ表示) -->
+                      <div id="crImageUploadArea" class="hidden mt-3">
+                        <div class="flex items-center gap-2">
+                          <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
+                            📎 Upload image
+                            <input type="file" id="crFileInput" accept="image/*" class="hidden" onchange="handleSubFileChange(this, crUploadedFiles, 'crFilePreviewArea')" />
+                          </label>
+                          <span class="text-xs text-slate-400">PNG, JPG (optional)</span>
+                        </div>
+                        <div id="crFilePreviewArea" class="hidden mt-2 space-y-1"></div>
+                      </div>
                     </div>
 
-                    <!-- Image upload -->
-                    <div class="mb-4">
-                      <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
-                      <div class="flex items-center gap-2">
-                        <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
-                          📎 Upload image
-                          <input type="file" id="crFileInput" accept="image/*" multiple class="hidden" onchange="handleSubFileChange(this, crUploadedFiles, 'crFilePreviewArea')" />
-                        </label>
-                        <span class="text-xs text-slate-400">PNG, JPG supported</span>
-                      </div>
-                      <div id="crFilePreviewArea" class="hidden mt-2 space-y-1"></div>
-                    </div>
                     <button id="crGenerateBtn" type="button"
                       class="btn-hover rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60">
                       Generate
@@ -1905,10 +1917,19 @@ ${text.slice(0, 6000)}`;
             $('outCustom').textContent = parsed.custom || '—';
             $('copyCustom').disabled = false;
           }
-          // バナーボタンを表示
-          $('genMetaBanner').classList.remove('hidden');
-          $('genLINEBanner').classList.remove('hidden');
-          setCrStatus('success', 'Done! バナー画像を生成するには 🖼 Banner をクリック');
+          // imageモードなら自動バナー生成、textモードならボタン表示
+          if ($('crOutputImage') && $('crOutputImage').checked) {
+            $('genMetaBanner').classList.remove('hidden');
+            $('genLINEBanner').classList.remove('hidden');
+            // Metaが選ばれてたらMetaバナーを自動生成
+            setTimeout(() => {
+              if (doMeta) generateBanner('meta');
+              else if (doLINE) generateBanner('line');
+            }, 100);
+            setCrStatus('success', 'Done! バナー画像を生成しました');
+          } else {
+            setCrStatus('success', 'Done!');
+          }
         } catch (e) {
           setCrStatus('error', `Failed: ${e.message}`);
         } finally {
@@ -2161,17 +2182,23 @@ No markdown, no extra text outside the JSON.`;
         canvas.height = H;
 
         // テキスト取得
+        const getText = (id) => {
+          const el = $(id);
+          if (!el) return '';
+          const span = el.querySelector('span');
+          return (span ? span.textContent : el.textContent).trim().replace(/^—$/, '');
+        };
         let headline = '', body = '', cta = '';
         if (platform === 'meta') {
-          headline = $('outMetaHeadline').textContent.trim();
-          body = $('outMetaPrimary').textContent.trim();
+          headline = getText('outMetaHeadline');
+          body = getText('outMetaPrimary');
           cta = '詳しく見る';
         } else if (platform === 'line') {
-          headline = $('outLINETitle').querySelector('span')?.textContent.trim() || $('outLINETitle').textContent.trim();
-          body = $('outLINEText').querySelector('span')?.textContent.trim() || $('outLINEText').textContent.trim();
+          headline = getText('outLINETitle');
+          body = getText('outLINEText');
           cta = 'まずは確認';
         }
-        if (!headline || headline === '—') { alert('先にGenerateを実行してください'); return; }
+        if (!headline) { alert('先にGenerateを実行してください'); return; }
 
         const draw = (bgImg) => {
           // 背景
@@ -2276,6 +2303,14 @@ No markdown, no extra text outside the JSON.`;
         a.href = $('bannerCanvas').toDataURL('image/png');
         a.click();
       };
+
+      // Output type toggle
+      document.querySelectorAll('input[name="crOutputType"]').forEach(r => {
+        r.addEventListener('change', () => {
+          const isImage = $('crOutputImage').checked;
+          $('crImageUploadArea').classList.toggle('hidden', !isImage);
+        });
+      });
 
       loadSettings();
 
