@@ -209,7 +209,25 @@
         border-color: rgba(180,160,200,0.25) !important;
         border-top-color: rgba(160,100,180,0.8) !important;
       }
-    </style>
+    
+      .tag-btn {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 500;
+        border: 1px solid rgba(200,185,215,0.5);
+        background: rgba(255,255,255,0.4);
+        color: rgba(20,10,25,0.65);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .tag-btn:hover { background: rgba(255,255,255,0.7); }
+      .tag-btn.active {
+        background: rgba(20,10,25,0.82);
+        color: #fff;
+        border-color: transparent;
+      }
+</style>
   </head>
   <body class="min-h-screen text-slate-900 antialiased" style="background:transparent">
     <!-- Image background -->
@@ -375,58 +393,56 @@
                       </div>
                       <span class="text-sm font-semibold" style="color:rgba(255,255,255,0.9)">Japan Market Personalization</span>
                     </div>
-                    <div class="space-y-3">
-                      <div class="grid grid-cols-2 gap-3">
-                        <div>
-                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_gender">Target Gender</p>
-                          <select id="settingGender" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
-                            <option value="">Not set</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="All genders">All</option>
-                          </select>
-                        </div>
-                        <div>
-                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_age">Target Age</p>
-                          <select id="settingAge" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
-                            <option value="">Not set</option>
-                            <option value="Teens (13-19)">10代</option>
-                            <option value="Young adults (20-30s)">20〜30代</option>
-                            <option value="Middle-aged (40-50s)">40〜50代</option>
-                            <option value="Seniors (60+)">60代以上</option>
-                            <option value="All ages">All</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="grid grid-cols-2 gap-3">
-                        <div>
-                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_tone">Tone</p>
-                          <select id="settingTone" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
-                            <option value="">Not set</option>
-                            <option value="Professional and trustworthy">Professional</option>
-                            <option value="Casual and friendly">Casual</option>
-                            <option value="Warm and approachable">Warm</option>
-                            <option value="Authoritative and expert">Authoritative</option>
-                            <option value="Energetic and bold">Energetic</option>
-                          </select>
-                        </div>
-                        <div>
-                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_goal">Goal</p>
-                          <select id="settingGoal" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
-                            <option value="">Not set</option>
-                            <option value="Brand awareness">Brand awareness</option>
-                            <option value="Lead generation">Lead generation</option>
-                            <option value="Conversion / Purchase">Conversion</option>
-                            <option value="Retention / Re-engagement">Retention</option>
-                          </select>
+                    <div class="space-y-4">
+                      <!-- hidden inputs for compatibility -->
+                      <input type="hidden" id="settingGender" value="" />
+                      <input type="hidden" id="settingAge" value="" />
+                      <input type="hidden" id="settingTone" value="" />
+                      <input type="hidden" id="settingGoal" value="" />
+
+                      <div>
+                        <p class="text-[10px] uppercase tracking-wider mb-2" style="color:rgba(20,10,25,0.4)">Target Gender</p>
+                        <div class="flex flex-wrap gap-1.5" data-group="settingGender">
+                          <button type="button" class="tag-btn" data-value="">Any</button>
+                          <button type="button" class="tag-btn" data-value="Male">Male</button>
+                          <button type="button" class="tag-btn" data-value="Female">Female</button>
+                          <button type="button" class="tag-btn" data-value="All genders">All</button>
                         </div>
                       </div>
                       <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_notes">Notes</p>
+                        <p class="text-[10px] uppercase tracking-wider mb-2" style="color:rgba(20,10,25,0.4)">Target Age</p>
+                        <div class="flex flex-wrap gap-1.5" data-group="settingAge">
+                          <button type="button" class="tag-btn" data-value="">Any</button>
+                          <button type="button" class="tag-btn" data-value="Teens (13-19)">Teens</button>
+                          <button type="button" class="tag-btn" data-value="Young adults (20-30s)">20-30s</button>
+                          <button type="button" class="tag-btn" data-value="Middle-aged (40-50s)">40-50s</button>
+                          <button type="button" class="tag-btn" data-value="Seniors (60+)">60+</button>
+                          <button type="button" class="tag-btn" data-value="All ages">All</button>
+                        </div>
+                      </div>
+                      <div>
+                        <p class="text-[10px] uppercase tracking-wider mb-2" style="color:rgba(20,10,25,0.4)">Tone</p>
+                        <div class="flex flex-wrap gap-1.5" data-group="settingTone">
+                          <button type="button" class="tag-btn" data-value="">Any</button>
+                          <button type="button" class="tag-btn" data-value="Professional and trustworthy">Professional</button>
+                          <button type="button" class="tag-btn" data-value="Casual and friendly">Casual</button>
+                          <button type="button" class="tag-btn" data-value="Warm and approachable">Warm</button>
+                          <button type="button" class="tag-btn" data-value="Authoritative and expert">Authoritative</button>
+                          <button type="button" class="tag-btn" data-value="Energetic and bold">Energetic</button>
+                        </div>
+                      </div>
+                      <div>
+                        <p class="text-[10px] uppercase tracking-wider mb-2" style="color:rgba(20,10,25,0.4)">Goal</p>
+                        <div class="flex flex-wrap gap-1.5" data-group="settingGoal">
+                          <button type="button" class="tag-btn" data-value="">Any</button>
+                          <button type="button" class="tag-btn" data-value="Brand awareness">Awareness</button>
+                          <button type="button" class="tag-btn" data-value="Lead generation">Lead gen</button>
+                          <button type="button" class="tag-btn" data-value="Conversion / Purchase">Conversion</button>
+                          <button type="button" class="tag-btn" data-value="Retention / Re-engagement">Retention</button>
+                        </div>
+                      </div>
+                      <div>
+                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)">Notes</p>
                         <textarea id="settingNotes" rows="2" placeholder="e.g. Competitor: X, USP: Y, Brand voice: Z..."
                           class="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none"
                           style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);"></textarea>
@@ -2119,6 +2135,30 @@ No markdown, no extra text outside the JSON.`;
       // Personalization Settings
       // ===================
       const SETTING_KEYS = ['settingIndustry','settingGender','settingAge','settingTone','settingGoal','settingNotes'];
+
+      // Tag button selection
+      document.querySelectorAll('[data-group]').forEach(group => {
+        const key = group.dataset.group;
+        group.querySelectorAll('.tag-btn').forEach(btn => {
+          btn.onclick = () => {
+            group.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            $(key).value = btn.dataset.value;
+            saveSettings();
+          };
+        });
+        // 保存済み値を復元
+        const saved = localStorage.getItem('lp-' + key);
+        if (saved !== null) {
+          $(key).value = saved;
+          group.querySelectorAll('.tag-btn').forEach(b => {
+            if (b.dataset.value === saved) b.classList.add('active');
+          });
+        } else {
+          // デフォルトはAny（最初のボタン）
+          group.querySelector('.tag-btn').classList.add('active');
+        }
+      });
 
       // OpenAI key persist
       const savedOAI = localStorage.getItem('lp-openai-key');
