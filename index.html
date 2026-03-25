@@ -252,14 +252,25 @@
         <!-- Sidebar bottom: API key + lang + settings -->
         <div class="border-t border-white/10 px-4 py-4 space-y-3">
           <span id="settingsSummary" class="hidden"></span>
-          <!-- API Key -->
+          <!-- API Keys -->
           <div>
-            <label class="text-[10px] font-medium uppercase tracking-wide block mb-1.5" style="color:rgba(20,10,25,0.4)">API Key</label>
+            <label class="text-[10px] font-medium uppercase tracking-wide block mb-1.5" style="color:rgba(20,10,25,0.4)">Anthropic API Key</label>
             <div class="flex gap-1.5">
               <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-..."
                 class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
                 style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
               <button id="toggleKey" type="button"
+                class="rounded-lg px-2 py-1.5 text-xs transition-colors"
+                style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
+            </div>
+          </div>
+          <div class="mt-2">
+            <label class="text-[10px] font-medium uppercase tracking-wide block mb-1.5" style="color:rgba(20,10,25,0.4)">OpenAI API Key <span style="color:rgba(20,10,25,0.3)">(Banner)</span></label>
+            <div class="flex gap-1.5">
+              <input id="openaiKey" type="password" autocomplete="off" placeholder="sk-proj-..."
+                class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
+                style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
+              <button id="toggleOpenaiKey" type="button"
                 class="rounded-lg px-2 py-1.5 text-xs transition-colors"
                 style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
             </div>
@@ -1448,6 +1459,11 @@ Only use information present in the provided content. Do not invent company name
       }
 
       $('inputText').oninput = () => $('charCount').textContent = $('inputText').value.length;
+      $('toggleOpenaiKey').onclick = () => {
+        const inp = $('openaiKey');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+        $('toggleOpenaiKey').textContent = inp.type === 'password' ? 'Show' : 'Hide';
+      };
       $('toggleKey').onclick = () => {
         $('apiKey').type = $('apiKey').type === 'password' ? 'text' : 'password';
         $('toggleKey').textContent = $('apiKey').type === 'password' ? 'Show' : 'Hide';
@@ -2072,6 +2088,11 @@ No markdown, no extra text outside the JSON.`;
       // ===================
       const SETTING_KEYS = ['settingIndustry','settingGender','settingAge','settingTone','settingGoal','settingNotes'];
 
+      // OpenAI key persist
+      const savedOAI = localStorage.getItem('lp-openai-key');
+      if (savedOAI && $('openaiKey')) $('openaiKey').value = savedOAI;
+      $('openaiKey').addEventListener('change', () => localStorage.setItem('lp-openai-key', $('openaiKey').value));
+
       function loadSettings() {
         SETTING_KEYS.forEach(key => {
           const val = localStorage.getItem('lp-' + key);
@@ -2253,13 +2274,83 @@ No markdown, no extra text outside the JSON.`;
           $('bannerPreviewWrap').classList.remove('hidden');
         };
 
-        // アップロード画像があれば使う
-        if (crUploadedFiles.length > 0) {
-          const img = new Image();
-          img.onload = () => draw(img);
-          img.src = 'data:' + crUploadedFiles[0].mediaType + ';base64,' + crUploadedFiles[0].base64;
+        const openaiKey = $('openaiKey')?.value.trim();
+
+        // OpenAI APIキーがあればgpt-image-1で生成
+        if (openaiKey) {
+          await generateBannerWithOpenAI(platform, openaiKey, headline, body, cta);
         } else {
-          draw(null);
+          // フォールバック: Canvas描画
+          if (crUploadedFiles.length > 0) {
+            const img = new Image();
+            img.onload = () => draw(img);
+            img.src = 'data:' + crUploadedFiles[0].mediaType + ';base64,' + crUploadedFiles[0].base64;
+          } else {
+            draw(null);
+          }
+        }
+      }
+
+      async function generateBannerWithOpenAI(platform, openaiKey, headline, body, cta) {
+        $('bannerPreviewWrap').classList.remove('hidden');
+        const canvas = $('bannerCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 1200; canvas.height = 628;
+        ctx.fillStyle = '#f1f5f9';
+        ctx.fillRect(0, 0, 1200, 628);
+        ctx.fillStyle = '#64748b';
+        ctx.font = '24px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Generating with AI...', 600, 314);
+
+        const platformLabel = platform === 'meta' ? 'Facebook/Instagram' : 'LINE';
+        const hasImg = crUploadedFiles.length > 0;
+
+        const prompt = `Create a professional Japanese digital advertising banner for ${platformLabel}.
+Size: 1200x628px (landscape).
+Headline (large, prominent): ${headline}
+Body text (smaller): ${body}
+CTA button text: ${cta}
+Style: Clean, modern, trustworthy Japanese ad aesthetic. White or light background with strong typography. Red CTA button. Japanese text must be clear and readable.
+${hasImg ? 'Use a similar composition style to a roadside assistance / automotive service ad.' : ''}
+The banner should look like a real Japanese advertisement, professional quality.`;
+
+        try {
+          const imgPayload = {};
+          if (hasImg) {
+            imgPayload.image = crUploadedFiles[0].base64;
+          }
+
+          const res = await fetch('https://api.openai.com/v1/images/generations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + openaiKey },
+            body: JSON.stringify({
+              model: 'gpt-image-1',
+              prompt,
+              n: 1,
+              size: '1792x1024',
+              quality: 'medium'
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error?.message || res.status);
+
+          const b64 = data.data?.[0]?.b64_json;
+          if (!b64) throw new Error('No image returned');
+
+          const img = new Image();
+          img.onload = () => {
+            canvas.width = 1200; canvas.height = 628;
+            ctx.drawImage(img, 0, 0, 1200, 628);
+          };
+          img.src = 'data:image/png;base64,' + b64;
+        } catch (e) {
+          ctx.fillStyle = '#fee2e2';
+          ctx.fillRect(0, 0, 1200, 628);
+          ctx.fillStyle = '#ef4444';
+          ctx.font = '20px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Error: ' + e.message, 600, 314);
         }
       }
 
