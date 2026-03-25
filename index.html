@@ -2193,7 +2193,7 @@ No markdown, no extra text outside the JSON.`;
       $('seoUrlInput').addEventListener('keydown', e => { if(e.key==='Enter') $('seoFetchBtn').click(); });
 
       // ===== Banner Generator =====
-      function generateBanner(platform) {
+      async function generateBanner(platform) {
         const canvas = $('bannerCanvas');
         const ctx = canvas.getContext('2d');
 
