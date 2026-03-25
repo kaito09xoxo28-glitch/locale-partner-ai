@@ -2284,67 +2284,77 @@ No markdown, no extra text outside the JSON.`;
         const getText = (id) => {
           const el = $(id); if (!el) return '';
           const span = el.querySelector('span');
-          return (span ? span.textContent : el.textContent).trim().replace(/^—$/, '');
+          const txt = (span ? span.textContent : el.textContent).trim();
+          return txt === '—' ? '' : txt;
         };
-        const headline = getText('outMetaHeadline') || getText('outLINETitle') || 'キャッチコピーを入力';
-        const body = getText('outMetaPrimary') || getText('outLINEText') || 'サブコピーを入力してください';
+        const headline = getText('outMetaHeadline') || getText('outLINETitle') || '';
+        const body = getText('outMetaPrimary') || getText('outLINEText') || '';
         const cta = '詳しく見る';
 
-        if (!headline || headline === 'キャッチコピーを入力') {
-          alert('先にGenerateを実行してください');
-          return;
-        }
+        if (!headline) { alert('先にGenerateを実行してください'); return; }
 
         $('bannerPreviewWrap').classList.remove('hidden');
         const grid = $('bannerKitGrid');
-        grid.innerHTML = '';
+        grid.innerHTML = '<p class="text-xs text-slate-400 py-2">生成中...</p>';
 
-        const bgImg = crUploadedFiles.length > 0 ? await new Promise(res => {
-          const img = new Image();
-          img.onload = () => res(img);
-          img.src = 'data:' + crUploadedFiles[0].mediaType + ';base64,' + crUploadedFiles[0].base64;
-        }) : null;
+        let bgImg = null;
+        if (crUploadedFiles.length > 0) {
+          bgImg = await new Promise(res => {
+            const img = new Image();
+            img.onload = () => res(img);
+            img.onerror = () => res(null);
+            img.src = 'data:' + crUploadedFiles[0].mediaType + ';base64,' + crUploadedFiles[0].base64;
+          });
+        }
 
         window._bannerCanvases = {};
+        grid.innerHTML = '';
 
-        for (const size of BANNER_SIZES) {
-          const canvas = document.createElement('canvas');
-          drawBannerCanvas(canvas, size.w, size.h, headline, body, cta, bgImg);
-          window._bannerCanvases[size.id] = canvas;
+        BANNER_SIZES.forEach(size => {
+          // フルサイズcanvas
+          const fullCanvas = document.createElement('canvas');
+          drawBannerCanvas(fullCanvas, size.w, size.h, headline, body, cta, bgImg);
+          window._bannerCanvases[size.id] = fullCanvas;
 
-          const maxDisplayH = 200;
-          const displayW = Math.min(size.w, 600);
-          const displayH = Math.round(displayW * size.h / size.w);
-          const scale = displayW / size.w;
-
-          const wrap = document.createElement('div');
-          wrap.className = 'rounded-lg border border-slate-200 overflow-hidden';
-          wrap.innerHTML = `
-            <div class="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200">
-              <span class="text-xs font-semibold text-slate-700">${size.label}</span>
-              <span class="text-[10px] text-slate-400">${size.w}×${size.h}</span>
-              <button class="dl-btn btn-hover rounded px-2 py-0.5 text-[11px] border border-slate-200 bg-white hover:bg-slate-50" data-id="${size.id}">⬇ PNG</button>
-            </div>
-            <div class="bg-slate-100 flex items-center justify-center p-2" style="min-height:80px">
-              <canvas data-canvas-id="${size.id}" style="max-width:100%;max-height:${maxDisplayH}px;border-radius:4px"></canvas>
-            </div>`;
-
-          grid.appendChild(wrap);
-
-          // canvasに描画コピー
-          const displayCanvas = wrap.querySelector('canvas');
-          const dw = Math.min(size.w, 560);
+          // 表示用canvas（縮小）
+          const maxW = 520;
+          const dw = Math.min(size.w, maxW);
           const dh = Math.round(dw * size.h / size.w);
-          displayCanvas.width = dw; displayCanvas.height = dh;
-          displayCanvas.getContext('2d').drawImage(canvas, 0, 0, dw, dh);
+          const displayCanvas = document.createElement('canvas');
+          displayCanvas.width = dw;
+          displayCanvas.height = dh;
+          displayCanvas.style.cssText = 'max-width:100%;border-radius:4px;display:block';
+          displayCanvas.getContext('2d').drawImage(fullCanvas, 0, 0, dw, dh);
 
-          wrap.querySelector('.dl-btn').onclick = () => {
+          // DLボタン
+          const dlBtn = document.createElement('button');
+          dlBtn.className = 'btn-hover rounded px-2 py-0.5 text-[11px] border border-slate-200 bg-white hover:bg-slate-50';
+          dlBtn.textContent = 'PNG';
+          dlBtn.onclick = () => {
             const a = document.createElement('a');
-            a.download = `banner-japan-${size.id}-${size.w}x${size.h}.png`;
-            a.href = window._bannerCanvases[size.id].toDataURL('image/png');
+            a.download = 'banner-japan-' + size.id + '-' + size.w + 'x' + size.h + '.png';
+            a.href = fullCanvas.toDataURL('image/png');
             a.click();
           };
-        }
+
+          // ヘッダー
+          const header = document.createElement('div');
+          header.className = 'flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200';
+          header.innerHTML = '<span class="text-xs font-semibold text-slate-700">' + size.label + '</span><span class="text-[10px] text-slate-400">' + size.w + '×' + size.h + '</span>';
+          header.appendChild(dlBtn);
+
+          // プレビューエリア
+          const preview = document.createElement('div');
+          preview.className = 'bg-slate-100 flex items-center justify-center p-2';
+          preview.appendChild(displayCanvas);
+
+          // ラッパー
+          const wrap = document.createElement('div');
+          wrap.className = 'rounded-lg border border-slate-200 overflow-hidden';
+          wrap.appendChild(header);
+          wrap.appendChild(preview);
+          grid.appendChild(wrap);
+        });
       }
 
             function wrapText(ctx, text, x, y, maxWidth, lineH) {
