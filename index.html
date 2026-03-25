@@ -873,13 +873,13 @@
                       </div>
                     </div>
 
-                    <!-- Banner Preview -->
+                    <!-- Banner Kit -->
                     <div id="bannerPreviewWrap" class="hidden mt-5">
-                      <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-semibold text-slate-700">🖼 Banner Preview</span>
-                        <button id="downloadBanner" class="btn-hover rounded-lg bg-slate-900 px-3 py-1.5 text-[11px] font-medium text-white hover:bg-slate-700">⬇ Download PNG</button>
+                      <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-semibold text-slate-700">🖼 Banner Kit</span>
+                        <button id="downloadAllBanners" class="btn-hover rounded-lg bg-slate-900 px-3 py-1.5 text-[11px] font-medium text-white hover:bg-slate-700">⬇ Download All</button>
                       </div>
-                      <canvas id="bannerCanvas" class="w-full rounded-lg border border-slate-200" style="max-height:300px;object-fit:contain"></canvas>
+                      <div id="bannerKitGrid" class="space-y-4"></div>
                     </div>
 
                     <!-- Custom -->
@@ -1937,12 +1937,8 @@ ${text.slice(0, 6000)}`;
           if ($('crOutputImage') && $('crOutputImage').checked) {
             $('genMetaBanner').classList.remove('hidden');
             $('genLINEBanner').classList.remove('hidden');
-            // Metaが選ばれてたらMetaバナーを自動生成
-            setTimeout(() => {
-              if (doMeta) generateBanner('meta');
-              else if (doLINE) generateBanner('line');
-            }, 100);
-            setCrStatus('success', 'Done! バナー画像を生成しました');
+            setTimeout(() => generateBannerKit(), 100);
+            setCrStatus('success', 'Done! バナーキットを生成しました');
           } else {
             setCrStatus('success', 'Done!');
           }
@@ -2193,168 +2189,165 @@ No markdown, no extra text outside the JSON.`;
       $('seoUrlInput').addEventListener('keydown', e => { if(e.key==='Enter') $('seoFetchBtn').click(); });
 
       // ===== Banner Generator =====
-      async function generateBanner(platform) {
-        const canvas = $('bannerCanvas');
+      const BANNER_SIZES = [
+        { id: 'meta_feed',     label: 'Meta Feed',        w: 1200, h: 628  },
+        { id: 'meta_story',    label: 'Meta Story',       w: 1080, h: 1920 },
+        { id: 'line',          label: 'LINE Ad',          w: 1200, h: 628  },
+        { id: 'google_rect',   label: 'Google 300×250',   w: 300,  h: 250  },
+        { id: 'google_leader', label: 'Google 728×90',    w: 728,  h: 90   },
+      ];
+
+      function drawBannerCanvas(canvas, w, h, headline, body, cta, bgImg) {
+        canvas.width = w; canvas.height = h;
         const ctx = canvas.getContext('2d');
+        const isNarrow = h > w; // storyなど縦長
+        const isSmall = w <= 300;
+        const isBanner = h <= 90;
 
-        // サイズ設定
-        const W = 1200, H = 628;
-        canvas.width = W;
-        canvas.height = H;
+        // 背景
+        if (bgImg) {
+          ctx.drawImage(bgImg, 0, 0, w, h);
+          const grad = ctx.createLinearGradient(0, 0, isNarrow ? 0 : w * 0.65, isNarrow ? h * 0.6 : 0);
+          grad.addColorStop(0, 'rgba(10,10,20,0.80)');
+          grad.addColorStop(1, 'rgba(10,10,20,0.0)');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+        } else {
+          const grad = ctx.createLinearGradient(0, 0, w, h);
+          grad.addColorStop(0, '#1a0a2e');
+          grad.addColorStop(1, '#0f2044');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+        }
 
-        // テキスト取得
+        if (isBanner) {
+          // リーダーボード: 1行レイアウト
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 18px sans-serif';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(headline.slice(0, 20), 12, h / 2);
+          // CTA
+          const btnW = 110, btnH = 34, btnX = w - btnW - 10, btnY = (h - btnH) / 2;
+          ctx.fillStyle = '#e8263a';
+          ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 4); ctx.fill();
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 13px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(cta, btnX + btnW / 2, h / 2);
+          ctx.textAlign = 'left';
+          return;
+        }
+
+        const pad = isSmall ? 14 : (isNarrow ? 60 : 60);
+        const textW = isNarrow ? w - pad * 2 : (bgImg ? w * 0.55 : w - pad * 2);
+        const startY = isNarrow ? h * 0.35 : h * 0.18;
+
+        // フォントサイズをサイズに応じて調整
+        const hSize = isSmall ? 18 : (isNarrow ? 52 : 48);
+        const bSize = isSmall ? 11 : (isNarrow ? 26 : 24);
+        const lineH = hSize * 1.3;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.textBaseline = 'top';
+        ctx.font = `bold ${hSize}px "Hiragino Sans", "Yu Gothic", sans-serif`;
+        wrapText(ctx, headline, pad, startY, textW, lineH);
+
+        if (!isSmall) {
+          const bodyY = startY + lineH * Math.ceil(headline.length / (textW / (hSize * 0.6))) + 16;
+          ctx.fillStyle = 'rgba(255,255,255,0.80)';
+          ctx.font = `${bSize}px "Hiragino Sans", "Yu Gothic", sans-serif`;
+          wrapText(ctx, body.slice(0, 60), pad, bodyY, textW, bSize * 1.5);
+        }
+
+        // CTAボタン
+        const btnW = isSmall ? w - pad * 2 : (isNarrow ? w - pad * 2 : 220);
+        const btnH = isSmall ? 32 : (isNarrow ? 72 : 56);
+        const btnX = pad;
+        const btnY = h - (isNarrow ? 160 : 110);
+        ctx.fillStyle = '#e8263a';
+        ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 8); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${isSmall ? 13 : (isNarrow ? 28 : 22)}px "Hiragino Sans", "Yu Gothic", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(cta, btnX + btnW / 2, btnY + btnH / 2);
+        ctx.textAlign = 'left';
+
+        // サイズラベル
+        ctx.font = '12px sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(`${w}×${h}`, pad, h - 8);
+      }
+
+      async function generateBannerKit() {
         const getText = (id) => {
-          const el = $(id);
-          if (!el) return '';
+          const el = $(id); if (!el) return '';
           const span = el.querySelector('span');
           return (span ? span.textContent : el.textContent).trim().replace(/^—$/, '');
         };
-        let headline = '', body = '', cta = '';
-        if (platform === 'meta') {
-          headline = getText('outMetaHeadline');
-          body = getText('outMetaPrimary');
-          cta = '詳しく見る';
-        } else if (platform === 'line') {
-          headline = getText('outLINETitle');
-          body = getText('outLINEText');
-          cta = 'まずは確認';
+        const headline = getText('outMetaHeadline') || getText('outLINETitle') || 'キャッチコピーを入力';
+        const body = getText('outMetaPrimary') || getText('outLINEText') || 'サブコピーを入力してください';
+        const cta = '詳しく見る';
+
+        if (!headline || headline === 'キャッチコピーを入力') {
+          alert('先にGenerateを実行してください');
+          return;
         }
-        if (!headline) { alert('先にGenerateを実行してください'); return; }
 
-        const draw = (bgImg) => {
-          // 背景
-          if (bgImg) {
-            ctx.drawImage(bgImg, 0, 0, W, H);
-            // 左半分にグラデーションオーバーレイ
-            const grad = ctx.createLinearGradient(0, 0, W * 0.65, 0);
-            grad.addColorStop(0, 'rgba(15,15,25,0.82)');
-            grad.addColorStop(1, 'rgba(15,15,25,0)');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, W, H);
-          } else {
-            // デフォルト背景
-            const grad = ctx.createLinearGradient(0, 0, W, H);
-            grad.addColorStop(0, '#1a0a2e');
-            grad.addColorStop(1, '#16213e');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, W, H);
-          }
-
-          const pad = 72;
-          const textW = bgImg ? W * 0.55 : W - pad * 2;
-
-          // ヘッドライン
-          ctx.font = 'bold 56px "Hiragino Sans", "Yu Gothic", sans-serif';
-          ctx.fillStyle = '#ffffff';
-          ctx.textBaseline = 'top';
-          wrapText(ctx, headline, pad, 120, textW, 68);
-
-          // ボディ
-          ctx.font = '28px "Hiragino Sans", "Yu Gothic", sans-serif';
-          ctx.fillStyle = 'rgba(255,255,255,0.82)';
-          wrapText(ctx, body.slice(0, 60), pad, 290, textW, 38);
-
-          // CTAボタン
-          const btnX = pad, btnY = H - 140, btnW = 260, btnH = 64, btnR = 10;
-          ctx.fillStyle = '#e8263a';
-          roundRect(ctx, btnX, btnY, btnW, btnH, btnR);
-          ctx.font = 'bold 28px "Hiragino Sans", "Yu Gothic", sans-serif';
-          ctx.fillStyle = '#ffffff';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(cta, btnX + btnW / 2, btnY + btnH / 2);
-          ctx.textAlign = 'left';
-
-          // プラットフォームラベル
-          ctx.font = '18px sans-serif';
-          ctx.fillStyle = 'rgba(255,255,255,0.4)';
-          ctx.textBaseline = 'bottom';
-          ctx.fillText(platform === 'meta' ? 'Meta Ad · 1200×628' : 'LINE Ad · 1200×628', pad, H - 24);
-
-          $('bannerPreviewWrap').classList.remove('hidden');
-        };
-
-        const openaiKey = $('openaiKey')?.value.trim();
-
-        // OpenAI APIキーがあればgpt-image-1で生成
-        if (openaiKey) {
-          await generateBannerWithOpenAI(platform, openaiKey, headline, body, cta);
-        } else {
-          // フォールバック: Canvas描画
-          if (crUploadedFiles.length > 0) {
-            const img = new Image();
-            img.onload = () => draw(img);
-            img.src = 'data:' + crUploadedFiles[0].mediaType + ';base64,' + crUploadedFiles[0].base64;
-          } else {
-            draw(null);
-          }
-        }
-      }
-
-      async function generateBannerWithOpenAI(platform, openaiKey, headline, body, cta) {
         $('bannerPreviewWrap').classList.remove('hidden');
-        const canvas = $('bannerCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 1200; canvas.height = 628;
-        ctx.fillStyle = '#f1f5f9';
-        ctx.fillRect(0, 0, 1200, 628);
-        ctx.fillStyle = '#64748b';
-        ctx.font = '24px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Generating with AI...', 600, 314);
+        const grid = $('bannerKitGrid');
+        grid.innerHTML = '';
 
-        const platformLabel = platform === 'meta' ? 'Facebook/Instagram' : 'LINE';
-        const hasImg = crUploadedFiles.length > 0;
-
-        const prompt = `Create a professional Japanese digital advertising banner for ${platformLabel}.
-Size: 1200x628px (landscape).
-Headline (large, prominent): ${headline}
-Body text (smaller): ${body}
-CTA button text: ${cta}
-Style: Clean, modern, trustworthy Japanese ad aesthetic. White or light background with strong typography. Red CTA button. Japanese text must be clear and readable.
-${hasImg ? 'Use a similar composition style to a roadside assistance / automotive service ad.' : ''}
-The banner should look like a real Japanese advertisement, professional quality.`;
-
-        try {
-          const imgPayload = {};
-          if (hasImg) {
-            imgPayload.image = crUploadedFiles[0].base64;
-          }
-
-          const res = await fetch('https://api.openai.com/v1/images/generations', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + openaiKey },
-            body: JSON.stringify({
-              model: 'gpt-image-1',
-              prompt,
-              n: 1,
-              size: '1536x1024',
-              quality: 'medium'
-            })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error?.message || res.status);
-
-          const b64 = data.data?.[0]?.b64_json;
-          if (!b64) throw new Error('No image returned');
-
+        const bgImg = crUploadedFiles.length > 0 ? await new Promise(res => {
           const img = new Image();
-          img.onload = () => {
-            canvas.width = 1200; canvas.height = 628;
-            ctx.drawImage(img, 0, 0, 1200, 628);
+          img.onload = () => res(img);
+          img.src = 'data:' + crUploadedFiles[0].mediaType + ';base64,' + crUploadedFiles[0].base64;
+        }) : null;
+
+        window._bannerCanvases = {};
+
+        for (const size of BANNER_SIZES) {
+          const canvas = document.createElement('canvas');
+          drawBannerCanvas(canvas, size.w, size.h, headline, body, cta, bgImg);
+          window._bannerCanvases[size.id] = canvas;
+
+          const maxDisplayH = 200;
+          const displayW = Math.min(size.w, 600);
+          const displayH = Math.round(displayW * size.h / size.w);
+          const scale = displayW / size.w;
+
+          const wrap = document.createElement('div');
+          wrap.className = 'rounded-lg border border-slate-200 overflow-hidden';
+          wrap.innerHTML = `
+            <div class="flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200">
+              <span class="text-xs font-semibold text-slate-700">${size.label}</span>
+              <span class="text-[10px] text-slate-400">${size.w}×${size.h}</span>
+              <button class="dl-btn btn-hover rounded px-2 py-0.5 text-[11px] border border-slate-200 bg-white hover:bg-slate-50" data-id="${size.id}">⬇ PNG</button>
+            </div>
+            <div class="bg-slate-100 flex items-center justify-center p-2" style="min-height:80px">
+              <canvas data-canvas-id="${size.id}" style="max-width:100%;max-height:${maxDisplayH}px;border-radius:4px"></canvas>
+            </div>`;
+
+          grid.appendChild(wrap);
+
+          // canvasに描画コピー
+          const displayCanvas = wrap.querySelector('canvas');
+          const dw = Math.min(size.w, 560);
+          const dh = Math.round(dw * size.h / size.w);
+          displayCanvas.width = dw; displayCanvas.height = dh;
+          displayCanvas.getContext('2d').drawImage(canvas, 0, 0, dw, dh);
+
+          wrap.querySelector('.dl-btn').onclick = () => {
+            const a = document.createElement('a');
+            a.download = `banner-japan-${size.id}-${size.w}x${size.h}.png`;
+            a.href = window._bannerCanvases[size.id].toDataURL('image/png');
+            a.click();
           };
-          img.src = 'data:image/png;base64,' + b64;
-        } catch (e) {
-          ctx.fillStyle = '#fee2e2';
-          ctx.fillRect(0, 0, 1200, 628);
-          ctx.fillStyle = '#ef4444';
-          ctx.font = '20px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText('Error: ' + e.message, 600, 314);
         }
       }
 
-      function wrapText(ctx, text, x, y, maxWidth, lineH) {
+            function wrapText(ctx, text, x, y, maxWidth, lineH) {
         const chars = text.split('');
         let line = '';
         let cy = y;
@@ -2386,13 +2379,18 @@ The banner should look like a real Japanese advertisement, professional quality.
         ctx.fill();
       }
 
-      $('genMetaBanner').onclick = () => generateBanner('meta');
-      $('genLINEBanner').onclick = () => generateBanner('line');
-      $('downloadBanner').onclick = () => {
-        const a = document.createElement('a');
-        a.download = 'japan-ad-banner.png';
-        a.href = $('bannerCanvas').toDataURL('image/png');
-        a.click();
+      $('genMetaBanner').onclick = () => generateBannerKit();
+      $('genLINEBanner').onclick = () => generateBannerKit();
+      $('downloadAllBanners').onclick = () => {
+        if (!window._bannerCanvases) return;
+        for (const [id, canvas] of Object.entries(window._bannerCanvases)) {
+          const size = BANNER_SIZES.find(s => s.id === id);
+          if (!size) continue;
+          const a = document.createElement('a');
+          a.download = `banner-japan-${id}-${size.w}x${size.h}.png`;
+          a.href = canvas.toDataURL('image/png');
+          a.click();
+        }
       };
 
       // Output type toggle
