@@ -2229,7 +2229,7 @@ No markdown, no extra text outside the JSON.`;
           // CTA
           const btnW = 110, btnH = 34, btnX = w - btnW - 10, btnY = (h - btnH) / 2;
           ctx.fillStyle = '#e8263a';
-          ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 4); ctx.fill();
+          roundRect(ctx, btnX, btnY, btnW, btnH, 4);
           ctx.fillStyle = '#fff';
           ctx.font = 'bold 13px sans-serif';
           ctx.textAlign = 'center';
@@ -2265,7 +2265,7 @@ No markdown, no extra text outside the JSON.`;
         const btnX = pad;
         const btnY = h - (isNarrow ? 160 : 110);
         ctx.fillStyle = '#e8263a';
-        ctx.beginPath(); ctx.roundRect(btnX, btnY, btnW, btnH, 8); ctx.fill();
+        roundRect(ctx, btnX, btnY, btnW, btnH, 8);
         ctx.fillStyle = '#ffffff';
         ctx.font = `bold ${isSmall ? 13 : (isNarrow ? 28 : 22)}px "Hiragino Sans", "Yu Gothic", sans-serif`;
         ctx.textAlign = 'center';
