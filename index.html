@@ -252,27 +252,34 @@
         <!-- Sidebar bottom: API key + lang + settings -->
         <div class="border-t border-white/10 px-4 py-4 space-y-3">
           <span id="settingsSummary" class="hidden"></span>
-          <!-- API Keys -->
+          <!-- API Keys accordion -->
           <div>
-            <label class="text-[10px] font-medium uppercase tracking-wide block mb-1.5" style="color:rgba(20,10,25,0.4)">Anthropic API Key</label>
-            <div class="flex gap-1.5">
-              <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-..."
-                class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
-                style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
-              <button id="toggleKey" type="button"
-                class="rounded-lg px-2 py-1.5 text-xs transition-colors"
-                style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
-            </div>
-          </div>
-          <div class="mt-2">
-            <label class="text-[10px] font-medium uppercase tracking-wide block mb-1.5" style="color:rgba(20,10,25,0.4)">OpenAI API Key <span style="color:rgba(20,10,25,0.3)">(Banner)</span></label>
-            <div class="flex gap-1.5">
-              <input id="openaiKey" type="password" autocomplete="off" placeholder="sk-proj-..."
-                class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
-                style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
-              <button id="toggleOpenaiKey" type="button"
-                class="rounded-lg px-2 py-1.5 text-xs transition-colors"
-                style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
+            <button id="apiKeyToggleBtn" type="button" class="flex items-center justify-between w-full text-left"
+              style="color:rgba(20,10,25,0.5)">
+              <span class="text-[10px] font-medium uppercase tracking-wide">API Keys</span>
+              <span id="apiKeyStatus" class="text-[10px] px-1.5 py-0.5 rounded" style="background:rgba(239,68,68,0.15);color:#ef4444">Not set</span>
+            </button>
+            <div id="apiKeyPanel" class="hidden mt-2 space-y-2">
+              <div>
+                <label class="text-[10px] mb-1 block" style="color:rgba(20,10,25,0.4)">Anthropic</label>
+                <div class="flex gap-1.5">
+                  <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-..."
+                    class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
+                    style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
+                  <button id="toggleKey" type="button" class="rounded-lg px-2 py-1.5 text-xs"
+                    style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
+                </div>
+              </div>
+              <div>
+                <label class="text-[10px] mb-1 block" style="color:rgba(20,10,25,0.4)">OpenAI (Banner)</label>
+                <div class="flex gap-1.5">
+                  <input id="openaiKey" type="password" autocomplete="off" placeholder="sk-proj-..."
+                    class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
+                    style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
+                  <button id="toggleOpenaiKey" type="button" class="rounded-lg px-2 py-1.5 text-xs"
+                    style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
+                </div>
+              </div>
             </div>
           </div>
           <!-- Language toggle -->
@@ -348,20 +355,14 @@
                       </div>
                       <div>
                         <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)">Industry</p>
-                        <select id="settingIndustry" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
-                          style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
-                          <option value="">Not set</option>
-                          <option value="Horizontal SaaS (CRM, HR, Legal, Marketing etc.)">Horizontal SaaS</option>
-                          <option value="EC & Retail">EC・小売</option>
-                          <option value="Consumer Goods (FMCG)">消費財（FMCG）</option>
-                          <option value="Healthcare & Medical">ヘルスケア・医療</option>
-                          <option value="Finance & FinTech">金融・FinTech</option>
-                          <option value="HR & Recruitment">人材・HR</option>
-                          <option value="Education & EdTech">教育・EdTech</option>
-                          <option value="Real Estate">不動産</option>
-                          <option value="Manufacturing & Hardware">製造・ハードウェア</option>
-                          <option value="Media & Entertainment">メディア・エンタメ</option>
-                        </select>
+                        <p id="homeIndustryLabel" class="text-sm font-medium mb-1" style="color:rgba(20,10,25,0.85)">—</p>
+                        <input id="settingIndustry" type="hidden" value="" />
+                      </div>
+                      <div>
+                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)">Japan Competitors</p>
+                        <div id="homeCompetitors" class="space-y-1">
+                          <p class="text-xs" style="color:rgba(20,10,25,0.45)">—</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1463,6 +1464,24 @@ Only use information present in the provided content. Do not invent company name
       }
 
       $('inputText').oninput = () => $('charCount').textContent = $('inputText').value.length;
+      // API Key accordion
+      $('apiKeyToggleBtn').onclick = () => {
+        $('apiKeyPanel').classList.toggle('hidden');
+      };
+      function updateApiKeyStatus() {
+        const hasKey = $('apiKey').value.trim().length > 0;
+        $('apiKeyStatus').textContent = hasKey ? 'Set' : 'Not set';
+        $('apiKeyStatus').style.background = hasKey ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)';
+        $('apiKeyStatus').style.color = hasKey ? '#16a34a' : '#ef4444';
+      }
+      $('apiKey').addEventListener('input', () => {
+        updateApiKeyStatus();
+        localStorage.setItem('lp-anthropic-key', $('apiKey').value);
+      });
+      const savedAnthropicKey = localStorage.getItem('lp-anthropic-key');
+      if (savedAnthropicKey) $('apiKey').value = savedAnthropicKey;
+      updateApiKeyStatus();
+
       $('toggleOpenaiKey').onclick = () => {
         const inp = $('openaiKey');
         inp.type = inp.type === 'password' ? 'text' : 'password';
@@ -1704,8 +1723,15 @@ Only use information present in the provided content. Do not invent company name
           const analysisPrompt = `Analyze this product page content and respond ONLY with valid JSON (no markdown, no explanation):
 {
   "summary": "2-3 sentence product description in English",
-  "industry": "one of: Horizontal SaaS (CRM, HR, Legal, Marketing etc.) | EC & Retail | Consumer Goods (FMCG) | Healthcare & Medical | Finance & FinTech | HR & Recruitment | Education & EdTech | Real Estate | Manufacturing & Hardware | Media & Entertainment"
+  "industry": "one of: Horizontal SaaS (CRM, HR, Legal, Marketing etc.) | EC & Retail | Consumer Goods (FMCG) | Healthcare & Medical | Finance & FinTech | HR & Recruitment | Education & EdTech | Real Estate | Manufacturing & Hardware | Media & Entertainment",
+  "competitors_japan": [
+    {"name": "Company Name", "description": "One line description in English"},
+    {"name": "Company Name", "description": "One line description in English"},
+    {"name": "Company Name", "description": "One line description in English"}
+  ]
 }
+
+List 2-3 real Japanese competitors or dominant players in this industry in Japan.
 
 Page content:
 ${text.slice(0, 6000)}`;
@@ -1724,14 +1750,20 @@ ${text.slice(0, 6000)}`;
           // Populate UI
           $('homeSummary').textContent = parsed.summary || '—';
 
-          // Auto-select industry
-          const industryEl = $('settingIndustry');
+          // Industry: テキスト表示
           if (parsed.industry) {
-            for (let opt of industryEl.options) {
-              if (opt.value && parsed.industry.toLowerCase().includes(opt.value.split(' ')[0].toLowerCase())) {
-                industryEl.value = opt.value; break;
-              }
-            }
+            $('homeIndustryLabel').textContent = parsed.industry;
+            $('settingIndustry').value = parsed.industry;
+          }
+
+          // Japan competitors
+          if (parsed.competitors_japan && parsed.competitors_japan.length) {
+            $('homeCompetitors').innerHTML = parsed.competitors_japan.map(c =>
+              `<div class="rounded-lg px-2.5 py-2" style="background:rgba(255,255,255,0.35);border:1px solid rgba(200,185,215,0.3)">
+                <p class="text-xs font-semibold" style="color:rgba(20,10,25,0.85)">${c.name}</p>
+                <p class="text-[11px] mt-0.5" style="color:rgba(20,10,25,0.55)">${c.description}</p>
+              </div>`
+            ).join('');
           }
 
           // Store URL and propagate to LP tab
