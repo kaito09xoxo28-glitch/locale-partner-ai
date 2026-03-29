@@ -1674,23 +1674,39 @@ Convert the provided Western LP content into a Japan-optimized version. If image
           // 1. Fetch HTML via proxies
           setMsg(tpl('lp_status_fetching'));
           const proxies = [
-            (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
-            (u) => 'https://corsproxy.io/?' + encodeURIComponent(u),
-            (u) => u
+            { name: 'allorigins-json', fn: async (u) => {
+              const r = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(u), { signal: AbortSignal.timeout(15000) });
+              if (!r.ok) return '';
+              const j = await r.json();
+              return j?.contents || '';
+            }},
+            { name: 'allorigins-raw', fn: async (u) => {
+              const r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(u), { signal: AbortSignal.timeout(15000) });
+              return r.ok ? await r.text() : '';
+            }},
+            { name: 'corsproxy', fn: async (u) => {
+              const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(u), { signal: AbortSignal.timeout(15000) });
+              return r.ok ? await r.text() : '';
+            }},
+            { name: 'codetabs', fn: async (u) => {
+              const r = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u), { signal: AbortSignal.timeout(15000) });
+              return r.ok ? await r.text() : '';
+            }},
+            { name: 'direct', fn: async (u) => {
+              const r = await fetch(u, { signal: AbortSignal.timeout(10000) });
+              return r.ok ? await r.text() : '';
+            }}
           ];
           let rawHtml = '';
           for (let pi = 0; pi < proxies.length; pi++) {
             try {
               setMsg(tpl('lp_status_fetching_n', { n: pi + 1, total: proxies.length }));
-              const res = await fetch(proxies[pi](targetUrl), { signal: AbortSignal.timeout(15000) });
-              if (res.ok) {
-                const text = await res.text();
-                if (text && text.includes('<')) { rawHtml = text; break; }
-              }
+              const text = await proxies[pi].fn(targetUrl);
+              if (text && text.includes('<')) { rawHtml = text; break; }
             } catch(e) { /* next proxy */ }
           }
 
-          if (!rawHtml) throw new Error(tpl('lp_status_fetching'));
+          if (!rawHtml) throw new Error('HTML fetch failed. The site may block proxy access. Try a different URL.');
 
           // Show original in left iframe
           const origBlob = new Blob([rawHtml], { type: 'text/html;charset=utf-8' });
@@ -1810,6 +1826,9 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         } catch(e) {
           if ($('htmlLoadingMsg')) $('htmlLoadingMsg').classList.add('hidden');
           if ($('htmlPlaceholder')) $('htmlPlaceholder').classList.remove('hidden');
+          if ($('originalPreviewLoading')) $('originalPreviewLoading').classList.add('hidden');
+          if ($('originalPreviewPlaceholder')) $('originalPreviewPlaceholder').classList.remove('hidden');
+          if ($('locSummaryText')) { $('locSummaryText').textContent = tpl('lp_summary_placeholder'); $('locSummaryText').style.color = 'rgba(255,255,255,0.5)'; }
           setStatus('error', tpl('lp_status_fail', { msg: e.message }));
         } finally {
           if ($('lpGenerateBtn')) { $('lpGenerateBtn').disabled = false; $('lpGenerateBtn').textContent = tpl('lp_generate_btn'); }
