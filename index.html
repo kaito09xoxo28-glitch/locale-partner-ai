@@ -243,9 +243,7 @@
   </head>
   <body class="min-h-screen text-slate-900 antialiased" style="background:#f0ecf5">
     <!-- Video background -->
-    <video id="videoBg" autoplay loop muted playsinline>
-      <source src="bg.mp4" type="video/mp4">
-    </video>
+    <img id="videoBg" src="bg.png" alt="" />
     <div id="videoBgOverlay"></div>
 
     <div class="flex min-h-screen app-shell">
@@ -1952,71 +1950,161 @@ Convert the provided Western LP content into a Japan-optimized version. If image
       };
 
       // Add chat message to UI
-      function ncAddMessage(role, text) {
+      function ncAddMessage(role, content) {
         const container = $('ncChatMessages');
         if (!container) return;
-        // Remove placeholder
         const placeholder = container.querySelector('[data-i18n="nc_chat_placeholder"]');
         if (placeholder) placeholder.remove();
 
         const div = document.createElement('div');
         div.className = 'rounded-xl px-3 py-2.5 text-xs leading-relaxed';
         if (role === 'user') {
-          div.style.cssText = 'background:rgba(99,102,241,0.12);color:rgba(255,255,255,0.85);margin-left:25%;border:1px solid rgba(99,102,241,0.15);';
-          div.textContent = text;
+          div.style.cssText = 'background:rgba(99,102,241,0.12);color:rgba(255,255,255,0.85);margin-left:20%;border:1px solid rgba(99,102,241,0.15);';
+          div.textContent = content;
         } else {
-          div.style.cssText = 'background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.75);margin-right:10%;border:1px solid rgba(200,185,215,0.1);';
-          // Split on double newline: first part = explanation, second = diff
-          const parts = text.split('\n\n');
-          if (parts.length >= 2) {
-            const expSpan = document.createElement('div');
-            expSpan.textContent = parts[0];
-            expSpan.style.cssText = 'margin-bottom:6px;';
-            div.appendChild(expSpan);
-            const diffSpan = document.createElement('div');
-            diffSpan.textContent = parts.slice(1).join('\n\n');
-            diffSpan.style.cssText = 'font-family:monospace;font-size:10px;color:rgba(34,197,94,0.8);padding:4px 8px;border-radius:6px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.1);';
-            div.appendChild(diffSpan);
-          } else {
-            div.textContent = text;
+          div.style.cssText = 'background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.75);margin-right:5%;border:1px solid rgba(200,185,215,0.1);';
+          // Parse: split message and changes
+          const changesMatch = content.match(/<changes>([\s\S]*?)<\/changes>/);
+          const msgPart = content.replace(/<changes>[\s\S]*?<\/changes>/, '').trim();
+          
+          if (msgPart) {
+            const msgDiv = document.createElement('div');
+            msgDiv.textContent = msgPart;
+            msgDiv.style.cssText = 'margin-bottom:6px;line-height:1.6;';
+            div.appendChild(msgDiv);
+          }
+          
+          if (changesMatch) {
+            try {
+              const changes = JSON.parse(changesMatch[1]);
+              if (Array.isArray(changes) && changes.length > 0) {
+                changes.forEach(c => {
+                  if (c.old && c.new) {
+                    const diffDiv = document.createElement('div');
+                    diffDiv.style.cssText = 'font-family:monospace;font-size:10px;padding:6px 8px;border-radius:6px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.1);margin-top:4px;';
+                    const oldSpan = document.createElement('div');
+                    oldSpan.textContent = '- ' + c.old;
+                    oldSpan.style.cssText = 'color:rgba(239,68,68,0.7);text-decoration:line-through;margin-bottom:2px;';
+                    const newSpan = document.createElement('div');
+                    newSpan.textContent = '+ ' + c.new;
+                    newSpan.style.cssText = 'color:rgba(34,197,94,0.8);';
+                    diffDiv.appendChild(oldSpan);
+                    diffDiv.appendChild(newSpan);
+                    div.appendChild(diffDiv);
+                  }
+                });
+              }
+            } catch(e) { /* ignore parse errors */ }
           }
         }
         container.appendChild(div);
         container.scrollTop = container.scrollHeight;
       }
 
-      // Send revision request
-      async function ncSendRevision() {
+      // Extract visible text from iframe for context
+      function ncGetPageText() {
+        const iframe = $('htmlPreviewFrame');
+        if (!iframe) return '';
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow?.document;
+          if (!doc || !doc.body) return '';
+          const skipTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'SVG']);
+          const texts = [];
+          const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, {
+            acceptNode: (n) => {
+              const p = n.parentElement;
+              if (!p || skipTags.has(p.tagName)) return NodeFilter.FILTER_REJECT;
+              const t = n.textContent.replace(/\s+/g, ' ').trim();
+              if (!t || t.length < 2) return NodeFilter.FILTER_SKIP;
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          });
+          while (walker.nextNode()) texts.push(walker.currentNode.textContent.trim());
+          return texts.join('\n');
+        } catch(e) { return ''; }
+      }
+
+      // Apply changes to iframe DOM
+      function ncApplyChanges(changesJson) {
+        const iframe = $('htmlPreviewFrame');
+        if (!iframe) return 0;
+        let currentDoc;
+        try {
+          currentDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        } catch(e) { return 0; }
+        if (!currentDoc || !currentDoc.body) return 0;
+
+        let applied = 0;
+        const changes = typeof changesJson === 'string' ? JSON.parse(changesJson) : changesJson;
+        if (!Array.isArray(changes)) return 0;
+
+        for (const change of changes) {
+          if (!change.old || !change.new) continue;
+          // Try text node replacement first
+          const walker = currentDoc.createTreeWalker(currentDoc.body, NodeFilter.SHOW_TEXT);
+          let found = false;
+          while (walker.nextNode()) {
+            const node = walker.currentNode;
+            if (node.textContent.includes(change.old)) {
+              node.textContent = node.textContent.replace(change.old, change.new);
+              found = true;
+              applied++;
+              break;
+            }
+          }
+          if (!found) {
+            // Fallback: innerHTML
+            const before = currentDoc.body.innerHTML;
+            currentDoc.body.innerHTML = currentDoc.body.innerHTML.replace(change.old, change.new);
+            if (currentDoc.body.innerHTML !== before) applied++;
+          }
+        }
+
+        if (applied > 0) {
+          const newHtml = '<!DOCTYPE html>\n' + currentDoc.documentElement.outerHTML;
+          localizedHtmlBlob = new Blob([newHtml], { type: 'text/html;charset=utf-8' });
+          // Re-inject click handlers
+          setTimeout(injectClickHandlers, 300);
+        }
+        return applied;
+      }
+
+      // Send chat message
+      async function ncSendMessage() {
         const input = $('ncChatInput');
         if (!input) return;
-        const instruction = input.value.trim();
-        if (!instruction) return;
+        const userText = input.value.trim();
+        if (!userText) return;
 
         const apiKey = $('apiKey').value.trim();
         if (!apiKey) { setStatus('error', t('status_enter_key')); return; }
 
-        // Get current HTML from iframe
-        const iframe = $('htmlPreviewFrame');
-        if (!iframe) return;
-        let currentDoc;
-        try {
-          currentDoc = iframe.contentDocument || iframe.contentWindow?.document;
-        } catch(e) { return; }
-        if (!currentDoc) return;
-
-        const selectedContext = ncSelectedText ? ncSelectedText : '';
         input.value = '';
         if ($('ncSendBtn')) $('ncSendBtn').disabled = true;
 
-        // Add user message
-        const userMsg = selectedContext ? '[' + selectedContext.substring(0, 50) + '] ' + instruction : instruction;
-        ncAddMessage('user', userMsg);
+        // Build user message with selected element context
+        let userContent = userText;
+        if (ncSelectedText) {
+          userContent = '[Selected: "' + ncSelectedText + '"]\n' + userText;
+        }
 
-        // Build prompt - ask for explanation
+        // Show user message in chat
+        ncAddMessage('user', ncSelectedText ? ncSelectedText.substring(0, 60) + '... >> ' + userText : userText);
+
+        // Add to history
+        ncChatHistory.push({ role: 'user', content: userContent });
+
+        // Build system prompt with current page content
+        const pageText = ncGetPageText();
         const lang = currentLang === 'jp' ? 'Japanese' : 'English';
-        const prompt = selectedContext
-          ? 'The user selected this text from a localized Japanese landing page:\n"' + selectedContext + '"\n\nTheir revision instruction: "' + instruction + '"\n\nReturn ONLY a JSON object with exactly three keys:\n{"old": "the exact current text to find", "new": "the replacement text", "explanation": "brief ' + lang + ' explanation of what you changed and why"}\n\nThe "old" value must exactly match the selected text. Apply the revision to produce natural Japanese. Return ONLY the JSON, no other text.'
-          : 'The user wants to revise a localized Japanese landing page. Their instruction: "' + instruction + '"\n\nContext: this is a tech/SaaS landing page localized from English to Japanese.\n\nReturn ONLY a JSON object:\n{"old": "exact text to find in the page", "new": "replacement text", "explanation": "brief ' + lang + ' explanation of what you changed and why"}\nReturn ONLY the JSON, no other text.';
+        const systemPrompt = 'You are a native Japanese language reviewer helping to refine a localized landing page. '
+          + 'Respond in ' + lang + '. Be conversational and explain your reasoning. '
+          + 'When you make text changes, include them at the END of your response in this exact format:\n'
+          + '<changes>[{"old": "exact current text", "new": "replacement text"}]</changes>\n'
+          + 'The "old" value MUST exactly match text from the page. You can include multiple changes.\n'
+          + 'If the user is just asking a question without requesting changes, respond normally without the <changes> tag.\n'
+          + 'If a specific element is selected (shown in [Selected: "..."]), focus your changes on that text.\n\n'
+          + '--- Current page text content ---\n' + pageText.substring(0, 8000);
 
         try {
           const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -2029,60 +2117,39 @@ Convert the provided Western LP content into a Japan-optimized version. If image
             },
             body: JSON.stringify({
               model: 'claude-sonnet-4-20250514',
-              max_tokens: 1024,
-              messages: [{ role: 'user', content: prompt }]
+              max_tokens: 2048,
+              system: systemPrompt,
+              messages: ncChatHistory.slice(-10) // Keep last 10 messages for context
             })
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error?.message || 'API error');
 
-          const raw = data.content?.find(c => c.type === 'text')?.text || '';
-          const cleaned = raw.replace(/```json\n?|\n?```/g, '').trim();
-          const diff = JSON.parse(cleaned);
+          const responseText = data.content?.find(c => c.type === 'text')?.text || '';
+          
+          // Add to chat history
+          ncChatHistory.push({ role: 'assistant', content: responseText });
 
-          if (!diff.old || !diff.new) throw new Error('Invalid response format');
-
-          // Apply the change to the iframe
-          const body = currentDoc.body;
-          const walker = currentDoc.createTreeWalker(body, NodeFilter.SHOW_TEXT);
-          let applied = false;
-          while (walker.nextNode()) {
-            const node = walker.currentNode;
-            if (node.textContent.includes(diff.old)) {
-              node.textContent = node.textContent.replace(diff.old, diff.new);
-              applied = true;
-              break;
-            }
+          // Apply changes if present
+          const changesMatch = responseText.match(/<changes>([\s\S]*?)<\/changes>/);
+          if (changesMatch) {
+            try {
+              const changes = JSON.parse(changesMatch[1]);
+              const appliedCount = ncApplyChanges(changes);
+              ncRevisions.push(...changes.filter(c => c.old && c.new));
+              if ($('ncRevCount')) $('ncRevCount').textContent = ncRevisions.length + ' revision' + (ncRevisions.length !== 1 ? 's' : '');
+            } catch(e) { /* parse error */ }
           }
 
-          if (!applied) {
-            // Try innerHTML replacement as fallback
-            body.innerHTML = body.innerHTML.replace(diff.old, diff.new);
-            applied = true;
-          }
+          // Show assistant message
+          ncAddMessage('assistant', responseText);
 
-          if (applied) {
-            // Update the stored HTML blob
-            const newHtml = '<!DOCTYPE html>\n' + currentDoc.documentElement.outerHTML;
-            localizedHtmlBlob = new Blob([newHtml], { type: 'text/html;charset=utf-8' });
-
-            // Show conversational response with diff
-            const explanation = diff.explanation || '';
-            const diffLine = '"' + diff.old.substring(0, 40) + (diff.old.length > 40 ? '...' : '') + '" → "' + diff.new.substring(0, 40) + (diff.new.length > 40 ? '...' : '') + '"';
-            ncAddMessage('assistant', explanation + '\n\n' + diffLine);
-            ncRevisions.push({ old: diff.old, new: diff.new, instruction });
-            if ($('ncRevCount')) $('ncRevCount').textContent = ncRevisions.length + ' revision' + (ncRevisions.length > 1 ? 's' : '');
-
-            // Clear selection
-            if (ncHighlightEl) ncHighlightEl.classList.remove('nc-selected');
-            ncHighlightEl = null;
-            ncSelectedEl = null;
-            ncSelectedText = '';
-            if ($('ncSelectedWrap')) $('ncSelectedWrap').classList.add('hidden');
-
-            // Re-inject click handlers (DOM changed)
-            setTimeout(injectClickHandlers, 300);
-          }
+          // Clear selection
+          if (ncHighlightEl) ncHighlightEl.classList.remove('nc-selected');
+          ncHighlightEl = null;
+          ncSelectedEl = null;
+          ncSelectedText = '';
+          if ($('ncSelectedWrap')) $('ncSelectedWrap').classList.add('hidden');
 
         } catch(e) {
           ncAddMessage('assistant', tpl('nc_error') + ': ' + e.message);
@@ -2093,9 +2160,12 @@ Convert the provided Western LP content into a Japan-optimized version. If image
       }
 
       // Bind send button and Enter key
-      if ($('ncSendBtn')) $('ncSendBtn').onclick = ncSendRevision;
+      if ($('ncSendBtn')) $('ncSendBtn').onclick = ncSendMessage;
       if ($('ncChatInput')) $('ncChatInput').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') ncSendRevision();
+        if (e.key === 'Enter' && !e.isComposing) {
+          e.preventDefault();
+          ncSendMessage();
+        }
       });
 
       // Fetch URL (used by other tabs if needed)
