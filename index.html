@@ -503,7 +503,7 @@
                         style="background:rgba(255,255,255,0.5);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.9);" />
                       <button id="lpGenerateBtn" type="button"
                         class="btn-hover flex-shrink-0 rounded-xl px-6 py-3 text-sm font-semibold disabled:opacity-50"
-                        style="background:rgba(99,102,241,0.85);color:#fff;" data-i18n="lp_generate_btn">
+                        style="background:#0f172a;color:#fff;" data-i18n="lp_generate_btn">
                         Generate
                       </button>
                       <button id="lpClearBtn" type="button"
@@ -590,6 +590,15 @@
 
                 <div class="p-5 relative" style="min-height:55vh;">
                   <div id="statusBox" class="mb-4 hidden rounded-lg border px-3 py-2 text-xs"></div>
+                  
+                  <!-- Localization Summary -->
+                  <div id="locSummaryWrap" class="hidden mb-4 rounded-xl p-4" style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);">
+                    <div class="flex items-center gap-2 mb-2">
+                      <svg class="w-4 h-4" style="color:rgba(99,102,241,0.8)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      <span class="text-xs font-semibold" style="color:rgba(99,102,241,0.9)" data-i18n="lp_summary_title">Localization Summary</span>
+                    </div>
+                    <p id="locSummaryText" class="text-xs leading-relaxed" style="color:rgba(20,10,25,0.7)"></p>
+                  </div>
                   
                   <!-- HTML preview area -->
                   <div class="rounded-xl overflow-hidden" style="border:1px solid rgba(200,185,215,0.3);height:55vh;">
@@ -1021,7 +1030,9 @@
           lp_status_done: "Done! {n} texts localized to Japanese",
           lp_status_fail: "Failed: {msg}",
           lp_status_no_text: "No translatable text found",
-          lp_enter_url: "Please enter a URL"
+          lp_enter_url: "Please enter a URL",
+          lp_summary_title: "Localization Summary",
+          lp_summary_generating: "Generating summary..."
         },
         jp: {
           sidebar_desc: "日本市場向けAIローカライズ",
@@ -1079,6 +1090,8 @@
           lp_status_done: "完了 {n}件のテキストを日本語に変換しました",
           lp_status_no_text: "翻訳対象のテキストが見つかりませんでした",
           lp_enter_url: "URLを入力してください",
+          lp_summary_title: "ローカライゼーションサマリー",
+          lp_summary_generating: "サマリーを生成中...",
           lp_status_fail: "失敗: {msg}",
           set_title: "パーソナライズ設定",
           set_subtitle: "一度設定すれば全ツールに反映されます",
@@ -1553,6 +1566,8 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if ($('htmlLoadingMsg')) $('htmlLoadingMsg').classList.add('hidden');
         if ($('htmlPreviewFrame')) { $('htmlPreviewFrame').classList.add('hidden'); $('htmlPreviewFrame').src = ''; }
         if ($('downloadHtmlBtn')) { $('downloadHtmlBtn').classList.add('hidden'); $('downloadHtmlBtn').disabled = true; }
+        if ($('locSummaryWrap')) $('locSummaryWrap').classList.add('hidden');
+        if ($('locSummaryText')) $('locSummaryText').textContent = '';
         clearStatus();
       };
 
@@ -1581,6 +1596,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if ($('htmlLoadingMsg')) $('htmlLoadingMsg').classList.remove('hidden');
         clearStatus();
         localizedHtmlBlob = null;
+        if ($('locSummaryWrap')) $('locSummaryWrap').classList.add('hidden');
 
         // Show original in left iframe
         if ($('originalPreviewPlaceholder')) $('originalPreviewPlaceholder').classList.add('hidden');
@@ -1712,12 +1728,17 @@ Convert the provided Western LP content into a Japan-optimized version. If image
             iframe.onload = () => {
               if ($('htmlLoadingMsg')) $('htmlLoadingMsg').classList.add('hidden');
               iframe.classList.remove('hidden');
+              // Setup synchronized scrolling
+              setupScrollSync();
             };
             iframe.src = blobUrl;
           }
 
           if ($('downloadHtmlBtn')) { $('downloadHtmlBtn').classList.remove('hidden'); $('downloadHtmlBtn').disabled = false; }
           setStatus('success', tpl('lp_status_done', { n: allTexts.length }));
+
+          // 6. Generate localization summary (non-blocking)
+          generateLocSummary(apiKey, allTexts, translated);
 
         } catch(e) {
           if ($('htmlLoadingMsg')) $('htmlLoadingMsg').classList.add('hidden');
@@ -1735,6 +1756,78 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         a.download = 'jp-lp-' + Date.now() + '.html';
         a.click();
       };
+
+      // Synchronized scrolling between original and localized iframes
+      let scrollSyncing = false;
+      function setupScrollSync() {
+        const origFrame = $('originalPreviewFrame');
+        const locFrame = $('htmlPreviewFrame');
+        if (!origFrame || !locFrame) return;
+        try {
+          const origDoc = origFrame.contentDocument || origFrame.contentWindow?.document;
+          const locDoc = locFrame.contentDocument || locFrame.contentWindow?.document;
+          if (!origDoc || !locDoc) return;
+
+          const syncScroll = (source, target) => {
+            if (scrollSyncing) return;
+            scrollSyncing = true;
+            const sourceEl = source.scrollingElement || source.documentElement;
+            const targetEl = target.scrollingElement || target.documentElement;
+            const maxSource = sourceEl.scrollHeight - sourceEl.clientHeight;
+            const maxTarget = targetEl.scrollHeight - targetEl.clientHeight;
+            if (maxSource > 0 && maxTarget > 0) {
+              const ratio = sourceEl.scrollTop / maxSource;
+              targetEl.scrollTop = ratio * maxTarget;
+            }
+            requestAnimationFrame(() => { scrollSyncing = false; });
+          };
+
+          origDoc.addEventListener('scroll', () => syncScroll(origDoc, locDoc));
+          locDoc.addEventListener('scroll', () => syncScroll(locDoc, origDoc));
+        } catch(e) { console.log('Scroll sync not available:', e); }
+      }
+
+      // Generate localization summary
+      async function generateLocSummary(apiKey, origTexts, translatedTexts) {
+        if ($('locSummaryWrap')) $('locSummaryWrap').classList.remove('hidden');
+        if ($('locSummaryText')) $('locSummaryText').textContent = tpl('lp_summary_generating');
+        
+        // Sample some before/after pairs (max 15 to keep prompt small)
+        const sampleSize = Math.min(15, origTexts.length);
+        const step = Math.max(1, Math.floor(origTexts.length / sampleSize));
+        const samples = [];
+        for (let i = 0; i < origTexts.length && samples.length < sampleSize; i += step) {
+          if (origTexts[i] && translatedTexts[i]) {
+            samples.push({ en: origTexts[i], ja: translatedTexts[i] });
+          }
+        }
+
+        const lang = currentLang === 'jp' ? 'Japanese' : 'English';
+        try {
+          const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+              'x-api-key': apiKey,
+              'anthropic-version': '2023-06-01',
+              'anthropic-dangerous-direct-browser-access': 'true'
+            },
+            body: JSON.stringify({
+              model: 'claude-sonnet-4-20250514',
+              max_tokens: 512,
+              messages: [{ role: 'user', content: 'You localized a landing page from English to Japanese. Here are sample translations (total: ' + origTexts.length + ' items):\n\n' + JSON.stringify(samples) + '\n\nWrite a brief localization summary in ' + lang + ' (3-4 sentences). Cover: what the page is about, key localization decisions (tone, terminology, cultural adaptation), and total items translated. Be concise and professional.' }]
+            })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            const summary = data.content?.find(c => c.type === 'text')?.text || '';
+            if ($('locSummaryText')) $('locSummaryText').textContent = summary;
+          }
+        } catch(e) {
+          if ($('locSummaryText')) $('locSummaryText').textContent = '';
+          if ($('locSummaryWrap')) $('locSummaryWrap').classList.add('hidden');
+        }
+      }
 
       // Generate button → HTML localization
       if ($('lpGenerateBtn')) $('lpGenerateBtn').onclick = localizeHTML;
