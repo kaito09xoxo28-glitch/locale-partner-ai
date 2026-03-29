@@ -489,49 +489,46 @@
 
             <!-- LP Tab -->
             <div id="tabLP">
-              <!-- Top Row: URL Input (left) + Summary (right) -->
-              <div class="grid gap-4 lg:grid-cols-2 mb-4">
-                <!-- URL Input -->
-                <section class="card-panel glass-card rounded-xl">
-                  <div class="p-5">
-                    <button id="fetchUrlBtn" type="button" class="hidden" aria-hidden="true"></button>
-                    <span class="mb-2 block text-sm font-medium" style="color:rgba(255,255,255,0.6)" data-i18n="url_label">LP URL</span>
-                    <div class="flex gap-2">
-                      <input id="fetchUrlInput" type="url" placeholder="https://example.com/landing-page"
-                        class="min-w-0 flex-1 rounded-xl px-4 py-3 text-sm outline-none"
-                        style="background:rgba(255,255,255,0.5);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.9);" />
-                      <button id="lpGenerateBtn" type="button"
-                        class="btn-hover flex-shrink-0 rounded-xl px-6 py-3 text-sm font-semibold disabled:opacity-50"
-                        style="background:#0f172a;color:#fff;" data-i18n="lp_generate_btn">
-                        Generate
-                      </button>
-                      <button id="lpClearBtn" type="button"
-                        class="btn-hover flex-shrink-0 rounded-xl px-4 py-3 text-sm"
-                        style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.12);">
-                        Clear
-                      </button>
-                    </div>
-                    <div id="statusBox" class="mt-3 hidden rounded-lg border px-3 py-2 text-xs"></div>
-                  </div>
-                </section>
-
-                <!-- Localization Summary -->
-                <section class="card-panel glass-card rounded-xl">
-                  <div class="p-5 h-full flex flex-col">
-                    <div class="flex items-center justify-between mb-2">
-                      <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4" style="color:rgba(99,102,241,0.8)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span class="text-sm font-semibold" style="color:rgba(255,255,255,0.9)" data-i18n="lp_summary_title">Localization Summary</span>
+              <!-- Top: URL Input + Summary (single card) -->
+              <section class="card-panel glass-card rounded-xl mb-4">
+                <div class="p-5">
+                  <button id="fetchUrlBtn" type="button" class="hidden" aria-hidden="true"></button>
+                  <div class="flex flex-col lg:flex-row gap-4">
+                    <!-- Left: URL + buttons -->
+                    <div class="flex-1">
+                      <span class="mb-2 block text-sm font-medium" style="color:rgba(255,255,255,0.6)" data-i18n="url_label">LP URL</span>
+                      <div class="flex gap-2">
+                        <input id="fetchUrlInput" type="url" placeholder="https://example.com/landing-page"
+                          class="min-w-0 flex-1 rounded-xl px-4 py-3 text-sm outline-none"
+                          style="background:rgba(255,255,255,0.5);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.9);" />
+                        <button id="lpGenerateBtn" type="button"
+                          class="btn-hover flex-shrink-0 rounded-xl px-6 py-3 text-sm font-semibold disabled:opacity-50"
+                          style="background:#0f172a;color:#ffffff;" data-i18n="lp_generate_btn">
+                          Generate
+                        </button>
+                        <button id="lpClearBtn" type="button"
+                          class="btn-hover flex-shrink-0 rounded-xl px-4 py-3 text-sm"
+                          style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.12);">
+                          Clear
+                        </button>
                       </div>
-                      <button id="downloadHtmlBtn" class="btn-hover rounded-lg px-4 py-1.5 text-xs font-medium disabled:opacity-40 hidden" disabled
-                        style="background:rgba(99,102,241,0.15);color:rgba(129,140,248,1);border:1px solid rgba(99,102,241,0.3);" data-i18n="lp_download_btn">Download HTML</button>
+                      <div id="statusBox" class="mt-3 hidden rounded-lg border px-3 py-2 text-xs"></div>
                     </div>
-                    <div class="flex-1 flex items-center">
+                    <!-- Right: Summary + DL button -->
+                    <div class="flex-1 lg:border-l lg:pl-4" style="border-color:rgba(200,185,215,0.2);">
+                      <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                          <svg class="w-4 h-4" style="color:rgba(99,102,241,0.8)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                          <span class="text-sm font-semibold" style="color:rgba(255,255,255,0.9)" data-i18n="lp_summary_title">Localization Summary</span>
+                        </div>
+                        <button id="downloadHtmlBtn" class="btn-hover rounded-lg px-4 py-1.5 text-xs font-medium disabled:opacity-40 hidden" disabled
+                          style="background:rgba(99,102,241,0.15);color:rgba(129,140,248,1);border:1px solid rgba(99,102,241,0.3);" data-i18n="lp_download_btn">Download HTML</button>
+                      </div>
                       <p id="locSummaryText" class="text-xs leading-relaxed" style="color:rgba(255,255,255,0.5)" data-i18n="lp_summary_placeholder">Summary will appear after localization</p>
                     </div>
                   </div>
-                </section>
-              </div>
+                </div>
+              </section>
 
               <!-- Bottom Row: Before / After iframes (same height) -->
               <div class="grid gap-4 lg:grid-cols-2">
@@ -1711,8 +1708,6 @@ Convert the provided Western LP content into a Japan-optimized version. If image
             iframe.onload = () => {
               if ($('htmlLoadingMsg')) $('htmlLoadingMsg').classList.add('hidden');
               iframe.classList.remove('hidden');
-              // Setup synchronized scrolling
-              setupScrollSync();
             };
             iframe.src = blobUrl;
           }
@@ -1739,47 +1734,6 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         a.download = 'jp-lp-' + Date.now() + '.html';
         a.click();
       };
-
-      // Synchronized scrolling between original and localized iframes
-      let scrollSyncing = false;
-      function setupScrollSync() {
-        const origFrame = $('originalPreviewFrame');
-        const locFrame = $('htmlPreviewFrame');
-        if (!origFrame || !locFrame) return;
-
-        function injectScrollListener(iframe, name) {
-          try {
-            const doc = iframe.contentDocument || iframe.contentWindow?.document;
-            if (!doc) return;
-            doc.addEventListener('scroll', () => {
-              if (scrollSyncing) return;
-              const el = doc.scrollingElement || doc.documentElement;
-              const max = el.scrollHeight - el.clientHeight;
-              if (max <= 0) return;
-              const ratio = el.scrollTop / max;
-              scrollSyncing = true;
-              syncTarget(name === 'orig' ? locFrame : origFrame, ratio);
-              requestAnimationFrame(() => { scrollSyncing = false; });
-            }, { passive: true });
-          } catch(e) { console.log('Scroll listener failed for ' + name, e); }
-        }
-
-        function syncTarget(targetFrame, ratio) {
-          try {
-            const doc = targetFrame.contentDocument || targetFrame.contentWindow?.document;
-            if (!doc) return;
-            const el = doc.scrollingElement || doc.documentElement;
-            const max = el.scrollHeight - el.clientHeight;
-            if (max > 0) el.scrollTop = ratio * max;
-          } catch(e) { /* cross-origin */ }
-        }
-
-        // Wait a bit for iframes to fully render
-        setTimeout(() => {
-          injectScrollListener(origFrame, 'orig');
-          injectScrollListener(locFrame, 'loc');
-        }, 500);
-      }
 
       // Generate localization summary
       async function generateLocSummary(apiKey, origTexts, translatedTexts) {
