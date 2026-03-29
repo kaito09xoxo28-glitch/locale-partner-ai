@@ -29,6 +29,18 @@
       .btn-hover { transition: transform 0.2s ease, background-color 0.2s ease; }
       .btn-hover:hover:not(:disabled) { transform: scale(1.03); }
       .btn-hover:active:not(:disabled) { transform: scale(0.98); }
+      .liquid-glass-btn {
+        background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.15) 100%) !important;
+        backdrop-filter: blur(12px) saturate(1.4);
+        -webkit-backdrop-filter: blur(12px) saturate(1.4);
+        border: 1px solid rgba(255,255,255,0.3) !important;
+        color: rgba(20,10,25,0.85) !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.4);
+      }
+      .liquid-glass-btn:hover:not(:disabled) {
+        background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.25) 100%) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
+      }
 
       .card-panel { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06); transition: box-shadow 0.25s ease; }
       .card-panel:hover { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.08); }
@@ -249,7 +261,7 @@
           </a>
           <a href="javascript:void(0)" id="navLP" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            LP Localization
+            LP
           </a>
           <a href="javascript:void(0)" id="navCreative" class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -309,7 +321,7 @@
         <header class="glass-header flex-shrink-0 px-8 py-5">
           <div class="flex items-center justify-between">
             <div>
-              <h2 id="headerTitle" class="text-xl font-semibold tracking-tight" style="color:rgba(20,10,25,0.92)" data-i18n="header_title">LP Localization</h2>
+              <h2 id="headerTitle" class="text-xl font-semibold tracking-tight" style="color:rgba(20,10,25,0.92)" data-i18n="header_title">LP</h2>
               <p id="headerDesc" class="mt-1 text-sm" style="color:rgba(20,10,25,0.5)" data-i18n="header_desc">Generate Japan-optimized landing page copy</p>
             </div>
             <div class="flex items-center gap-2">
@@ -502,8 +514,8 @@
                           class="min-w-0 flex-1 rounded-xl px-4 py-3 text-sm outline-none"
                           style="background:rgba(255,255,255,0.5);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.9);" />
                         <button id="lpGenerateBtn" type="button"
-                          class="btn-hover flex-shrink-0 rounded-xl px-6 py-3 text-sm font-semibold disabled:opacity-50"
-                          style="background:#0f172a;color:#ffffff;" data-i18n="lp_generate_btn">
+                          class="btn-hover flex-shrink-0 rounded-xl px-6 py-3 text-sm font-semibold disabled:opacity-50 liquid-glass-btn"
+                          data-i18n="lp_generate_btn">
                           Generate
                         </button>
                         <button id="lpClearBtn" type="button"
@@ -601,35 +613,19 @@
                       <p id="ncSelectedText" class="text-xs font-mono" style="color:rgba(255,255,255,0.8);word-break:break-all;max-height:60px;overflow:auto;"></p>
                     </div>
 
-                    <!-- Chat area -->
-                    <div class="grid gap-4 lg:grid-cols-2">
-                      <!-- Chat messages -->
-                      <div>
-                        <div id="ncChatMessages" class="rounded-lg p-3 space-y-2 overflow-y-auto" style="background:rgba(0,0,0,0.15);height:200px;border:1px solid rgba(200,185,215,0.15);">
-                          <p class="text-xs text-center" style="color:rgba(255,255,255,0.3)" data-i18n="nc_chat_placeholder">Click an element in the After preview, then describe your revision</p>
-                        </div>
-                        <!-- Input -->
-                        <div class="flex gap-2 mt-2">
-                          <input id="ncChatInput" type="text" placeholder="e.g. make this more casual / CTAを「まずは相談」に変更"
-                            class="min-w-0 flex-1 rounded-xl px-4 py-2.5 text-sm outline-none"
-                            style="background:rgba(255,255,255,0.5);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.9);" />
-                          <button id="ncSendBtn" type="button"
-                            class="btn-hover flex-shrink-0 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
-                            style="background:#0f172a;color:#ffffff;">
-                            Send
-                          </button>
-                        </div>
-                      </div>
-
-                      <!-- Revision history -->
-                      <div>
-                        <div class="flex items-center gap-2 mb-2">
-                          <span class="text-xs font-semibold" style="color:rgba(255,255,255,0.6)" data-i18n="nc_history_title">Revision History</span>
-                        </div>
-                        <div id="ncRevisionList" class="rounded-lg p-3 overflow-y-auto space-y-2" style="background:rgba(0,0,0,0.15);height:228px;border:1px solid rgba(200,185,215,0.15);">
-                          <p class="text-xs text-center" style="color:rgba(255,255,255,0.3)" data-i18n="nc_no_revisions">No revisions yet</p>
-                        </div>
-                      </div>
+                    <!-- Chat area (full width) -->
+                    <div id="ncChatMessages" class="rounded-xl p-4 space-y-3 overflow-y-auto" style="background:rgba(0,0,0,0.12);height:220px;border:1px solid rgba(200,185,215,0.12);">
+                      <p class="text-xs text-center" style="color:rgba(255,255,255,0.3)" data-i18n="nc_chat_placeholder">Click an element in the After preview, then describe your revision</p>
+                    </div>
+                    <!-- Input -->
+                    <div class="flex gap-2 mt-3">
+                      <input id="ncChatInput" type="text" placeholder="e.g. make this more casual / CTAを「まずは相談」に変更"
+                        class="min-w-0 flex-1 rounded-xl px-4 py-2.5 text-sm outline-none"
+                        style="background:rgba(255,255,255,0.5);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.9);" />
+                      <button id="ncSendBtn" type="button"
+                        class="btn-hover flex-shrink-0 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50 liquid-glass-btn">
+                        Send
+                      </button>
                     </div>
                   </div>
                 </section>
@@ -997,7 +993,7 @@
       const i18n = {
         en: {
           sidebar_desc: "AI localization for Japan",
-          header_title: "LP Localization",
+          header_title: "LP",
           header_desc: "Generate Japan-optimized landing page copy",
           api_key_label: "API Key",
           show_btn: "Show",
@@ -1078,7 +1074,7 @@
         },
         jp: {
           sidebar_desc: "日本市場向けAIローカライズ",
-          header_title: "LPローカライズ",
+          header_title: "LP",
           header_desc: "日本市場向けランディングページを生成",
           api_key_label: "APIキー",
           show_btn: "表示",
@@ -1626,7 +1622,6 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if ($('nativeCheckPanel')) $('nativeCheckPanel').classList.add('hidden');
         if ($('ncSelectedWrap')) $('ncSelectedWrap').classList.add('hidden');
         if ($('ncChatMessages')) $('ncChatMessages').innerHTML = '<p class="text-xs text-center" style="color:rgba(255,255,255,0.3)" data-i18n="nc_chat_placeholder">' + tpl('nc_chat_placeholder') + '</p>';
-        if ($('ncRevisionList')) $('ncRevisionList').innerHTML = '<p class="text-xs text-center" style="color:rgba(255,255,255,0.3)" data-i18n="nc_no_revisions">' + tpl('nc_no_revisions') + '</p>';
         if ($('ncRevCount')) $('ncRevCount').textContent = '0 revisions';
         ncRevisions = [];
         ncChatHistory = [];
@@ -1965,39 +1960,29 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if (placeholder) placeholder.remove();
 
         const div = document.createElement('div');
-        div.className = 'rounded-lg px-3 py-2 text-xs';
+        div.className = 'rounded-xl px-3 py-2.5 text-xs leading-relaxed';
         if (role === 'user') {
-          div.style.cssText = 'background:rgba(99,102,241,0.15);color:rgba(255,255,255,0.85);margin-left:20%;';
+          div.style.cssText = 'background:rgba(99,102,241,0.12);color:rgba(255,255,255,0.85);margin-left:25%;border:1px solid rgba(99,102,241,0.15);';
           div.textContent = text;
         } else {
-          div.style.cssText = 'background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);margin-right:20%;';
-          div.textContent = text;
+          div.style.cssText = 'background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.75);margin-right:10%;border:1px solid rgba(200,185,215,0.1);';
+          // Split on double newline: first part = explanation, second = diff
+          const parts = text.split('\n\n');
+          if (parts.length >= 2) {
+            const expSpan = document.createElement('div');
+            expSpan.textContent = parts[0];
+            expSpan.style.cssText = 'margin-bottom:6px;';
+            div.appendChild(expSpan);
+            const diffSpan = document.createElement('div');
+            diffSpan.textContent = parts.slice(1).join('\n\n');
+            diffSpan.style.cssText = 'font-family:monospace;font-size:10px;color:rgba(34,197,94,0.8);padding:4px 8px;border-radius:6px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.1);';
+            div.appendChild(diffSpan);
+          } else {
+            div.textContent = text;
+          }
         }
         container.appendChild(div);
         container.scrollTop = container.scrollHeight;
-      }
-
-      // Add revision to history
-      function ncAddRevision(oldText, newText, instruction) {
-        ncRevisions.push({ old: oldText, new: newText, instruction });
-        const list = $('ncRevisionList');
-        if (!list) return;
-        // Remove placeholder
-        const placeholder = list.querySelector('[data-i18n="nc_no_revisions"]');
-        if (placeholder) placeholder.remove();
-
-        const div = document.createElement('div');
-        div.className = 'rounded-lg p-2 text-[11px]';
-        div.style.cssText = 'background:rgba(255,255,255,0.05);border:1px solid rgba(200,185,215,0.1);';
-        div.innerHTML = '<div style="color:rgba(239,68,68,0.7);text-decoration:line-through;margin-bottom:2px;">' +
-          oldText.substring(0, 80) + (oldText.length > 80 ? '...' : '') +
-          '</div><div style="color:rgba(34,197,94,0.8);">' +
-          newText.substring(0, 80) + (newText.length > 80 ? '...' : '') +
-          '</div>';
-        list.appendChild(div);
-        list.scrollTop = list.scrollHeight;
-
-        if ($('ncRevCount')) $('ncRevCount').textContent = ncRevisions.length + ' revision' + (ncRevisions.length > 1 ? 's' : '');
       }
 
       // Send revision request
@@ -2027,10 +2012,11 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         const userMsg = selectedContext ? '[' + selectedContext.substring(0, 50) + '] ' + instruction : instruction;
         ncAddMessage('user', userMsg);
 
-        // Build prompt
+        // Build prompt - ask for explanation
+        const lang = currentLang === 'jp' ? 'Japanese' : 'English';
         const prompt = selectedContext
-          ? 'The user selected this text from a localized Japanese landing page:\n"' + selectedContext + '"\n\nTheir revision instruction: "' + instruction + '"\n\nReturn ONLY a JSON object with exactly two keys:\n{"old": "the exact current text to find", "new": "the replacement text"}\n\nThe "old" value must exactly match the selected text. Apply the revision to produce natural Japanese. Return ONLY the JSON, no explanation.'
-          : 'The user wants to revise a localized Japanese landing page. Their instruction: "' + instruction + '"\n\nContext: this is a tech/SaaS landing page localized from English to Japanese.\n\nReturn ONLY a JSON object: {"old": "exact text to find in the page", "new": "replacement text"}\nReturn ONLY the JSON, no explanation.';
+          ? 'The user selected this text from a localized Japanese landing page:\n"' + selectedContext + '"\n\nTheir revision instruction: "' + instruction + '"\n\nReturn ONLY a JSON object with exactly three keys:\n{"old": "the exact current text to find", "new": "the replacement text", "explanation": "brief ' + lang + ' explanation of what you changed and why"}\n\nThe "old" value must exactly match the selected text. Apply the revision to produce natural Japanese. Return ONLY the JSON, no other text.'
+          : 'The user wants to revise a localized Japanese landing page. Their instruction: "' + instruction + '"\n\nContext: this is a tech/SaaS landing page localized from English to Japanese.\n\nReturn ONLY a JSON object:\n{"old": "exact text to find in the page", "new": "replacement text", "explanation": "brief ' + lang + ' explanation of what you changed and why"}\nReturn ONLY the JSON, no other text.';
 
         try {
           const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -2080,8 +2066,12 @@ Convert the provided Western LP content into a Japan-optimized version. If image
             const newHtml = '<!DOCTYPE html>\n' + currentDoc.documentElement.outerHTML;
             localizedHtmlBlob = new Blob([newHtml], { type: 'text/html;charset=utf-8' });
 
-            ncAddMessage('assistant', tpl('nc_applied') + ': ' + diff.old.substring(0, 30) + ' -> ' + diff.new.substring(0, 30));
-            ncAddRevision(diff.old, diff.new, instruction);
+            // Show conversational response with diff
+            const explanation = diff.explanation || '';
+            const diffLine = '"' + diff.old.substring(0, 40) + (diff.old.length > 40 ? '...' : '') + '" → "' + diff.new.substring(0, 40) + (diff.new.length > 40 ? '...' : '') + '"';
+            ncAddMessage('assistant', explanation + '\n\n' + diffLine);
+            ncRevisions.push({ old: diff.old, new: diff.new, instruction });
+            if ($('ncRevCount')) $('ncRevCount').textContent = ncRevisions.length + ' revision' + (ncRevisions.length > 1 ? 's' : '');
 
             // Clear selection
             if (ncHighlightEl) ncHighlightEl.classList.remove('nc-selected');
@@ -2184,7 +2174,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
           $('headerTitle').textContent = 'Locale Partner AI';
           $('headerDesc').textContent = 'AI-powered Japan localization platform';
         } else if (isLP) {
-          $('headerTitle').textContent = currentLang === 'jp' ? 'LPローカライズ' : 'LP Localization';
+          $('headerTitle').textContent = currentLang === 'jp' ? 'LP' : 'LP';
           $('headerDesc').textContent = currentLang === 'jp' ? '日本市場向けランディングページを生成' : 'Generate Japan-optimized landing page copy';
         } else if (isSocial) {
           $('headerTitle').textContent = currentLang === 'jp' ? 'SNS投稿ローカライズ' : 'Social Media Localization';
