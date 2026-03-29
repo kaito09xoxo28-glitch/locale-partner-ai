@@ -112,7 +112,7 @@
       }
       #videoBgOverlay {
         position: fixed; inset: 0; z-index: 1;
-        background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(240,235,245,0.04) 100%);
+        background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(240,235,245,0.12) 100%);
         pointer-events: none;
       }
       .app-shell {
@@ -121,8 +121,8 @@
 
       /* ── Glassmorphism ── */
       .glass-sidebar {
-        background: rgba(255,252,255,0.10) !important;
-        border-right: 1px solid rgba(255,255,255,0.25) !important;
+        background: rgba(255,252,255,0.22) !important;
+        border-right: 1px solid rgba(255,255,255,0.35) !important;
         backdrop-filter: blur(28px) saturate(1.4);
         -webkit-backdrop-filter: blur(28px) saturate(1.4);
       }
@@ -135,8 +135,8 @@
       .glass-sidebar span#settingsSummary { color: rgba(30,20,35,0.4) !important; }
 
       .glass-header {
-        background: rgba(255,252,255,0.10) !important;
-        border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+        background: rgba(255,252,255,0.2) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.3) !important;
         backdrop-filter: blur(24px) saturate(1.3);
         -webkit-backdrop-filter: blur(24px) saturate(1.3);
       }
@@ -152,14 +152,14 @@
       .glass-header .rounded-full { background: rgba(255,255,255,0.3) !important; color: rgba(20,10,25,0.6) !important; }
 
       .glass-card {
-        background: rgba(255,252,255,0.14) !important;
-        border: 1px solid rgba(255,255,255,0.4) !important;
+        background: rgba(255,252,255,0.28) !important;
+        border: 1px solid rgba(255,255,255,0.5) !important;
         backdrop-filter: blur(20px) saturate(1.3);
         -webkit-backdrop-filter: blur(20px) saturate(1.3);
         color: rgba(20,10,25,0.85) !important;
-        box-shadow: 0 4px 24px rgba(180,160,200,0.10) !important;
+        box-shadow: 0 4px 24px rgba(180,160,200,0.12) !important;
       }
-      .glass-card:hover { background: rgba(255,252,255,0.22) !important; border-color: rgba(255,255,255,0.55) !important; }
+      .glass-card:hover { background: rgba(255,252,255,0.38) !important; border-color: rgba(255,255,255,0.65) !important; }
       .glass-card h2, .glass-card h3, .glass-card .font-semibold, .glass-card .font-medium { color: rgba(20,10,25,0.9) !important; }
       .glass-card p, .glass-card .text-slate-500, .glass-card .text-slate-600, .glass-card .text-xs { color: rgba(20,10,25,0.5) !important; }
       .glass-card label span, .glass-card .block { color: rgba(20,10,25,0.7) !important; }
@@ -188,11 +188,11 @@
 
       /* Home tab tool buttons */
       #tabHome .card-panel {
-        background: rgba(255,252,255,0.14) !important;
-        border: 1px solid rgba(255,255,255,0.4) !important;
+        background: rgba(255,252,255,0.28) !important;
+        border: 1px solid rgba(255,255,255,0.5) !important;
         backdrop-filter: blur(20px);
       }
-      #tabHome .card-panel:hover { background: rgba(255,252,255,0.24) !important; }
+      #tabHome .card-panel:hover { background: rgba(255,252,255,0.4) !important; }
       #tabHome .card-panel span.text-sm { color: rgba(20,10,25,0.9) !important; }
       #tabHome .card-panel p { color: rgba(20,10,25,0.5) !important; }
       #tabHome .card-panel .rounded-lg { background: rgba(255,255,255,0.35) !important; }
@@ -209,29 +209,13 @@
         border-color: rgba(180,160,200,0.25) !important;
         border-top-color: rgba(160,100,180,0.8) !important;
       }
-    
-      .tag-btn {
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 500;
-        border: 1px solid rgba(200,185,215,0.5);
-        background: rgba(255,255,255,0.4);
-        color: rgba(20,10,25,0.65);
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-      .tag-btn:hover { background: rgba(255,255,255,0.7); }
-      .tag-btn.active {
-        background: rgba(20,10,25,0.82);
-        color: #fff;
-        border-color: transparent;
-      }
-</style>
+    </style>
   </head>
-  <body class="min-h-screen text-slate-900 antialiased" style="background:transparent">
-    <!-- Image background -->
-    <img id="videoBg" src="bg.png" alt="" />
+  <body class="min-h-screen text-slate-900 antialiased" style="background:#f0ecf5">
+    <!-- Video background -->
+    <video id="videoBg" autoplay loop muted playsinline>
+      <source src="bg.mp4" type="video/mp4">
+    </video>
     <div id="videoBgOverlay"></div>
 
     <div class="flex min-h-screen app-shell">
@@ -270,34 +254,16 @@
         <!-- Sidebar bottom: API key + lang + settings -->
         <div class="border-t border-white/10 px-4 py-4 space-y-3">
           <span id="settingsSummary" class="hidden"></span>
-          <!-- API Keys accordion -->
+          <!-- API Key -->
           <div>
-            <button id="apiKeyToggleBtn" type="button" class="flex items-center justify-between w-full text-left"
-              style="color:rgba(20,10,25,0.5)">
-              <span class="text-[10px] font-medium uppercase tracking-wide">API Keys</span>
-              <span id="apiKeyStatus" class="text-[10px] px-1.5 py-0.5 rounded" style="background:rgba(239,68,68,0.15);color:#ef4444">Not set</span>
-            </button>
-            <div id="apiKeyPanel" class="hidden mt-2 space-y-2">
-              <div>
-                <label class="text-[10px] mb-1 block" style="color:rgba(20,10,25,0.4)">Anthropic</label>
-                <div class="flex gap-1.5">
-                  <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-..."
-                    class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
-                    style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
-                  <button id="toggleKey" type="button" class="rounded-lg px-2 py-1.5 text-xs"
-                    style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
-                </div>
-              </div>
-              <div>
-                <label class="text-[10px] mb-1 block" style="color:rgba(20,10,25,0.4)">OpenAI (Banner)</label>
-                <div class="flex gap-1.5">
-                  <input id="openaiKey" type="password" autocomplete="off" placeholder="sk-proj-..."
-                    class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
-                    style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
-                  <button id="toggleOpenaiKey" type="button" class="rounded-lg px-2 py-1.5 text-xs"
-                    style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
-                </div>
-              </div>
+            <label class="text-[10px] font-medium uppercase tracking-wide block mb-1.5" style="color:rgba(20,10,25,0.4)">API Key</label>
+            <div class="flex gap-1.5">
+              <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-..."
+                class="flex-1 min-w-0 rounded-lg px-2.5 py-1.5 text-xs outline-none"
+                style="background:rgba(255,255,255,0.45);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.85);" />
+              <button id="toggleKey" type="button"
+                class="rounded-lg px-2 py-1.5 text-xs transition-colors"
+                style="background:rgba(255,255,255,0.4);color:rgba(20,10,25,0.7);border:1px solid rgba(200,185,215,0.4);">Show</button>
             </div>
           </div>
           <!-- Language toggle -->
@@ -373,14 +339,20 @@
                       </div>
                       <div>
                         <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)">Industry</p>
-                        <p id="homeIndustryLabel" class="text-sm font-medium mb-1" style="color:rgba(20,10,25,0.85)">—</p>
-                        <input id="settingIndustry" type="hidden" value="" />
-                      </div>
-                      <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)">Japan Competitors</p>
-                        <div id="homeCompetitors" class="space-y-1">
-                          <p class="text-xs" style="color:rgba(20,10,25,0.45)">—</p>
-                        </div>
+                        <select id="settingIndustry" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                          style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
+                          <option value="">Not set</option>
+                          <option value="Horizontal SaaS (CRM, HR, Legal, Marketing etc.)">Horizontal SaaS</option>
+                          <option value="EC & Retail">EC・小売</option>
+                          <option value="Consumer Goods (FMCG)">消費財（FMCG）</option>
+                          <option value="Healthcare & Medical">ヘルスケア・医療</option>
+                          <option value="Finance & FinTech">金融・FinTech</option>
+                          <option value="HR & Recruitment">人材・HR</option>
+                          <option value="Education & EdTech">教育・EdTech</option>
+                          <option value="Real Estate">不動産</option>
+                          <option value="Manufacturing & Hardware">製造・ハードウェア</option>
+                          <option value="Media & Entertainment">メディア・エンタメ</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -393,56 +365,58 @@
                       </div>
                       <span class="text-sm font-semibold" style="color:rgba(255,255,255,0.9)">Japan Market Personalization</span>
                     </div>
-                    <div class="space-y-4">
-                      <!-- hidden inputs for compatibility -->
-                      <input type="hidden" id="settingGender" value="" />
-                      <input type="hidden" id="settingAge" value="" />
-                      <input type="hidden" id="settingTone" value="" />
-                      <input type="hidden" id="settingGoal" value="" />
-
-                      <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-2" style="color:rgba(20,10,25,0.4)">Target Gender</p>
-                        <div class="flex flex-wrap gap-1.5" data-group="settingGender">
-                          <button type="button" class="tag-btn" data-value="">Any</button>
-                          <button type="button" class="tag-btn" data-value="Male">Male</button>
-                          <button type="button" class="tag-btn" data-value="Female">Female</button>
-                          <button type="button" class="tag-btn" data-value="All genders">All</button>
+                    <div class="space-y-3">
+                      <div class="grid grid-cols-2 gap-3">
+                        <div>
+                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_gender">Target Gender</p>
+                          <select id="settingGender" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
+                            <option value="">Not set</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="All genders">All</option>
+                          </select>
+                        </div>
+                        <div>
+                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_age">Target Age</p>
+                          <select id="settingAge" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
+                            <option value="">Not set</option>
+                            <option value="Teens (13-19)">10代</option>
+                            <option value="Young adults (20-30s)">20〜30代</option>
+                            <option value="Middle-aged (40-50s)">40〜50代</option>
+                            <option value="Seniors (60+)">60代以上</option>
+                            <option value="All ages">All</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="grid grid-cols-2 gap-3">
+                        <div>
+                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_tone">Tone</p>
+                          <select id="settingTone" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
+                            <option value="">Not set</option>
+                            <option value="Professional and trustworthy">Professional</option>
+                            <option value="Casual and friendly">Casual</option>
+                            <option value="Warm and approachable">Warm</option>
+                            <option value="Authoritative and expert">Authoritative</option>
+                            <option value="Energetic and bold">Energetic</option>
+                          </select>
+                        </div>
+                        <div>
+                          <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_goal">Goal</p>
+                          <select id="settingGoal" class="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                            style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);">
+                            <option value="">Not set</option>
+                            <option value="Brand awareness">Brand awareness</option>
+                            <option value="Lead generation">Lead generation</option>
+                            <option value="Conversion / Purchase">Conversion</option>
+                            <option value="Retention / Re-engagement">Retention</option>
+                          </select>
                         </div>
                       </div>
                       <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-2" style="color:rgba(20,10,25,0.4)">Target Age</p>
-                        <div class="flex flex-wrap gap-1.5" data-group="settingAge">
-                          <button type="button" class="tag-btn" data-value="">Any</button>
-                          <button type="button" class="tag-btn" data-value="Teens (13-19)">Teens</button>
-                          <button type="button" class="tag-btn" data-value="Young adults (20-30s)">20-30s</button>
-                          <button type="button" class="tag-btn" data-value="Middle-aged (40-50s)">40-50s</button>
-                          <button type="button" class="tag-btn" data-value="Seniors (60+)">60+</button>
-                          <button type="button" class="tag-btn" data-value="All ages">All</button>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-2" style="color:rgba(20,10,25,0.4)">Tone</p>
-                        <div class="flex flex-wrap gap-1.5" data-group="settingTone">
-                          <button type="button" class="tag-btn" data-value="">Any</button>
-                          <button type="button" class="tag-btn" data-value="Professional and trustworthy">Professional</button>
-                          <button type="button" class="tag-btn" data-value="Casual and friendly">Casual</button>
-                          <button type="button" class="tag-btn" data-value="Warm and approachable">Warm</button>
-                          <button type="button" class="tag-btn" data-value="Authoritative and expert">Authoritative</button>
-                          <button type="button" class="tag-btn" data-value="Energetic and bold">Energetic</button>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-2" style="color:rgba(20,10,25,0.4)">Goal</p>
-                        <div class="flex flex-wrap gap-1.5" data-group="settingGoal">
-                          <button type="button" class="tag-btn" data-value="">Any</button>
-                          <button type="button" class="tag-btn" data-value="Brand awareness">Awareness</button>
-                          <button type="button" class="tag-btn" data-value="Lead generation">Lead gen</button>
-                          <button type="button" class="tag-btn" data-value="Conversion / Purchase">Conversion</button>
-                          <button type="button" class="tag-btn" data-value="Retention / Re-engagement">Retention</button>
-                        </div>
-                      </div>
-                      <div>
-                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)">Notes</p>
+                        <p class="text-[10px] uppercase tracking-wider mb-1.5" style="color:rgba(20,10,25,0.4)" data-i18n="set_notes">Notes</p>
                         <textarea id="settingNotes" rows="2" placeholder="e.g. Competitor: X, USP: Y, Brand voice: Z..."
                           class="w-full rounded-lg px-3 py-2 text-sm outline-none resize-none"
                           style="background:rgba(255,255,255,0.55);border:1px solid rgba(200,185,215,0.45);color:rgba(20,10,25,0.9);"></textarea>
@@ -513,6 +487,11 @@
                         class="btn-hover flex-shrink-0 rounded-xl px-6 py-3 text-sm font-semibold disabled:opacity-50"
                         style="background:rgba(255,255,255,0.92);color:#0f172a;">
                         Generate
+                      </button>
+                      <button id="lpLocalizeHtmlBtn" type="button"
+                        class="btn-hover flex-shrink-0 rounded-xl px-5 py-3 text-sm font-semibold disabled:opacity-50"
+                        style="background:rgba(99,102,241,0.85);color:#fff;">
+                        HTML化
                       </button>
                       <button id="lpClearBtn" type="button"
                         class="btn-hover flex-shrink-0 rounded-xl px-4 py-3 text-sm"
@@ -602,9 +581,11 @@
                   <div class="flex flex-wrap items-center gap-2">
                     <button id="copyMdBtn" class="btn-hover rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs hover:bg-slate-50 disabled:opacity-60" disabled data-i18n="copy_btn">Copy</button>
                     <button id="downloadBtn" class="btn-hover rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs hover:bg-slate-50 disabled:opacity-60" disabled data-i18n="save_btn">Save</button>
+                    <button id="downloadHtmlBtn" class="btn-hover rounded-lg border border-indigo-300 bg-indigo-50 px-3 py-1.5 text-xs text-indigo-700 hover:bg-indigo-100 disabled:opacity-40 hidden" disabled>HTML DL</button>
                     <div class="flex rounded-lg border border-slate-200 p-1 text-xs">
                       <button id="tabPreview" class="rounded-md px-2 py-1 font-medium bg-slate-900 text-white">Preview</button>
                       <button id="tabMarkdown" class="rounded-md px-2 py-1 text-slate-700 hover:bg-slate-100">Markdown</button>
+                      <button id="tabHtml" class="rounded-md px-2 py-1 text-slate-700 hover:bg-slate-100">HTML</button>
                     </div>
                   </div>
                 </div>
@@ -622,6 +603,15 @@
                   </div>
                   <div id="markdownPane" class="hidden">
                     <textarea id="outputMd" class="h-[60vh] w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-xs" readonly></textarea>
+                  </div>
+                  <div id="htmlPane" class="hidden">
+                    <div class="rounded-lg border border-slate-200 overflow-hidden" style="height:60vh;">
+                      <div id="htmlLoadingMsg" class="hidden flex items-center justify-center h-full text-sm text-slate-500 gap-3">
+                        <div class="loading-spinner"></div>
+                        <span id="htmlStatusMsg">HTMLをローカライズ中...</span>
+                      </div>
+                      <iframe id="htmlPreviewFrame" class="w-full h-full border-0 hidden" sandbox="allow-scripts allow-same-origin"></iframe>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -659,18 +649,6 @@
                           <input type="checkbox" id="chkIG" checked class="rounded"> Instagram
                         </label>
                       </div>
-                    </div>
-                    <!-- Image upload -->
-                    <div class="mt-4">
-                      <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
-                      <div class="flex items-center gap-2">
-                        <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
-                          📎 Upload image
-                          <input type="file" id="smFileInput" accept="image/*" multiple class="hidden" onchange="handleSubFileChange(this, smUploadedFiles, 'smFilePreviewArea')" />
-                        </label>
-                        <span class="text-xs text-slate-400">PNG, JPG supported</span>
-                      </div>
-                      <div id="smFilePreviewArea" class="hidden mt-2 space-y-1"></div>
                     </div>
                     <div class="mt-4">
                       <button id="smGenerateBtn" type="button"
@@ -751,13 +729,6 @@
                       <span class="text-xs text-slate-400 mt-1 block"><span id="crCharCount">0</span> chars</span>
                     </div>
 
-                    <!-- Custom format -->
-                    <div>
-                      <span class="text-xs font-medium text-slate-600 mb-2 block">Custom format (optional)</span>
-                      <input id="crCustomFormat" type="text" placeholder="e.g. 20 chars headline + 40 chars body"
-                        class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
-                    </div>
-
                     <!-- Platform checkboxes -->
                     <div>
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Platforms</span>
@@ -774,28 +745,11 @@
                       </div>
                     </div>
 
-                    <!-- Output type -->
+                    <!-- Custom format -->
                     <div>
-                      <span class="text-xs font-medium text-slate-600 mb-2 block">Output type</span>
-                      <div class="flex gap-3">
-                        <label class="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
-                          <input type="radio" name="crOutputType" id="crOutputText" value="text" checked class="rounded"> Text only
-                        </label>
-                        <label class="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
-                          <input type="radio" name="crOutputType" id="crOutputImage" value="image" class="rounded"> Image banner
-                        </label>
-                      </div>
-                      <!-- Image upload -->
-                      <div id="crImageUploadArea" class="mt-3">
-                        <div class="flex items-center gap-2">
-                          <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
-                            📎 Upload image
-                            <input type="file" id="crFileInput" accept="image/*" class="hidden" onchange="handleSubFileChange(this, crUploadedFiles, 'crFilePreviewArea')" />
-                          </label>
-                          <span class="text-xs text-slate-400">PNG, JPG (optional)</span>
-                        </div>
-                        <div id="crFilePreviewArea" class="hidden mt-2 space-y-1"></div>
-                      </div>
+                      <span class="text-xs font-medium text-slate-600 mb-2 block">Custom format (optional)</span>
+                      <input id="crCustomFormat" type="text" placeholder="e.g. 20 chars headline + 40 chars body"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
                     </div>
 
                     <button id="crGenerateBtn" type="button"
@@ -826,10 +780,7 @@
                     <div id="outMetaWrap" class="mb-5">
                       <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-semibold text-slate-700">📘 Meta (Facebook/Instagram)</span>
-                        <div class="flex gap-1">
-                          <button id="genMetaBanner" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40 hidden">🖼 Banner</button>
-                          <button id="copyMeta" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy all</button>
-                        </div>
+                        <button id="copyMeta" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy all</button>
                       </div>
                       <div class="space-y-2">
                         <div>
@@ -873,10 +824,7 @@
                     <div id="outLINEWrap">
                       <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-semibold text-slate-700">💚 LINE Ads</span>
-                        <div class="flex gap-1">
-                          <button id="genLINEBanner" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40 hidden">🖼 Banner</button>
-                          <button id="copyLINE" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy all</button>
-                        </div>
+                        <button id="copyLINE" class="btn-hover rounded border border-slate-200 px-2 py-0.5 text-[11px] hover:bg-slate-50 disabled:opacity-40" disabled>Copy all</button>
                       </div>
                       <div class="space-y-2">
                         <div>
@@ -890,8 +838,6 @@
                       </div>
                     </div>
 
-
-
                     <!-- Custom -->
                     <div id="outCustomWrap" class="hidden mt-5">
                       <div class="flex items-center justify-between mb-2">
@@ -903,17 +849,6 @@
                   </div>
                 </section>
               </div>
-
-            <!-- Banner Kit (full width below) -->
-            <div id="bannerPreviewWrap" class="hidden mt-6">
-              <div class="card-panel glass-card rounded-xl p-5">
-                <div class="flex items-center justify-between mb-4">
-                  <span class="text-sm font-semibold text-slate-700">🖼 Banner Kit</span>
-                  <button id="downloadAllBanners" class="btn-hover rounded-lg bg-slate-900 px-4 py-2 text-xs font-medium text-white hover:bg-slate-700">⬇ Download All</button>
-                </div>
-                <div id="bannerKitGrid" class="grid gap-4 md:grid-cols-2"></div>
-              </div>
-            </div>
             </div><!-- end tabCreative -->
 
             <!-- SEO Tab -->
@@ -924,14 +859,8 @@
                   <div class="p-6 space-y-5">
                     <div>
                       <span class="mb-2 block text-sm font-medium text-slate-700">URL (optional)</span>
-                      <div class="flex gap-2">
-                        <input id="seoUrlInput" type="url" placeholder="https://example.com/page"
-                          class="flex-1 rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
-                        <button id="seoFetchBtn" type="button"
-                          class="btn-hover rounded-lg bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60 whitespace-nowrap">
-                          Fetch
-                        </button>
-                      </div>
+                      <input id="seoUrlInput" type="url" placeholder="https://example.com/page"
+                        class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-base shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
                       <p class="mt-1 text-xs text-slate-400">Enter URL to auto-fetch, or paste content below</p>
                     </div>
                     <div>
@@ -943,18 +872,6 @@
                       <span class="text-xs font-medium text-slate-600 mb-2 block">Target keyword (optional)</span>
                       <input id="seoKeyword" type="text" placeholder="e.g. PIM ツール 日本, AI画像生成"
                         class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200" />
-                    </div>
-                    <!-- Image upload -->
-                    <div class="mb-4">
-                      <span class="text-xs font-medium text-slate-600 mb-2 block">Image upload (optional)</span>
-                      <div class="flex items-center gap-2">
-                        <label class="btn-hover cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50">
-                          📎 Upload image
-                          <input type="file" id="seoFileInput" accept="image/*" multiple class="hidden" onchange="handleSubFileChange(this, seoUploadedFiles, 'seoFilePreviewArea')" />
-                        </label>
-                        <span class="text-xs text-slate-400">PNG, JPG supported</span>
-                      </div>
-                      <div id="seoFilePreviewArea" class="hidden mt-2 space-y-1"></div>
                     </div>
                     <button id="seoGenerateBtn" type="button"
                       class="btn-hover rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-slate-700 disabled:opacity-60">
@@ -1255,9 +1172,6 @@ Convert the provided Western LP content into a Japan-optimized version. If image
 2. [Change 2]
 3. [Change 3]
 **Recommended Next Steps:** [Suggestions for further optimization]
-
-# Important
-Only use information present in the provided content. Do not invent company names, branch offices, statistics, testimonials, pricing, or any details not explicitly stated in the source material.
 `;
 
       // ===================
@@ -1269,18 +1183,6 @@ Only use information present in the provided content. Do not invent company name
       const $ = id => document.getElementById(id);
       let inFlight = false, urlFetchInProgress = false;
       let uploadedFiles = [], screenshotData = null, lastMarkdown = "";
-      let smUploadedFiles = [], crUploadedFiles = [], seoUploadedFiles = [];
-
-      async function handleSubFileChange(input, filesArr, previewId) {
-        for (const file of Array.from(input.files)) {
-          if (file.type.startsWith('image/')) {
-            const base64 = await fileToBase64(file);
-            filesArr.push({ id: Date.now()+Math.random(), name: file.name, base64, mediaType: file.type });
-          }
-        }
-        renderSubPreview(previewId, filesArr);
-        input.value = '';
-      }
 
       // Screenshot
       async function fetchScreenshot(url) {
@@ -1469,9 +1371,11 @@ Only use information present in the provided content. Do not invent company name
 
       function setTabs(tab) {
         $('previewPane').classList.toggle('hidden', tab !== 'preview');
-        $('markdownPane').classList.toggle('hidden', tab === 'preview');
+        $('markdownPane').classList.toggle('hidden', tab !== 'markdown');
+        $('htmlPane').classList.toggle('hidden', tab !== 'html');
         $('tabPreview').className = `rounded-md px-2 py-1 ${tab === 'preview' ? 'font-medium bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`;
-        $('tabMarkdown').className = `rounded-md px-2 py-1 ${tab !== 'preview' ? 'font-medium bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`;
+        $('tabMarkdown').className = `rounded-md px-2 py-1 ${tab === 'markdown' ? 'font-medium bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`;
+        $('tabHtml').className = `rounded-md px-2 py-1 ${tab === 'html' ? 'font-medium bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`;
       }
 
       function renderMarkdown(md) {
@@ -1480,35 +1384,13 @@ Only use information present in the provided content. Do not invent company name
       }
 
       $('inputText').oninput = () => $('charCount').textContent = $('inputText').value.length;
-      // API Key accordion
-      $('apiKeyToggleBtn').onclick = () => {
-        $('apiKeyPanel').classList.toggle('hidden');
-      };
-      function updateApiKeyStatus() {
-        const hasKey = $('apiKey').value.trim().length > 0;
-        $('apiKeyStatus').textContent = hasKey ? 'Set' : 'Not set';
-        $('apiKeyStatus').style.background = hasKey ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)';
-        $('apiKeyStatus').style.color = hasKey ? '#16a34a' : '#ef4444';
-      }
-      $('apiKey').addEventListener('input', () => {
-        updateApiKeyStatus();
-        localStorage.setItem('lp-anthropic-key', $('apiKey').value);
-      });
-      const savedAnthropicKey = localStorage.getItem('lp-anthropic-key');
-      if (savedAnthropicKey) $('apiKey').value = savedAnthropicKey;
-      updateApiKeyStatus();
-
-      $('toggleOpenaiKey').onclick = () => {
-        const inp = $('openaiKey');
-        inp.type = inp.type === 'password' ? 'text' : 'password';
-        $('toggleOpenaiKey').textContent = inp.type === 'password' ? 'Show' : 'Hide';
-      };
       $('toggleKey').onclick = () => {
         $('apiKey').type = $('apiKey').type === 'password' ? 'text' : 'password';
         $('toggleKey').textContent = $('apiKey').type === 'password' ? 'Show' : 'Hide';
       };
       $('tabPreview').onclick = () => setTabs('preview');
       $('tabMarkdown').onclick = () => setTabs('markdown');
+      $('tabHtml').onclick = () => setTabs('html');
       $('copyMdBtn').onclick = () => { navigator.clipboard.writeText(lastMarkdown); setStatus('success', t('status_copied')); };
       $('downloadBtn').onclick = () => {
         const a = document.createElement('a');
@@ -1585,7 +1467,169 @@ Only use information present in the provided content. Do not invent company name
       }
 
       $('convertBtn').onclick = runConvert;
-      if ($('lpClearBtn')) $('lpClearBtn').onclick = () => { $('clearBtn').click(); };
+      $('lpClearBtn').onclick = () => { $('clearBtn').click(); };
+
+      // ── HTML化 (Localize HTML) ─────────────────────────────
+      let localizedHtmlBlob = null;
+
+      async function localizeHTML() {
+        const url = $('fetchUrlInput').value.trim();
+        if (!url) { setStatus('error', 'URLを入力してください'); return; }
+        const apiKey = $('apiKey').value.trim();
+        if (!apiKey) { setStatus('error', t('status_enter_key')); return; }
+
+        setTabs('html');
+        $('htmlPane').classList.remove('hidden');
+        $('htmlPreviewFrame').classList.add('hidden');
+        $('htmlLoadingMsg').classList.remove('hidden');
+        $('lpLocalizeHtmlBtn').disabled = true;
+        $('lpLocalizeHtmlBtn').textContent = '処理中...';
+        $('downloadHtmlBtn').disabled = true;
+        $('downloadHtmlBtn').classList.add('hidden');
+        clearStatus();
+        localizedHtmlBlob = null;
+
+        const setMsg = (msg) => { $('htmlStatusMsg').textContent = msg; };
+
+        try {
+          // 1. HTMLを取得
+          setMsg('HTML取得中...');
+          const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+          let rawHtml = '';
+          try {
+            const res = await fetch(proxyUrl);
+            rawHtml = res.ok ? await res.text() : '';
+          } catch(e) { rawHtml = ''; }
+
+          if (!rawHtml) throw new Error('HTMLの取得に失敗しました。URLを確認してください。');
+
+          // 2. DOMパース
+          setMsg('テキストを抽出中...');
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(rawHtml, 'text/html');
+
+          // 相対URLを絶対URLに変換
+          const base = doc.createElement('base');
+          base.href = url;
+          doc.head.prepend(base);
+
+          // テキストノードを収集（script/style除外）
+          const skipTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'CODE', 'PRE', 'SVG', 'MATH']);
+          const textNodes = [];
+          const walker = document.createTreeWalker(
+            doc.body,
+            NodeFilter.SHOW_TEXT,
+            { acceptNode: (n) => {
+              const p = n.parentElement;
+              if (!p || skipTags.has(p.tagName)) return NodeFilter.FILTER_REJECT;
+              const t = n.textContent.replace(/\s+/g, ' ').trim();
+              if (!t || t.length < 2) return NodeFilter.FILTER_SKIP;
+              // すでに日本語ならスキップ
+              if (/[\u3040-\u30FF\u4E00-\u9FFF]/.test(t)) return NodeFilter.FILTER_SKIP;
+              return NodeFilter.FILTER_ACCEPT;
+            }}
+          );
+          while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+          // meta / alt / placeholder も収集
+          const attrNodes = [];
+          doc.querySelectorAll('[alt],[placeholder],[aria-label]').forEach(el => {
+            ['alt','placeholder','aria-label'].forEach(attr => {
+              const v = el.getAttribute(attr);
+              if (v && v.trim().length > 1 && !/[\u3040-\u30FF\u4E00-\u9FFF]/.test(v)) {
+                attrNodes.push({ el, attr, val: v.trim() });
+              }
+            });
+          });
+          // title属性
+          const metaDesc = doc.querySelector('meta[name="description"]');
+          const metaTitle = doc.querySelector('title');
+
+          const texts = textNodes.map(n => n.textContent.replace(/\s+/g, ' ').trim());
+          const attrTexts = attrNodes.map(a => a.val);
+          const allTexts = [...texts, ...attrTexts];
+
+          if (allTexts.length === 0) throw new Error('翻訳対象のテキストが見つかりませんでした。');
+
+          // 3. Claudeで一括翻訳（チャンク分割）
+          setMsg(`翻訳中... (${allTexts.length}件のテキスト)`);
+          const CHUNK = 80;
+          const translated = [];
+          for (let i = 0; i < allTexts.length; i += CHUNK) {
+            const chunk = allTexts.slice(i, i + CHUNK);
+            setMsg(`翻訳中... (${Math.min(i + CHUNK, allTexts.length)}/${allTexts.length})`);
+            const res = await fetch('https://api.anthropic.com/v1/messages', {
+              method: 'POST',
+              headers: {
+                'content-type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true'
+              },
+              body: JSON.stringify({
+                model: 'claude-sonnet-4-20250514',
+                max_tokens: 4096,
+                messages: [{ role: 'user', content: `You are a Japan market localization expert. Translate the following texts to natural Japanese, preserving any HTML entities, numbers, or URLs as-is. Return ONLY a JSON array of translated strings, same count and order as the input array.
+
+Input (${chunk.length} items):
+${JSON.stringify(chunk)}` }]
+              })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error?.message || 'API error');
+            const raw = data.content?.find(c => c.type === 'text')?.text || '[]';
+            const parsed = JSON.parse(raw.replace(/```json\n?|\n?```/g, '').trim());
+            translated.push(...parsed);
+          }
+
+          // 4. テキストを置換
+          setMsg('テキストを適用中...');
+          textNodes.forEach((node, i) => {
+            if (translated[i]) node.textContent = translated[i];
+          });
+          attrNodes.forEach((a, i) => {
+            const t = translated[texts.length + i];
+            if (t) a.el.setAttribute(a.attr, t);
+          });
+
+          // 5. HTMLシリアライズ
+          const finalHtml = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+
+          // 6. iframeに表示
+          setMsg('プレビューを生成中...');
+          const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
+          localizedHtmlBlob = blob;
+          const blobUrl = URL.createObjectURL(blob);
+          const iframe = $('htmlPreviewFrame');
+          iframe.onload = () => {
+            $('htmlLoadingMsg').classList.add('hidden');
+            iframe.classList.remove('hidden');
+          };
+          iframe.src = blobUrl;
+
+          $('downloadHtmlBtn').classList.remove('hidden');
+          $('downloadHtmlBtn').disabled = false;
+          setStatus('success', `HTML化完了！ ${allTexts.length}件のテキストを日本語に変換しました`);
+
+        } catch(e) {
+          $('htmlLoadingMsg').classList.add('hidden');
+          setStatus('error', `HTML化失敗: ${e.message}`);
+          setTabs('preview');
+        } finally {
+          $('lpLocalizeHtmlBtn').disabled = false;
+          $('lpLocalizeHtmlBtn').textContent = 'HTML化';
+        }
+      }
+
+      if ($('lpLocalizeHtmlBtn')) $('lpLocalizeHtmlBtn').onclick = localizeHTML;
+
+      if ($('downloadHtmlBtn')) $('downloadHtmlBtn').onclick = () => {
+        if (!localizedHtmlBlob) return;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(localizedHtmlBlob);
+        a.download = `jp-lp-${Date.now()}.html`;
+        a.click();
+      };
 
       // lpGenerateBtn: fetch URL (if provided) then generate
       if ($('lpGenerateBtn')) $('lpGenerateBtn').onclick = async () => {
@@ -1693,7 +1737,6 @@ Only use information present in the provided content. Do not invent company name
         // convertBtn/clearBtn are always hidden (replaced by lpGenerateBtn inside LP tab)
         updateSmBadge();
         updateCrBadge();
-        initDropzones();
       }
 
       function updateSmBadge() {
@@ -1739,15 +1782,8 @@ Only use information present in the provided content. Do not invent company name
           const analysisPrompt = `Analyze this product page content and respond ONLY with valid JSON (no markdown, no explanation):
 {
   "summary": "2-3 sentence product description in English",
-  "industry": "one of: Horizontal SaaS (CRM, HR, Legal, Marketing etc.) | EC & Retail | Consumer Goods (FMCG) | Healthcare & Medical | Finance & FinTech | HR & Recruitment | Education & EdTech | Real Estate | Manufacturing & Hardware | Media & Entertainment",
-  "competitors_japan": [
-    {"name": "Company Name", "description": "One line description in English"},
-    {"name": "Company Name", "description": "One line description in English"},
-    {"name": "Company Name", "description": "One line description in English"}
-  ]
+  "industry": "one of: Horizontal SaaS (CRM, HR, Legal, Marketing etc.) | EC & Retail | Consumer Goods (FMCG) | Healthcare & Medical | Finance & FinTech | HR & Recruitment | Education & EdTech | Real Estate | Manufacturing & Hardware | Media & Entertainment"
 }
-
-List 2-3 real Japanese competitors or dominant players in this industry in Japan.
 
 Page content:
 ${text.slice(0, 6000)}`;
@@ -1766,20 +1802,14 @@ ${text.slice(0, 6000)}`;
           // Populate UI
           $('homeSummary').textContent = parsed.summary || '—';
 
-          // Industry: テキスト表示
+          // Auto-select industry
+          const industryEl = $('settingIndustry');
           if (parsed.industry) {
-            $('homeIndustryLabel').textContent = parsed.industry;
-            $('settingIndustry').value = parsed.industry;
-          }
-
-          // Japan competitors
-          if (parsed.competitors_japan && parsed.competitors_japan.length) {
-            $('homeCompetitors').innerHTML = parsed.competitors_japan.map(c =>
-              `<div class="rounded-lg px-2.5 py-2" style="background:rgba(255,255,255,0.35);border:1px solid rgba(200,185,215,0.3)">
-                <p class="text-xs font-semibold" style="color:rgba(20,10,25,0.85)">${c.name}</p>
-                <p class="text-[11px] mt-0.5" style="color:rgba(20,10,25,0.55)">${c.description}</p>
-              </div>`
-            ).join('');
+            for (let opt of industryEl.options) {
+              if (opt.value && parsed.industry.toLowerCase().includes(opt.value.split(' ')[0].toLowerCase())) {
+                industryEl.value = opt.value; break;
+              }
+            }
           }
 
           // Store URL and propagate to LP tab
@@ -1838,22 +1868,29 @@ ${text.slice(0, 6000)}`;
           } catch {}
         }
 
-        if (!text && !seoUploadedFiles.length) { setSeoStatus('error', 'Please enter content, URL, or upload an image'); seoInFlight = false; $('seoLoadingOverlay').classList.add('hidden'); return; }
+        if (!text) { setSeoStatus('error', 'Please enter content or a valid URL'); seoInFlight = false; $('seoLoadingOverlay').classList.add('hidden'); return; }
 
         const keyword = $('seoKeyword').value.trim();
-        // Build content with images
-        const seoContent = [];
-        seoUploadedFiles.forEach(f => seoContent.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType, data: f.base64 } }));
         setSeoStatus('info', 'Generating SEO content...');
 
-        const seoSystem = `あなたは日本SEO専門のローカライザー。英語サイトを日本市場向けに自然で検索に強い日本語へ最適化せよ。日本の検索行動は欧米より比較・検討・安心感・具体性重視。直訳、過度な煽り、英語臭い表現は避け、実際に検索される自然語を使う。主KWはtitle_tag前方、H1、本文冒頭に配置し、不自然な詰め込みは禁止。関連語はH2と本文へ分散。文体は一貫してです/ます調。会社情報、実績、料金/条件、問い合わせ、法令表記等の信頼要素を補強。body_rewriteは300〜500字で、導入段落＋主要セクション構成。提供された情報のみ使用し、実在しない会社情報・日本拠点・統計・価格等を勝手に追加しないこと。${keyword ? `\nTarget keyword: ${keyword}` : ''}
-出力はJSONのみ: {"title_tag":"","meta_description":"","H1":"","H2_suggestions":[],"body_rewrite":""}`;
+        const seoSystem = `You are a Japan SEO specialist. Localize and optimize the given content for Japanese search.
+${keyword ? `Target keyword: ${keyword}` : ''}
+Japanese SEO guidelines: use natural Japanese, incorporate target keyword in title/H1/early body, write for Japanese search intent, use です/ます調, include trust signals.
+Return ONLY valid JSON, no markdown:
+{
+  "summary": "2-3 sentence English explanation of key localization and SEO decisions made",
+  "title_tag": "SEO title in Japanese (30-60 chars)",
+  "meta_description": "Meta description in Japanese (70-120 chars)",
+  "h1": "H1 heading in Japanese",
+  "h2_suggestions": "3-5 H2 suggestions, one per line",
+  "body_rewrite": "Rewritten intro paragraph + key sections in Japanese (300-500 chars), optimized for the target keyword"
+}`;
 
         try {
           const res = await fetch(ENDPOINT, {
             method: 'POST',
             headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-            body: JSON.stringify({ model: MODEL, max_tokens: 3000, temperature: 0.3, system: seoSystem + getPersonalizationContext(), messages: [{ role: 'user', content: [...seoContent, { type: 'text', text: `Localize for Japan SEO:\n\n${text}` }] }] })
+            body: JSON.stringify({ model: MODEL, max_tokens: 3000, temperature: 0.3, system: seoSystem + getPersonalizationContext(), messages: [{ role: 'user', content: `Localize for Japan SEO:\n\n${text}` }] })
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error?.message || res.status);
@@ -1916,7 +1953,7 @@ ${text.slice(0, 6000)}`;
         const apiKey = $('apiKey').value.trim();
         if (!apiKey) { setCrStatus('error', 'API Key required'); return; }
         const text = $('crInputText').value.trim();
-        if (!text && !crUploadedFiles.length) { setCrStatus('error', 'Please paste ad copy or upload an image'); return; }
+        if (!text) { setCrStatus('error', 'Please paste your ad copy'); return; }
 
         const doMeta = $('chkMeta').checked;
         const doGoogle = $('chkGoogle').checked;
@@ -1935,12 +1972,12 @@ ${text.slice(0, 6000)}`;
         if (doLINE) platforms.push(`"line": { "title": "max 40 chars", "text": "max 60 chars" }`);
         if (customFormat) platforms.push(`"custom": "follow this format: ${customFormat}"`);
 
-        const crSystem = `あなたは日本向け広告コピーライター。英語広告をMeta・Google・LINE向けに、自然で成果重視の日本語へ再構成せよ。日本の広告心理は、強い押し売りより控えめ・共感・便益・安心感重視。誇大表現、断定、煽り、命令調は避ける。Meta主文は簡潔で冒頭訴求、Google見出しは各30字以内、LINEタイトルは40字以内。CTAは「試してみる」「詳しく見る」「まずは確認」など柔らかく。信頼表現は「公式」「導入実績」「サポート充実」「安心」「無料相談」などを優先。媒体特性と審査通過性を意識し、自然で信頼される表現にせよ。提供された情報のみ使用し、実在しない実績・会社情報・日本拠点等を勝手に追加しないこと。
-出力はJSONのみ: {"notes":"ローカライズ方針の説明(英語2-3文)","meta":{"primary_text":"","headline":"","description":""},"google":{"headline_1":"","headline_2":"","description":""},"line":{"title":"","text":""}}`;
-
-        // Build content with images
-        const crContent = [];
-        crUploadedFiles.forEach(f => crContent.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType, data: f.base64 } }));
+        const crSystem = `You are a Japan advertising copywriter. Localize the given English ad copy for the Japanese market.
+Tone: Professional, trustworthy, benefit-focused.
+Japanese ad copy guidelines: use です/ます調, focus on concrete benefits, avoid superlatives, use numbers when possible, CTAs should be soft (試してみる, 詳しく見る, 無料で始める).
+Return ONLY valid JSON with key "notes" (2-3 sentences English localization notes) and these platform keys:
+{ "notes": "...", ${platforms.join(', ')} }
+No markdown, no extra text.`;
 
         crInFlight = true;
         $('crLoadingOverlay').classList.remove('hidden');
@@ -1950,7 +1987,7 @@ ${text.slice(0, 6000)}`;
           const res = await fetch(ENDPOINT, {
             method: 'POST',
             headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-            body: JSON.stringify({ model: MODEL, max_tokens: 2000, temperature: 0.3, system: crSystem + getPersonalizationContext(), messages: [{ role: 'user', content: [...crContent, { type: 'text', text: `Localize this ad copy for Japan:\n\n${text}` }] }] })
+            body: JSON.stringify({ model: MODEL, max_tokens: 2000, temperature: 0.3, system: crSystem + getPersonalizationContext(), messages: [{ role: 'user', content: `Localize this ad copy for Japan:\n\n${text}` }] })
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error?.message || res.status);
@@ -1985,15 +2022,7 @@ ${text.slice(0, 6000)}`;
             $('outCustom').textContent = parsed.custom || '—';
             $('copyCustom').disabled = false;
           }
-          // imageモードなら自動バナー生成、textモードならボタン表示
-          if ($('crOutputImage') && $('crOutputImage').checked) {
-            $('genMetaBanner').classList.remove('hidden');
-            $('genLINEBanner').classList.remove('hidden');
-            setTimeout(() => generateBannerKit(), 100);
-            setCrStatus('success', 'Done! バナーキットを生成しました');
-          } else {
-            setCrStatus('success', 'Done!');
-          }
+          setCrStatus('success', 'Done!');
         } catch (e) {
           setCrStatus('error', `Failed: ${e.message}`);
         } finally {
@@ -2064,7 +2093,7 @@ Return ONLY valid JSON in this exact format, no markdown, no extra text:
           } catch {}
         }
 
-        if (!text && !smUploadedFiles.length) { setSmStatus('error', 'Please enter text, URL, or upload an image'); smInFlight = false; $('smLoadingOverlay').classList.add('hidden'); return; }
+        if (!text) { setSmStatus('error', 'Please enter text or a valid URL'); smInFlight = false; $('smLoadingOverlay').classList.add('hidden'); return; }
 
         setSmStatus('info', 'Generating posts...');
 
@@ -2073,14 +2102,11 @@ Return ONLY valid JSON in this exact format, no markdown, no extra text:
         $('outLIWrap').classList.toggle('hidden', !doLI);
         $('outIGWrap').classList.toggle('hidden', !doIG);
 
-        // Build content with images
-        const smContent = [];
-        smUploadedFiles.forEach(f => smContent.push({ type: 'image', source: { type: 'base64', media_type: f.mediaType, data: f.base64 } }));
-
         const platformList = [doX && 'x', doLI && 'linkedin', doIG && 'instagram'].filter(Boolean);
         const platformDesc = [doX && 'x: X/Twitter post (max 140 chars in Japanese, 2-3 hashtags)', doLI && 'linkedin: LinkedIn post (3-5 paragraphs Japanese, professional, end with question or CTA)', doIG && 'instagram: Instagram caption (Japanese, storytelling, 5-8 hashtags at end)'].filter(Boolean).join('\n');
 
-        const dynamicSystem = `あなたは日本向けSNSコピーライター。英語コンテンツを各媒体文化に合う自然な日本語投稿へ再構成せよ。Xは短く即読・時流性・話題性重視、ハッシュタグは1〜2個。LinkedInは敬語寄りで端正に、知見・実績・示唆を軸にし、ハッシュタグは0〜3個。Instagramは感情訴求と物語性を重視し、やや柔らかく、ハッシュタグは3〜5個。媒体ごとに敬語/カジュアル度を調整。直訳、過剰な煽り、文化不適合な比喩やユーモアは避け、日本の文脈・共感・安心感・季節感に合わせて最適化せよ。提供された情報のみ使用し、実在しない情報・日本拠点・統計等を勝手に追加しないこと。
+        const dynamicSystem = `You are a professional Japan social media copywriter and localization strategist.
+Tone: Professional, trustworthy, engaging.
 Return ONLY valid JSON with keys: summary, ${platformList.join(', ')}
 - summary: 2-3 sentence English explanation of key localization decisions (tone, cultural adaptations, hashtag strategy)
 ${platformDesc}
@@ -2093,7 +2119,7 @@ No markdown, no extra text outside the JSON.`;
             body: JSON.stringify({
               model: MODEL, max_tokens: 2000, temperature: 0.3,
               system: dynamicSystem + getPersonalizationContext(),
-              messages: [{ role: 'user', content: [...smContent, { type: 'text', text: `Create Japanese social media posts for:\n\n${text}` }] }]
+              messages: [{ role: 'user', content: `Create Japanese social media posts for:\n\n${text}` }]
             })
           });
           const data = await res.json();
@@ -2135,35 +2161,6 @@ No markdown, no extra text outside the JSON.`;
       // Personalization Settings
       // ===================
       const SETTING_KEYS = ['settingIndustry','settingGender','settingAge','settingTone','settingGoal','settingNotes'];
-
-      // Tag button selection
-      document.querySelectorAll('[data-group]').forEach(group => {
-        const key = group.dataset.group;
-        group.querySelectorAll('.tag-btn').forEach(btn => {
-          btn.onclick = () => {
-            group.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            $(key).value = btn.dataset.value;
-            saveSettings();
-          };
-        });
-        // 保存済み値を復元
-        const saved = localStorage.getItem('lp-' + key);
-        if (saved !== null) {
-          $(key).value = saved;
-          group.querySelectorAll('.tag-btn').forEach(b => {
-            if (b.dataset.value === saved) b.classList.add('active');
-          });
-        } else {
-          // デフォルトはAny（最初のボタン）
-          group.querySelector('.tag-btn').classList.add('active');
-        }
-      });
-
-      // OpenAI key persist
-      const savedOAI = localStorage.getItem('lp-openai-key');
-      if (savedOAI && $('openaiKey')) $('openaiKey').value = savedOAI;
-      $('openaiKey').addEventListener('change', () => localStorage.setItem('lp-openai-key', $('openaiKey').value));
 
       function loadSettings() {
         SETTING_KEYS.forEach(key => {
@@ -2209,282 +2206,6 @@ No markdown, no extra text outside the JSON.`;
         const el = $(key);
         if (el) el.addEventListener('change', saveSettings);
         if (el && el.tagName === 'TEXTAREA') el.addEventListener('input', saveSettings);
-      });
-
-      // ===== Sub-tab dropzone handlers =====
-      function makeDropzone(zoneId, inputId, previewId, filesArr) {
-        const input = $(inputId);
-        if (!input) return;
-        input.addEventListener('change', async e => {
-          for (const file of Array.from(e.target.files)) {
-            if (file.type.startsWith('image/')) filesArr.push({ id: Date.now()+Math.random(), name: file.name, base64: await fileToBase64(file), mediaType: file.type });
-          }
-          renderSubPreview(previewId, filesArr);
-          input.value = '';
-        });
-      }
-      function renderSubPreview(previewId, filesArr) {
-        const area = $(previewId);
-        if (!filesArr.length) { area.classList.add('hidden'); return; }
-        area.classList.remove('hidden');
-        area.innerHTML = filesArr.map(f => `
-          <div class="p-2 bg-white rounded-lg border text-xs">
-            <img src="data:${f.mediaType};base64,${f.base64}" class="w-full rounded-lg" style="object-fit:contain;max-height:320px;background:#f8fafc" />
-            <div class="flex items-center justify-between mt-1">
-              <span class="truncate flex-1 text-slate-600">${f.name}</span>
-              <button class="rm-file ml-2 text-slate-400 hover:text-red-500 flex-shrink-0" data-id="${f.id}">✕</button>
-            </div>
-          </div>`).join('');
-        area.querySelectorAll('.rm-file').forEach(btn => {
-          btn.onclick = () => { const i = filesArr.findIndex(f=>f.id==btn.dataset.id); if(i>-1) filesArr.splice(i,1); renderSubPreview(previewId, filesArr); };
-        });
-      }
-      // dropzoneはswitchTab後に初期化（hidden状態だとaddEventListenerが効かないため）
-      let dropzonesInitialized = false;
-      function initDropzones() {
-        if (dropzonesInitialized) return;
-        if (!$('smFileInput') || !$('crFileInput') || !$('seoFileInput')) return;
-        makeDropzone('smDropzone','smFileInput','smFilePreviewArea', smUploadedFiles);
-        makeDropzone('crDropzone','crFileInput','crFilePreviewArea', crUploadedFiles);
-        makeDropzone('seoDropzone','seoFileInput','seoFilePreviewArea', seoUploadedFiles);
-        dropzonesInitialized = true;
-        console.log('Dropzones initialized');
-      }
-
-      // SEO URL fetch
-      $('seoFetchBtn').onclick = async () => {
-        const url = $('seoUrlInput').value.trim();
-        if (!url) return;
-        $('seoFetchBtn').disabled = true; $('seoFetchBtn').textContent = 'Fetching...';
-        try {
-          const text = await fetch('https://r.jina.ai/' + encodeURIComponent(url.startsWith('http') ? url : 'https://'+url)).then(r=>r.ok?r.text():'').catch(()=>'');
-          if (text) { $('seoInputText').value = text; $('seoCharCount').textContent = text.length; }
-        } catch {}
-        $('seoFetchBtn').disabled = false; $('seoFetchBtn').textContent = 'Fetch';
-      };
-      $('seoUrlInput').addEventListener('keydown', e => { if(e.key==='Enter') $('seoFetchBtn').click(); });
-
-      // ===== Banner Generator =====
-      const BANNER_SIZES = [
-        { id: 'meta_feed',     label: 'Meta Feed',        w: 1200, h: 628  },
-        { id: 'meta_story',    label: 'Meta Story',       w: 1080, h: 1920 },
-        { id: 'line',          label: 'LINE Ad',          w: 1200, h: 628  },
-        { id: 'google_rect',   label: 'Google 300×250',   w: 300,  h: 250  },
-        { id: 'google_leader', label: 'Google 728×90',    w: 728,  h: 90   },
-      ];
-
-      function drawBannerCanvas(canvas, w, h, headline, body, cta, bgImg) {
-        canvas.width = w; canvas.height = h;
-        const ctx = canvas.getContext('2d');
-        const isNarrow = h > w; // storyなど縦長
-        const isSmall = w <= 300;
-        const isBanner = h <= 90;
-
-        // 背景
-        if (bgImg) {
-          ctx.drawImage(bgImg, 0, 0, w, h);
-          const grad = ctx.createLinearGradient(0, 0, isNarrow ? 0 : w * 0.65, isNarrow ? h * 0.6 : 0);
-          grad.addColorStop(0, 'rgba(10,10,20,0.80)');
-          grad.addColorStop(1, 'rgba(10,10,20,0.0)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, w, h);
-        } else {
-          const grad = ctx.createLinearGradient(0, 0, w, h);
-          grad.addColorStop(0, '#1a0a2e');
-          grad.addColorStop(1, '#0f2044');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, w, h);
-        }
-
-        if (isBanner) {
-          // リーダーボード: 1行レイアウト
-          ctx.fillStyle = '#fff';
-          ctx.font = 'bold 18px sans-serif';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(headline.slice(0, 20), 12, h / 2);
-          // CTA
-          const btnW = 110, btnH = 34, btnX = w - btnW - 10, btnY = (h - btnH) / 2;
-          ctx.fillStyle = '#e8263a';
-          roundRect(ctx, btnX, btnY, btnW, btnH, 4);
-          ctx.fillStyle = '#fff';
-          ctx.font = 'bold 13px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(cta, btnX + btnW / 2, h / 2);
-          ctx.textAlign = 'left';
-          return;
-        }
-
-        const pad = isSmall ? 14 : (isNarrow ? 60 : 60);
-        const textW = isNarrow ? w - pad * 2 : (bgImg ? w * 0.55 : w - pad * 2);
-        const startY = isNarrow ? h * 0.35 : h * 0.18;
-
-        // フォントサイズをサイズに応じて調整
-        const hSize = isSmall ? 18 : (isNarrow ? 52 : 48);
-        const bSize = isSmall ? 11 : (isNarrow ? 26 : 24);
-        const lineH = hSize * 1.3;
-
-        ctx.fillStyle = '#ffffff';
-        ctx.textBaseline = 'top';
-        ctx.font = `bold ${hSize}px "Hiragino Sans", "Yu Gothic", sans-serif`;
-        wrapText(ctx, headline, pad, startY, textW, lineH);
-
-        if (!isSmall) {
-          const bodyY = startY + lineH * Math.ceil(headline.length / (textW / (hSize * 0.6))) + 16;
-          ctx.fillStyle = 'rgba(255,255,255,0.80)';
-          ctx.font = `${bSize}px "Hiragino Sans", "Yu Gothic", sans-serif`;
-          wrapText(ctx, body.slice(0, 60), pad, bodyY, textW, bSize * 1.5);
-        }
-
-        // CTAボタン
-        const btnW = isSmall ? w - pad * 2 : (isNarrow ? w - pad * 2 : 220);
-        const btnH = isSmall ? 32 : (isNarrow ? 72 : 56);
-        const btnX = pad;
-        const btnY = h - (isNarrow ? 160 : 110);
-        ctx.fillStyle = '#e8263a';
-        roundRect(ctx, btnX, btnY, btnW, btnH, 8);
-        ctx.fillStyle = '#ffffff';
-        ctx.font = `bold ${isSmall ? 13 : (isNarrow ? 28 : 22)}px "Hiragino Sans", "Yu Gothic", sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(cta, btnX + btnW / 2, btnY + btnH / 2);
-        ctx.textAlign = 'left';
-
-        // サイズラベル
-        ctx.font = '12px sans-serif';
-        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        ctx.textBaseline = 'bottom';
-        ctx.fillText(`${w}×${h}`, pad, h - 8);
-      }
-
-      async function generateBannerKit() {
-        const getText = (id) => {
-          const el = $(id); if (!el) return '';
-          const span = el.querySelector('span');
-          const txt = (span ? span.textContent : el.textContent).trim();
-          return txt === '—' ? '' : txt;
-        };
-        const headline = getText('outMetaHeadline') || getText('outLINETitle') || '';
-        const body = getText('outMetaPrimary') || getText('outLINEText') || '';
-        const cta = '詳しく見る';
-
-        if (!headline) { alert('先にGenerateを実行してください'); return; }
-
-        $('bannerPreviewWrap').classList.remove('hidden');
-        const grid = $('bannerKitGrid');
-        grid.innerHTML = '<p class="text-xs text-slate-400 py-2">生成中...</p>';
-
-        let bgImg = null;
-        if (crUploadedFiles.length > 0) {
-          bgImg = await new Promise(res => {
-            const img = new Image();
-            img.onload = () => res(img);
-            img.onerror = () => res(null);
-            img.src = 'data:' + crUploadedFiles[0].mediaType + ';base64,' + crUploadedFiles[0].base64;
-          });
-        }
-
-        window._bannerCanvases = {};
-        grid.innerHTML = '';
-
-        BANNER_SIZES.forEach(size => {
-          // フルサイズcanvas
-          const fullCanvas = document.createElement('canvas');
-          drawBannerCanvas(fullCanvas, size.w, size.h, headline, body, cta, bgImg);
-          window._bannerCanvases[size.id] = fullCanvas;
-
-          // 表示用canvas（縮小）
-          const maxW = 520;
-          const dw = Math.min(size.w, maxW);
-          const dh = Math.round(dw * size.h / size.w);
-          const displayCanvas = document.createElement('canvas');
-          displayCanvas.width = dw;
-          displayCanvas.height = dh;
-          displayCanvas.style.cssText = 'max-width:100%;border-radius:4px;display:block';
-          displayCanvas.getContext('2d').drawImage(fullCanvas, 0, 0, dw, dh);
-
-          // DLボタン
-          const dlBtn = document.createElement('button');
-          dlBtn.className = 'btn-hover rounded px-2 py-0.5 text-[11px] border border-slate-200 bg-white hover:bg-slate-50';
-          dlBtn.textContent = 'PNG';
-          dlBtn.onclick = () => {
-            const a = document.createElement('a');
-            a.download = 'banner-japan-' + size.id + '-' + size.w + 'x' + size.h + '.png';
-            a.href = fullCanvas.toDataURL('image/png');
-            a.click();
-          };
-
-          // ヘッダー
-          const header = document.createElement('div');
-          header.className = 'flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200';
-          header.innerHTML = '<span class="text-xs font-semibold text-slate-700">' + size.label + '</span><span class="text-[10px] text-slate-400">' + size.w + '×' + size.h + '</span>';
-          header.appendChild(dlBtn);
-
-          // プレビューエリア
-          const preview = document.createElement('div');
-          preview.className = 'bg-slate-100 flex items-center justify-center p-2';
-          preview.appendChild(displayCanvas);
-
-          // ラッパー
-          const wrap = document.createElement('div');
-          wrap.className = 'rounded-lg border border-slate-200 overflow-hidden';
-          wrap.appendChild(header);
-          wrap.appendChild(preview);
-          grid.appendChild(wrap);
-        });
-      }
-
-      function wrapText(ctx, text, x, y, maxWidth, lineH) {
-        const chars = text.split('');
-        let line = '';
-        let cy = y;
-        for (let i = 0; i < chars.length; i++) {
-          const test = line + chars[i];
-          if (ctx.measureText(test).width > maxWidth && line) {
-            ctx.fillText(line, x, cy);
-            line = chars[i];
-            cy += lineH;
-          } else {
-            line = test;
-          }
-        }
-        if (line) ctx.fillText(line, x, cy);
-      }
-
-      function roundRect(ctx, x, y, w, h, r) {
-        ctx.beginPath();
-        ctx.moveTo(x + r, y);
-        ctx.lineTo(x + w - r, y);
-        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-        ctx.lineTo(x + w, y + h - r);
-        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-        ctx.lineTo(x + r, y + h);
-        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-        ctx.lineTo(x, y + r);
-        ctx.quadraticCurveTo(x, y, x + r, y);
-        ctx.closePath();
-        ctx.fill();
-      }
-
-      $('genMetaBanner').onclick = () => generateBannerKit();
-      $('genLINEBanner').onclick = () => generateBannerKit();
-      $('downloadAllBanners').onclick = () => {
-        if (!window._bannerCanvases) return;
-        for (const [id, canvas] of Object.entries(window._bannerCanvases)) {
-          const size = BANNER_SIZES.find(s => s.id === id);
-          if (!size) continue;
-          const a = document.createElement('a');
-          a.download = `banner-japan-${id}-${size.w}x${size.h}.png`;
-          a.href = canvas.toDataURL('image/png');
-          a.click();
-        }
-      };
-
-      // Output type toggle
-      document.querySelectorAll('input[name="crOutputType"]').forEach(r => {
-        r.addEventListener('change', () => {
-          const isImage = $('crOutputImage').checked;
-          $('crImageUploadArea').classList.toggle('hidden', !isImage);
-        });
       });
 
       loadSettings();
