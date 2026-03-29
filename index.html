@@ -2030,7 +2030,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         return str.replace(/\s+/g, ' ').trim();
       }
 
-      function ncApplyChanges(changesJson) {
+      function ncApplyChanges(changesJson, selectedElement) {
         const iframe = $('htmlPreviewFrame');
         if (!iframe) return 0;
         let currentDoc;
@@ -2044,31 +2044,28 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if (!Array.isArray(changes)) return 0;
 
         for (const change of changes) {
-          if (!change.old || !change.new) continue;
-          const oldNorm = ncNormalize(change.old);
+          if (!change.new) continue;
           let found = false;
 
-          // Strategy 1: Direct text node match
-          const walker = currentDoc.createTreeWalker(currentDoc.body, NodeFilter.SHOW_TEXT);
-          while (walker.nextNode()) {
-            const node = walker.currentNode;
-            if (ncNormalize(node.textContent).includes(oldNorm)) {
-              // Replace in original text preserving surrounding whitespace
-              const regex = new RegExp(oldNorm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-              node.textContent = ncNormalize(node.textContent).replace(regex, change.new);
+          // Strategy 0 (BEST): If we have the selected DOM element, replace directly
+          if (selectedElement && !found) {
+            try {
+              selectedElement.textContent = change.new;
+              selectedElement.classList.remove('nc-selected');
               found = true;
               applied++;
-              break;
-            }
+              selectedElement = null; // Use only for first change
+            } catch(e) { /* fallback */ }
           }
 
-          // Strategy 2: Match parent element textContent (for text split across nodes)
-          if (!found) {
-            const allEls = currentDoc.body.querySelectorAll('h1,h2,h3,h4,h5,h6,p,span,a,li,td,th,button,label,div');
-            for (const el of allEls) {
-              if (el.querySelector('h1,h2,h3,h4,h5,h6,p,div,ul,ol,table')) continue;
-              if (ncNormalize(el.textContent).includes(oldNorm)) {
-                el.textContent = ncNormalize(el.textContent).replace(oldNorm, change.new);
+          // Strategy 1: Direct text node match with normalized comparison
+          if (!found && change.old) {
+            const oldNorm = ncNormalize(change.old);
+            const walker = currentDoc.createTreeWalker(currentDoc.body, NodeFilter.SHOW_TEXT);
+            while (walker.nextNode()) {
+              const node = walker.currentNode;
+              if (ncNormalize(node.textContent).includes(oldNorm)) {
+                node.textContent = change.new;
                 found = true;
                 applied++;
                 break;
@@ -2076,31 +2073,17 @@ Convert the provided Western LP content into a Japan-optimized version. If image
             }
           }
 
-          // Strategy 3: innerHTML replacement (most aggressive)
-          if (!found) {
-            const html = currentDoc.body.innerHTML;
-            // Try exact match first
-            if (html.includes(change.old)) {
-              currentDoc.body.innerHTML = html.replace(change.old, change.new);
-              found = true;
-              applied++;
-            } else {
-              // Try normalized match on innerHTML
-              const normHtml = ncNormalize(html);
-              if (normHtml.includes(oldNorm)) {
-                // Find the approximate location and do a broader replace
-                const idx = normHtml.indexOf(oldNorm);
-                if (idx >= 0) {
-                  // Use a regex that's flexible with whitespace
-                  const flexRegex = oldNorm.split(' ').map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\s+');
-                  try {
-                    const re = new RegExp(flexRegex);
-                    if (re.test(html)) {
-                      currentDoc.body.innerHTML = html.replace(re, change.new);
-                      applied++;
-                    }
-                  } catch(e) { /* regex error */ }
-                }
+          // Strategy 2: Match leaf element textContent
+          if (!found && change.old) {
+            const oldNorm = ncNormalize(change.old);
+            const allEls = currentDoc.body.querySelectorAll('h1,h2,h3,h4,h5,h6,p,span,a,li,td,th,button,label,div');
+            for (const el of allEls) {
+              if (el.querySelector('h1,h2,h3,h4,h5,h6,p,div,ul,ol,table')) continue;
+              if (ncNormalize(el.textContent).includes(oldNorm)) {
+                el.textContent = change.new;
+                found = true;
+                applied++;
+                break;
               }
             }
           }
@@ -2127,6 +2110,9 @@ Convert the provided Western LP content into a Japan-optimized version. If image
 
         input.value = '';
         if ($('ncSendBtn')) $('ncSendBtn').disabled = true;
+
+        // Save selected element reference BEFORE async call
+        const savedSelectedEl = ncSelectedEl;
 
         // Build user message with selected element context
         let userContent = userText;
@@ -2187,7 +2173,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
             try {
               const changes = JSON.parse(changesMatch[1]);
               totalChanges = changes.filter(c => c.old && c.new).length;
-              appliedCount = ncApplyChanges(changes);
+              appliedCount = ncApplyChanges(changes, savedSelectedEl);
               ncRevisions.push(...changes.filter(c => c.old && c.new));
               if ($('ncRevCount')) $('ncRevCount').textContent = ncRevisions.length + ' revision' + (ncRevisions.length !== 1 ? 's' : '');
             } catch(e) { /* parse error */ }
