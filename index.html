@@ -579,7 +579,61 @@
                 </section>
               </div>
 
-              <!-- Hidden: Manual Input (keep for compatibility) -->
+              <!-- Native Check Panel (appears after localization) -->
+              <div id="nativeCheckPanel" class="hidden mt-4">
+                <section class="card-panel glass-card rounded-xl">
+                  <div class="p-5">
+                    <div class="flex items-center justify-between mb-4">
+                      <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5" style="color:rgba(34,197,94,0.8)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span class="text-sm font-semibold" style="color:rgba(255,255,255,0.9)" data-i18n="nc_title">Native Check</span>
+                        <span class="text-xs rounded-full px-2 py-0.5" style="background:rgba(34,197,94,0.15);color:rgba(34,197,94,0.9);" data-i18n="nc_badge">Click element to select</span>
+                      </div>
+                      <span id="ncRevCount" class="text-xs" style="color:rgba(255,255,255,0.4)">0 revisions</span>
+                    </div>
+
+                    <!-- Selected element indicator -->
+                    <div id="ncSelectedWrap" class="hidden mb-3 rounded-lg p-3" style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-[10px] font-medium" style="color:rgba(99,102,241,0.7)" data-i18n="nc_selected">Selected element</span>
+                        <button id="ncDeselectBtn" class="text-[10px]" style="color:rgba(255,255,255,0.4);cursor:pointer;" data-i18n="nc_deselect">Deselect</button>
+                      </div>
+                      <p id="ncSelectedText" class="text-xs font-mono" style="color:rgba(255,255,255,0.8);word-break:break-all;max-height:60px;overflow:auto;"></p>
+                    </div>
+
+                    <!-- Chat area -->
+                    <div class="grid gap-4 lg:grid-cols-2">
+                      <!-- Chat messages -->
+                      <div>
+                        <div id="ncChatMessages" class="rounded-lg p-3 space-y-2 overflow-y-auto" style="background:rgba(0,0,0,0.15);height:200px;border:1px solid rgba(200,185,215,0.15);">
+                          <p class="text-xs text-center" style="color:rgba(255,255,255,0.3)" data-i18n="nc_chat_placeholder">Click an element in the After preview, then describe your revision</p>
+                        </div>
+                        <!-- Input -->
+                        <div class="flex gap-2 mt-2">
+                          <input id="ncChatInput" type="text" placeholder="e.g. make this more casual / CTAを「まずは相談」に変更"
+                            class="min-w-0 flex-1 rounded-xl px-4 py-2.5 text-sm outline-none"
+                            style="background:rgba(255,255,255,0.5);border:1px solid rgba(200,185,215,0.5);color:rgba(20,10,25,0.9);" />
+                          <button id="ncSendBtn" type="button"
+                            class="btn-hover flex-shrink-0 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
+                            style="background:#0f172a;color:#ffffff;">
+                            Send
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Revision history -->
+                      <div>
+                        <div class="flex items-center gap-2 mb-2">
+                          <span class="text-xs font-semibold" style="color:rgba(255,255,255,0.6)" data-i18n="nc_history_title">Revision History</span>
+                        </div>
+                        <div id="ncRevisionList" class="rounded-lg p-3 overflow-y-auto space-y-2" style="background:rgba(0,0,0,0.15);height:228px;border:1px solid rgba(200,185,215,0.15);">
+                          <p class="text-xs text-center" style="color:rgba(255,255,255,0.3)" data-i18n="nc_no_revisions">No revisions yet</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
               <div class="hidden">
                 <details>
                   <summary data-i18n="manual_toggle">Manual upload or text input</summary>
@@ -1010,7 +1064,17 @@
           lp_summary_generating: "Generating summary...",
           lp_summary_placeholder: "Summary will appear after localization",
           lp_before_label: "Before (Original)",
-          lp_after_label: "After (Japanese)"
+          lp_after_label: "After (Japanese)",
+          nc_title: "Native Check",
+          nc_badge: "Click element to select",
+          nc_selected: "Selected element",
+          nc_deselect: "Deselect",
+          nc_chat_placeholder: "Click an element in the After preview, then describe your revision",
+          nc_history_title: "Revision History",
+          nc_no_revisions: "No revisions yet",
+          nc_sending: "Revising...",
+          nc_applied: "Applied",
+          nc_error: "Error"
         },
         jp: {
           sidebar_desc: "日本市場向けAIローカライズ",
@@ -1073,6 +1137,16 @@
           lp_summary_placeholder: "ローカライズ後にサマリーが表示されます",
           lp_before_label: "Before（オリジナル）",
           lp_after_label: "After（日本語版）",
+          nc_title: "ネイティブチェック",
+          nc_badge: "要素をクリックして選択",
+          nc_selected: "選択中の要素",
+          nc_deselect: "選択解除",
+          nc_chat_placeholder: "Afterプレビューの要素をクリックしてから修正指示を入力",
+          nc_history_title: "修正履歴",
+          nc_no_revisions: "まだ修正はありません",
+          nc_sending: "修正中...",
+          nc_applied: "適用済み",
+          nc_error: "エラー",
           lp_status_fail: "失敗: {msg}",
           set_title: "パーソナライズ設定",
           set_subtitle: "一度設定すれば全ツールに反映されます",
@@ -1548,6 +1622,17 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if ($('htmlPreviewFrame')) { $('htmlPreviewFrame').classList.add('hidden'); $('htmlPreviewFrame').src = ''; }
         if ($('downloadHtmlBtn')) { $('downloadHtmlBtn').classList.add('hidden'); $('downloadHtmlBtn').disabled = true; }
         if ($('locSummaryText')) { $('locSummaryText').textContent = tpl('lp_summary_placeholder'); $('locSummaryText').style.color = 'rgba(255,255,255,0.5)'; }
+        // Reset Native Check
+        if ($('nativeCheckPanel')) $('nativeCheckPanel').classList.add('hidden');
+        if ($('ncSelectedWrap')) $('ncSelectedWrap').classList.add('hidden');
+        if ($('ncChatMessages')) $('ncChatMessages').innerHTML = '<p class="text-xs text-center" style="color:rgba(255,255,255,0.3)" data-i18n="nc_chat_placeholder">' + tpl('nc_chat_placeholder') + '</p>';
+        if ($('ncRevisionList')) $('ncRevisionList').innerHTML = '<p class="text-xs text-center" style="color:rgba(255,255,255,0.3)" data-i18n="nc_no_revisions">' + tpl('nc_no_revisions') + '</p>';
+        if ($('ncRevCount')) $('ncRevCount').textContent = '0 revisions';
+        ncRevisions = [];
+        ncChatHistory = [];
+        ncSelectedText = '';
+        ncSelectedEl = null;
+        ncHighlightEl = null;
         clearStatus();
       };
 
@@ -1718,6 +1803,10 @@ Convert the provided Western LP content into a Japan-optimized version. If image
           // 6. Generate localization summary (non-blocking)
           generateLocSummary(apiKey, allTexts, translated);
 
+          // 7. Show Native Check panel and inject click handlers
+          showNativeCheckPanel();
+          setTimeout(injectClickHandlers, 500);
+
         } catch(e) {
           if ($('htmlLoadingMsg')) $('htmlLoadingMsg').classList.add('hidden');
           if ($('htmlPlaceholder')) $('htmlPlaceholder').classList.remove('hidden');
@@ -1784,6 +1873,221 @@ Convert the provided Western LP content into a Japan-optimized version. If image
 
       // Generate button → HTML localization
       if ($('lpGenerateBtn')) $('lpGenerateBtn').onclick = localizeHTML;
+
+      // ── Native Check ─────────────────────────────
+      let ncCurrentHtml = '';
+      let ncSelectedText = '';
+      let ncSelectedEl = null;
+      let ncHighlightEl = null;
+      let ncChatHistory = [];
+      let ncRevisions = [];
+
+      function showNativeCheckPanel() {
+        if ($('nativeCheckPanel')) $('nativeCheckPanel').classList.remove('hidden');
+      }
+
+      function injectClickHandlers() {
+        const iframe = $('htmlPreviewFrame');
+        if (!iframe) return;
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow?.document;
+          if (!doc || !doc.body) return;
+
+          // Add hover/click styles
+          const style = doc.createElement('style');
+          style.textContent = `
+            .nc-hoverable:hover { outline: 2px dashed rgba(99,102,241,0.5) !important; cursor: pointer !important; }
+            .nc-selected { outline: 3px solid rgba(99,102,241,0.8) !important; outline-offset: 2px !important; background: rgba(99,102,241,0.05) !important; }
+          `;
+          doc.head.appendChild(style);
+
+          // Make text elements clickable
+          const textEls = doc.querySelectorAll('h1,h2,h3,h4,h5,h6,p,span,a,li,td,th,button,label,div');
+          textEls.forEach(el => {
+            const text = el.textContent?.trim();
+            if (!text || text.length < 2) return;
+            // Skip if has child block elements (only leaf text elements)
+            if (el.querySelector('h1,h2,h3,h4,h5,h6,p,div,ul,ol,table')) return;
+            el.classList.add('nc-hoverable');
+            el.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              // Remove previous selection
+              if (ncHighlightEl) ncHighlightEl.classList.remove('nc-selected');
+              // Set new selection
+              el.classList.add('nc-selected');
+              ncHighlightEl = el;
+              ncSelectedEl = el;
+              ncSelectedText = el.textContent.trim();
+              // Update UI
+              if ($('ncSelectedWrap')) $('ncSelectedWrap').classList.remove('hidden');
+              if ($('ncSelectedText')) $('ncSelectedText').textContent = ncSelectedText;
+              if ($('ncChatInput')) $('ncChatInput').focus();
+            });
+          });
+        } catch(e) { console.log('Click handler injection failed:', e); }
+      }
+
+      // Deselect
+      if ($('ncDeselectBtn')) $('ncDeselectBtn').onclick = () => {
+        if (ncHighlightEl) ncHighlightEl.classList.remove('nc-selected');
+        ncHighlightEl = null;
+        ncSelectedEl = null;
+        ncSelectedText = '';
+        if ($('ncSelectedWrap')) $('ncSelectedWrap').classList.add('hidden');
+      };
+
+      // Add chat message to UI
+      function ncAddMessage(role, text) {
+        const container = $('ncChatMessages');
+        if (!container) return;
+        // Remove placeholder
+        const placeholder = container.querySelector('[data-i18n="nc_chat_placeholder"]');
+        if (placeholder) placeholder.remove();
+
+        const div = document.createElement('div');
+        div.className = 'rounded-lg px-3 py-2 text-xs';
+        if (role === 'user') {
+          div.style.cssText = 'background:rgba(99,102,241,0.15);color:rgba(255,255,255,0.85);margin-left:20%;';
+          div.textContent = text;
+        } else {
+          div.style.cssText = 'background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);margin-right:20%;';
+          div.textContent = text;
+        }
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+      }
+
+      // Add revision to history
+      function ncAddRevision(oldText, newText, instruction) {
+        ncRevisions.push({ old: oldText, new: newText, instruction });
+        const list = $('ncRevisionList');
+        if (!list) return;
+        // Remove placeholder
+        const placeholder = list.querySelector('[data-i18n="nc_no_revisions"]');
+        if (placeholder) placeholder.remove();
+
+        const div = document.createElement('div');
+        div.className = 'rounded-lg p-2 text-[11px]';
+        div.style.cssText = 'background:rgba(255,255,255,0.05);border:1px solid rgba(200,185,215,0.1);';
+        div.innerHTML = '<div style="color:rgba(239,68,68,0.7);text-decoration:line-through;margin-bottom:2px;">' +
+          oldText.substring(0, 80) + (oldText.length > 80 ? '...' : '') +
+          '</div><div style="color:rgba(34,197,94,0.8);">' +
+          newText.substring(0, 80) + (newText.length > 80 ? '...' : '') +
+          '</div>';
+        list.appendChild(div);
+        list.scrollTop = list.scrollHeight;
+
+        if ($('ncRevCount')) $('ncRevCount').textContent = ncRevisions.length + ' revision' + (ncRevisions.length > 1 ? 's' : '');
+      }
+
+      // Send revision request
+      async function ncSendRevision() {
+        const input = $('ncChatInput');
+        if (!input) return;
+        const instruction = input.value.trim();
+        if (!instruction) return;
+
+        const apiKey = $('apiKey').value.trim();
+        if (!apiKey) { setStatus('error', t('status_enter_key')); return; }
+
+        // Get current HTML from iframe
+        const iframe = $('htmlPreviewFrame');
+        if (!iframe) return;
+        let currentDoc;
+        try {
+          currentDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        } catch(e) { return; }
+        if (!currentDoc) return;
+
+        const selectedContext = ncSelectedText ? ncSelectedText : '';
+        input.value = '';
+        if ($('ncSendBtn')) $('ncSendBtn').disabled = true;
+
+        // Add user message
+        const userMsg = selectedContext ? '[' + selectedContext.substring(0, 50) + '] ' + instruction : instruction;
+        ncAddMessage('user', userMsg);
+
+        // Build prompt
+        const prompt = selectedContext
+          ? 'The user selected this text from a localized Japanese landing page:\n"' + selectedContext + '"\n\nTheir revision instruction: "' + instruction + '"\n\nReturn ONLY a JSON object with exactly two keys:\n{"old": "the exact current text to find", "new": "the replacement text"}\n\nThe "old" value must exactly match the selected text. Apply the revision to produce natural Japanese. Return ONLY the JSON, no explanation.'
+          : 'The user wants to revise a localized Japanese landing page. Their instruction: "' + instruction + '"\n\nContext: this is a tech/SaaS landing page localized from English to Japanese.\n\nReturn ONLY a JSON object: {"old": "exact text to find in the page", "new": "replacement text"}\nReturn ONLY the JSON, no explanation.';
+
+        try {
+          const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+              'x-api-key': apiKey,
+              'anthropic-version': '2023-06-01',
+              'anthropic-dangerous-direct-browser-access': 'true'
+            },
+            body: JSON.stringify({
+              model: 'claude-sonnet-4-20250514',
+              max_tokens: 1024,
+              messages: [{ role: 'user', content: prompt }]
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error?.message || 'API error');
+
+          const raw = data.content?.find(c => c.type === 'text')?.text || '';
+          const cleaned = raw.replace(/```json\n?|\n?```/g, '').trim();
+          const diff = JSON.parse(cleaned);
+
+          if (!diff.old || !diff.new) throw new Error('Invalid response format');
+
+          // Apply the change to the iframe
+          const body = currentDoc.body;
+          const walker = currentDoc.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+          let applied = false;
+          while (walker.nextNode()) {
+            const node = walker.currentNode;
+            if (node.textContent.includes(diff.old)) {
+              node.textContent = node.textContent.replace(diff.old, diff.new);
+              applied = true;
+              break;
+            }
+          }
+
+          if (!applied) {
+            // Try innerHTML replacement as fallback
+            body.innerHTML = body.innerHTML.replace(diff.old, diff.new);
+            applied = true;
+          }
+
+          if (applied) {
+            // Update the stored HTML blob
+            const newHtml = '<!DOCTYPE html>\n' + currentDoc.documentElement.outerHTML;
+            localizedHtmlBlob = new Blob([newHtml], { type: 'text/html;charset=utf-8' });
+
+            ncAddMessage('assistant', tpl('nc_applied') + ': ' + diff.old.substring(0, 30) + ' -> ' + diff.new.substring(0, 30));
+            ncAddRevision(diff.old, diff.new, instruction);
+
+            // Clear selection
+            if (ncHighlightEl) ncHighlightEl.classList.remove('nc-selected');
+            ncHighlightEl = null;
+            ncSelectedEl = null;
+            ncSelectedText = '';
+            if ($('ncSelectedWrap')) $('ncSelectedWrap').classList.add('hidden');
+
+            // Re-inject click handlers (DOM changed)
+            setTimeout(injectClickHandlers, 300);
+          }
+
+        } catch(e) {
+          ncAddMessage('assistant', tpl('nc_error') + ': ' + e.message);
+        } finally {
+          if ($('ncSendBtn')) $('ncSendBtn').disabled = false;
+          if ($('ncChatInput')) $('ncChatInput').focus();
+        }
+      }
+
+      // Bind send button and Enter key
+      if ($('ncSendBtn')) $('ncSendBtn').onclick = ncSendRevision;
+      if ($('ncChatInput')) $('ncChatInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') ncSendRevision();
+      });
 
       // Fetch URL (used by other tabs if needed)
       if ($('fetchUrlBtn')) $('fetchUrlBtn').onclick = async () => {
