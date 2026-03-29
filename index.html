@@ -489,13 +489,12 @@
 
             <!-- LP Tab -->
             <div id="tabLP">
-              <div class="grid gap-6 lg:grid-cols-2">
-              <!-- Input Section -->
-              <section class="card-panel glass-card rounded-xl">
-                <div class="p-6">
-                  <!-- URL Input -->
-                  <button id="fetchUrlBtn" type="button" class="hidden" aria-hidden="true"></button>
-                  <div class="mb-4">
+              <!-- Top Row: URL Input (left) + Summary (right) -->
+              <div class="grid gap-4 lg:grid-cols-2 mb-4">
+                <!-- URL Input -->
+                <section class="card-panel glass-card rounded-xl">
+                  <div class="p-5">
+                    <button id="fetchUrlBtn" type="button" class="hidden" aria-hidden="true"></button>
                     <span class="mb-2 block text-sm font-medium" style="color:rgba(255,255,255,0.6)" data-i18n="url_label">LP URL</span>
                     <div class="flex gap-2">
                       <input id="fetchUrlInput" type="url" placeholder="https://example.com/landing-page"
@@ -512,114 +511,93 @@
                         Clear
                       </button>
                     </div>
+                    <div id="statusBox" class="mt-3 hidden rounded-lg border px-3 py-2 text-xs"></div>
                   </div>
+                </section>
 
-                  <!-- Original LP Preview -->
-                  <div class="mt-5">
-                    <div class="flex items-center gap-2 mb-3">
-                      <span class="text-sm font-medium" style="color:rgba(255,255,255,0.7)" data-i18n="preview_label">Original LP Preview</span>
+                <!-- Localization Summary -->
+                <section class="card-panel glass-card rounded-xl">
+                  <div class="p-5 h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-2">
+                      <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" style="color:rgba(99,102,241,0.8)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span class="text-sm font-semibold" style="color:rgba(255,255,255,0.9)" data-i18n="lp_summary_title">Localization Summary</span>
+                      </div>
+                      <button id="downloadHtmlBtn" class="btn-hover rounded-lg px-4 py-1.5 text-xs font-medium disabled:opacity-40 hidden" disabled
+                        style="background:rgba(99,102,241,0.15);color:rgba(129,140,248,1);border:1px solid rgba(99,102,241,0.3);" data-i18n="lp_download_btn">Download HTML</button>
                     </div>
-                    
-                    <div class="rounded-xl overflow-hidden" style="border:1px solid rgba(200,185,215,0.3);height:55vh;">
-                      <!-- Placeholder -->
-                      <div id="originalPreviewPlaceholder" class="flex flex-col items-center justify-center h-full gap-3" style="background:rgba(255,255,255,0.3);">
-                        <svg class="w-16 h-16" style="color:rgba(20,10,25,0.25)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        <p class="text-sm" style="color:rgba(20,10,25,0.4)" data-i18n="placeholder_text">Enter URL to capture screenshot</p>
-                      </div>
-                      <!-- Loading -->
-                      <div id="originalPreviewLoading" class="hidden flex flex-col items-center justify-center h-full gap-3" style="background:rgba(255,255,255,0.3);">
-                        <div class="loading-spinner"></div>
-                        <p class="text-sm" style="color:rgba(20,10,25,0.5)" data-i18n="lp_loading_original">Loading original...</p>
-                      </div>
-                      <!-- Iframe -->
-                      <iframe id="originalPreviewFrame" class="w-full h-full border-0 hidden" sandbox="allow-scripts allow-same-origin"></iframe>
+                    <div class="flex-1 flex items-center">
+                      <p id="locSummaryText" class="text-xs leading-relaxed" style="color:rgba(255,255,255,0.5)" data-i18n="lp_summary_placeholder">Summary will appear after localization</p>
                     </div>
                   </div>
+                </section>
+              </div>
 
-                  <!-- Manual Input (collapsed) -->
-                  <details class="mt-5">
-                    <summary class="cursor-pointer text-xs text-slate-500 hover:text-slate-700" data-i18n="manual_toggle">
-                      ▼ Manual upload or text input
-                    </summary>
-                    <div class="mt-3 space-y-4 rounded-lg border border-slate-200 bg-slate-50/50 p-4">
-                      <!-- File Upload -->
-                      <div>
-                        <span class="text-xs font-medium text-slate-600 mb-2 block" data-i18n="upload_label">Upload Image/PDF</span>
-                        <div id="dropzone" class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
-                          <input type="file" id="fileInput" accept="image/*,application/pdf" multiple class="hidden" />
-                          <svg class="w-10 h-10 mx-auto text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                          </svg>
-                          <p class="text-sm text-slate-600" data-i18n="dropzone_text">Drag & drop or click</p>
-                          <p class="text-xs text-slate-400 mt-1">PNG, JPG, PDF</p>
-                        </div>
-                        <div id="filePreviewArea" class="mt-2 space-y-2 hidden"></div>
-                      </div>
-                      <!-- Text -->
-                      <div>
-                        <span class="text-xs font-medium text-slate-600 mb-2 block" data-i18n="paste_label">Or paste text</span>
-                        <textarea id="inputText" class="min-h-[100px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-200" placeholder="Paste LP text..." data-i18n-placeholder="paste_placeholder"></textarea>
-                        <div class="flex items-center justify-between mt-2">
-                          <span class="text-xs text-slate-500"><span id="charCount">0</span> chars</span>
-                          <label class="flex items-center gap-2 text-xs">
-                            <input id="includeRaw" type="checkbox" checked class="rounded" />
-                            <span data-i18n="include_checkbox">Include in prompt</span>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </details>
-
-                </div>
-              </section>
-
-              <!-- Output Section -->
-              <section class="card-panel glass-card rounded-xl">
-                <div class="flex flex-col gap-2 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between" style="border-color:rgba(200,185,215,0.3);">
-                  <div>
-                    <h2 class="text-sm font-semibold" style="color:rgba(255,255,255,0.9)" data-i18n="lp_output_title">Localized LP</h2>
-                    <p class="text-xs" style="color:rgba(255,255,255,0.5)" data-i18n="lp_output_desc">Japanese HTML</p>
+              <!-- Bottom Row: Before / After iframes (same height) -->
+              <div class="grid gap-4 lg:grid-cols-2">
+                <!-- Before (Original) -->
+                <section class="card-panel glass-card rounded-xl overflow-hidden">
+                  <div class="px-5 py-3 flex items-center gap-2" style="border-bottom:1px solid rgba(200,185,215,0.2);">
+                    <span class="text-xs font-semibold" style="color:rgba(255,255,255,0.7)" data-i18n="lp_before_label">Before (Original)</span>
                   </div>
-                  <div class="flex flex-wrap items-center gap-2">
-                    <button id="downloadHtmlBtn" class="btn-hover rounded-lg px-4 py-1.5 text-xs font-medium disabled:opacity-40 hidden" disabled
-                      style="background:rgba(99,102,241,0.15);color:rgba(129,140,248,1);border:1px solid rgba(99,102,241,0.3);" data-i18n="lp_download_btn">Download HTML</button>
-                  </div>
-                </div>
-
-                <div class="p-5 relative" style="min-height:55vh;">
-                  <div id="statusBox" class="mb-4 hidden rounded-lg border px-3 py-2 text-xs"></div>
-                  
-                  <!-- Localization Summary -->
-                  <div id="locSummaryWrap" class="hidden mb-4 rounded-xl p-4" style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);">
-                    <div class="flex items-center gap-2 mb-2">
-                      <svg class="w-4 h-4" style="color:rgba(99,102,241,0.8)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                      <span class="text-xs font-semibold" style="color:rgba(99,102,241,0.9)" data-i18n="lp_summary_title">Localization Summary</span>
-                    </div>
-                    <p id="locSummaryText" class="text-xs leading-relaxed" style="color:rgba(20,10,25,0.7)"></p>
-                  </div>
-                  
-                  <!-- HTML preview area -->
-                  <div class="rounded-xl overflow-hidden" style="border:1px solid rgba(200,185,215,0.3);height:55vh;">
+                  <div style="height:65vh;position:relative;">
                     <!-- Placeholder -->
-                    <div id="htmlPlaceholder" class="flex flex-col items-center justify-center h-full gap-3" style="background:rgba(255,255,255,0.3);">
-                      <svg class="w-16 h-16" style="color:rgba(20,10,25,0.25)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    <div id="originalPreviewPlaceholder" class="flex flex-col items-center justify-center h-full gap-3" style="background:rgba(255,255,255,0.05);">
+                      <svg class="w-12 h-12" style="color:rgba(255,255,255,0.15)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/>
                       </svg>
-                      <p class="text-sm" style="color:rgba(20,10,25,0.4)" data-i18n="lp_result_placeholder">Localized HTML will appear here</p>
+                      <p class="text-xs" style="color:rgba(255,255,255,0.3)" data-i18n="placeholder_text">Enter URL to capture screenshot</p>
                     </div>
                     <!-- Loading -->
-                    <div id="htmlLoadingMsg" class="hidden flex flex-col items-center justify-center h-full gap-3" style="background:rgba(255,255,255,0.3);">
+                    <div id="originalPreviewLoading" class="hidden absolute inset-0 flex flex-col items-center justify-center gap-3" style="background:rgba(255,255,255,0.05);">
                       <div class="loading-spinner"></div>
-                      <span id="htmlStatusMsg" class="text-sm" style="color:rgba(20,10,25,0.5)"></span>
+                      <p class="text-xs" style="color:rgba(255,255,255,0.4)" data-i18n="lp_loading_original">Loading original...</p>
+                    </div>
+                    <!-- Iframe -->
+                    <iframe id="originalPreviewFrame" class="w-full h-full border-0 hidden" sandbox="allow-scripts allow-same-origin"></iframe>
+                  </div>
+                </section>
+
+                <!-- After (Localized) -->
+                <section class="card-panel glass-card rounded-xl overflow-hidden">
+                  <div class="px-5 py-3 flex items-center gap-2" style="border-bottom:1px solid rgba(200,185,215,0.2);">
+                    <span class="text-xs font-semibold" style="color:rgba(255,255,255,0.7)" data-i18n="lp_after_label">After (Japanese)</span>
+                  </div>
+                  <div style="height:65vh;position:relative;">
+                    <!-- Placeholder -->
+                    <div id="htmlPlaceholder" class="flex flex-col items-center justify-center h-full gap-3" style="background:rgba(255,255,255,0.05);">
+                      <svg class="w-12 h-12" style="color:rgba(255,255,255,0.15)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                      </svg>
+                      <p class="text-xs" style="color:rgba(255,255,255,0.3)" data-i18n="lp_result_placeholder">Localized HTML will appear here</p>
+                    </div>
+                    <!-- Loading -->
+                    <div id="htmlLoadingMsg" class="hidden absolute inset-0 flex flex-col items-center justify-center gap-3" style="background:rgba(255,255,255,0.05);">
+                      <div class="loading-spinner"></div>
+                      <span id="htmlStatusMsg" class="text-xs" style="color:rgba(255,255,255,0.4)"></span>
                     </div>
                     <!-- Iframe -->
                     <iframe id="htmlPreviewFrame" class="w-full h-full border-0 hidden" sandbox="allow-scripts allow-same-origin"></iframe>
                   </div>
-                </div>
-              </section>
-              </div><!-- end LP grid -->
+                </section>
+              </div>
+
+              <!-- Hidden: Manual Input (keep for compatibility) -->
+              <div class="hidden">
+                <details>
+                  <summary data-i18n="manual_toggle">Manual upload or text input</summary>
+                  <div>
+                    <div id="dropzone">
+                      <input type="file" id="fileInput" accept="image/*,application/pdf" multiple class="hidden" />
+                    </div>
+                    <div id="filePreviewArea" class="hidden"></div>
+                    <textarea id="inputText" placeholder="Paste LP text..." data-i18n-placeholder="paste_placeholder"></textarea>
+                    <span id="charCount">0</span>
+                    <input id="includeRaw" type="checkbox" checked />
+                  </div>
+                </details>
+              </div>
+
             </div><!-- end tabLP -->
 
             <!-- Social Media Tab -->
@@ -1032,7 +1010,10 @@
           lp_status_no_text: "No translatable text found",
           lp_enter_url: "Please enter a URL",
           lp_summary_title: "Localization Summary",
-          lp_summary_generating: "Generating summary..."
+          lp_summary_generating: "Generating summary...",
+          lp_summary_placeholder: "Summary will appear after localization",
+          lp_before_label: "Before (Original)",
+          lp_after_label: "After (Japanese)"
         },
         jp: {
           sidebar_desc: "日本市場向けAIローカライズ",
@@ -1092,6 +1073,9 @@
           lp_enter_url: "URLを入力してください",
           lp_summary_title: "ローカライゼーションサマリー",
           lp_summary_generating: "サマリーを生成中...",
+          lp_summary_placeholder: "ローカライズ後にサマリーが表示されます",
+          lp_before_label: "Before（オリジナル）",
+          lp_after_label: "After（日本語版）",
           lp_status_fail: "失敗: {msg}",
           set_title: "パーソナライズ設定",
           set_subtitle: "一度設定すれば全ツールに反映されます",
@@ -1566,8 +1550,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if ($('htmlLoadingMsg')) $('htmlLoadingMsg').classList.add('hidden');
         if ($('htmlPreviewFrame')) { $('htmlPreviewFrame').classList.add('hidden'); $('htmlPreviewFrame').src = ''; }
         if ($('downloadHtmlBtn')) { $('downloadHtmlBtn').classList.add('hidden'); $('downloadHtmlBtn').disabled = true; }
-        if ($('locSummaryWrap')) $('locSummaryWrap').classList.add('hidden');
-        if ($('locSummaryText')) $('locSummaryText').textContent = '';
+        if ($('locSummaryText')) { $('locSummaryText').textContent = tpl('lp_summary_placeholder'); $('locSummaryText').style.color = 'rgba(255,255,255,0.5)'; }
         clearStatus();
       };
 
@@ -1596,7 +1579,7 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         if ($('htmlLoadingMsg')) $('htmlLoadingMsg').classList.remove('hidden');
         clearStatus();
         localizedHtmlBlob = null;
-        if ($('locSummaryWrap')) $('locSummaryWrap').classList.add('hidden');
+        if ($('locSummaryText')) { $('locSummaryText').textContent = tpl('lp_summary_generating'); $('locSummaryText').style.color = 'rgba(255,255,255,0.5)'; }
 
         // Show original in left iframe
         if ($('originalPreviewPlaceholder')) $('originalPreviewPlaceholder').classList.add('hidden');
@@ -1763,34 +1746,45 @@ Convert the provided Western LP content into a Japan-optimized version. If image
         const origFrame = $('originalPreviewFrame');
         const locFrame = $('htmlPreviewFrame');
         if (!origFrame || !locFrame) return;
-        try {
-          const origDoc = origFrame.contentDocument || origFrame.contentWindow?.document;
-          const locDoc = locFrame.contentDocument || locFrame.contentWindow?.document;
-          if (!origDoc || !locDoc) return;
 
-          const syncScroll = (source, target) => {
-            if (scrollSyncing) return;
-            scrollSyncing = true;
-            const sourceEl = source.scrollingElement || source.documentElement;
-            const targetEl = target.scrollingElement || target.documentElement;
-            const maxSource = sourceEl.scrollHeight - sourceEl.clientHeight;
-            const maxTarget = targetEl.scrollHeight - targetEl.clientHeight;
-            if (maxSource > 0 && maxTarget > 0) {
-              const ratio = sourceEl.scrollTop / maxSource;
-              targetEl.scrollTop = ratio * maxTarget;
-            }
-            requestAnimationFrame(() => { scrollSyncing = false; });
-          };
+        function injectScrollListener(iframe, name) {
+          try {
+            const doc = iframe.contentDocument || iframe.contentWindow?.document;
+            if (!doc) return;
+            doc.addEventListener('scroll', () => {
+              if (scrollSyncing) return;
+              const el = doc.scrollingElement || doc.documentElement;
+              const max = el.scrollHeight - el.clientHeight;
+              if (max <= 0) return;
+              const ratio = el.scrollTop / max;
+              scrollSyncing = true;
+              syncTarget(name === 'orig' ? locFrame : origFrame, ratio);
+              requestAnimationFrame(() => { scrollSyncing = false; });
+            }, { passive: true });
+          } catch(e) { console.log('Scroll listener failed for ' + name, e); }
+        }
 
-          origDoc.addEventListener('scroll', () => syncScroll(origDoc, locDoc));
-          locDoc.addEventListener('scroll', () => syncScroll(locDoc, origDoc));
-        } catch(e) { console.log('Scroll sync not available:', e); }
+        function syncTarget(targetFrame, ratio) {
+          try {
+            const doc = targetFrame.contentDocument || targetFrame.contentWindow?.document;
+            if (!doc) return;
+            const el = doc.scrollingElement || doc.documentElement;
+            const max = el.scrollHeight - el.clientHeight;
+            if (max > 0) el.scrollTop = ratio * max;
+          } catch(e) { /* cross-origin */ }
+        }
+
+        // Wait a bit for iframes to fully render
+        setTimeout(() => {
+          injectScrollListener(origFrame, 'orig');
+          injectScrollListener(locFrame, 'loc');
+        }, 500);
       }
 
       // Generate localization summary
       async function generateLocSummary(apiKey, origTexts, translatedTexts) {
-        if ($('locSummaryWrap')) $('locSummaryWrap').classList.remove('hidden');
         if ($('locSummaryText')) $('locSummaryText').textContent = tpl('lp_summary_generating');
+        if ($('locSummaryText')) $('locSummaryText').style.color = 'rgba(255,255,255,0.5)';
         
         // Sample some before/after pairs (max 15 to keep prompt small)
         const sampleSize = Math.min(15, origTexts.length);
@@ -1821,11 +1815,16 @@ Convert the provided Western LP content into a Japan-optimized version. If image
           const data = await res.json();
           if (res.ok) {
             const summary = data.content?.find(c => c.type === 'text')?.text || '';
-            if ($('locSummaryText')) $('locSummaryText').textContent = summary;
+            if ($('locSummaryText')) {
+              $('locSummaryText').textContent = summary;
+              $('locSummaryText').style.color = 'rgba(255,255,255,0.75)';
+            }
           }
         } catch(e) {
-          if ($('locSummaryText')) $('locSummaryText').textContent = '';
-          if ($('locSummaryWrap')) $('locSummaryWrap').classList.add('hidden');
+          if ($('locSummaryText')) {
+            $('locSummaryText').textContent = tpl('lp_summary_placeholder');
+            $('locSummaryText').style.color = 'rgba(255,255,255,0.5)';
+          }
         }
       }
 
